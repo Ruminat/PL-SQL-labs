@@ -1,0 +1,76 @@
+- var lab_n = 2;
+- var title = "Практическое занятие 2. Объявление переменных PL/SQL";
+
++lab
+  ul
+    li Требования к именам переменных.
+    li Основные скалярные типы данных PL/SQL.
+    li Атрибут <code>%TYPE</code>.
+    li Связанные переменные.
+
+  +task("1", "Укажите правильные и неправильные имена переменных:")
+    ul
+      li <code>today</code> — <em class="correct">правильно</em>.
+      li <code>last_name</code> — <em class="correct">правильно</em>.
+      li <code>today’s date</code> — <em class="wrong">неправильно</em>!
+      li <code>Number_of_days_February_this_year</code> — <em class="wrong">неправильно</em>!
+      li <code>IsLeap$year</code> — <em class="correct">правильно</em>.
+      li <code>#number</code> — <em class="wrong">неправильно</em>!
+      li <code>NUMBER#</code> — <em class="correct">правильно</em>.
+      li <code>number1to7</code> — <em class="correct">правильно</em>.
+
+  +task("2", "Укажите правильные и неправильные инструкции декларирования и инициализации:")
+    ul
+      li <code>Numbers_of_copies PLS_INTEGER;</code> — <em class="correct">правильно</em>.
+      li <code>printer_name constant VARCHAR2(10);</code> — <em class="wrong">неправильно</em>!
+      li <code>deliver_to VARCHAR2(10):=Jonson;</code> — <em class="wrong">неправильно</em>!
+      li <code>by_when DATE:=SYSDATE+1;</code> — <em class="correct">правильно</em>.
+  
+  +task("3", "Проанализируйте следующий анонимный блок и выберите подходящее утверждение:")
+    +plsql.
+      SET SERVEROUTPUT ON
+      DECLARE
+        fname VARCHAR(20);
+        lname VARCHAR(15) DEFAULT 'fernandez';
+      BEGIN
+        DBMS_OUTPUT.PUT_LINE(FNAME || ' ' || lname);
+      END;
+    ul
+      li(class="correct") Блок выполнится успешно и распечатает <code>fernandez</code>.
+      li Блок выдаст ошибку из-за того, что переменная <code>fname</code> используется без инициализации.
+      li Блок выполнится успешно и напечатает <code>null fernandez</code>.
+      li Блок выдаст ошибку, потому что нельзя использовать инструкцию <code>DEFAULT</code> для инициализации переменных типа <code>VARCHAR2</code>.
+      li Блок выдаст ошибку, потому что переменная <code>FNAME</code> не декларирована.
+
+  +task("4", "Загрузите в редактор скрипт для создания анонимного блока из пункта 2 первой Лабораторной работы, который вы сохранили в файле <code>lab_01_02.sql</code>.")
+    ul
+      li Добавьте в блок секцию декларирования переменных и включите в нее:
+        ul
+          li Переменную с именем <code>today</code>, типом данных <code>DATE</code> и с инициализацией по умолчанию с помощью системной функции <code>SYSDATE</code>.
+          li Переменную <code>tomorrow</code> такого же типа данных, что и переменная <code>today</code>. Воспользуйтесь при этом директивой <code>%TYPE</code>.
+      li В исполняемой секции блока инициализируйте переменную <code>tomorrow</code> с помощью выражения прибавляющего один день к текущему значению переменной today.
+      li Распечатайте значения переменных <code>today</code> и <code>tomorrow</code> после фразы <code>Hello, World!</code>.
+    +plsql
+      include ../../labs/2 lab/2-4.sql
+    +output.
+      Hello, World!
+      Today is 18.02.19 and tomorrow is 19.02.19
+
+  +task("5", "Добавьте в скрипт 2 связанных (<code>bind</code>) переменных: <code>basic_perсent</code> и <code>pf_percent</code> типа <code>NUMBER</code>;")
+    ul
+      li В исполняемой секции кода присвойте этим переменным значения <code>45</code> и <code>12</code> соответственно.
+      li Отделите исполняемый блок от остальной части скрипта инструкцией <code>/</code> и выведите значения связанных переменных с помощью инструкции <code>PRINT</code>.
+      li Сохраните скрипт под именем <code>lab_02_05.sql</code> — он пригодится вам в следующих работах.
+    +plsql
+      include ../../labs/2 lab/2-5.sql
+    +output.
+      BASIC_PERСENT
+      -------------
+                 45
+
+      PF_PERCENT
+      ----------
+              12
+
+      Hello, World!
+      Today is 18.02.19 and tomorrow is 19.02.19

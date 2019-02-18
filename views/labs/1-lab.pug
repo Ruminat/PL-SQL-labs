@@ -1,0 +1,36 @@
+- var lab_n = 1;
+- var title = "Практическое занятие 1. Введение в PL/SQL";
+
++lab
+  ul
+    li Типы блоков.
+    li Структура блока.
+    li Выполнение анонимного блока.
+    li Вывод сообщений при помощи пакета <code>DBMS_OUTPUT</code>.
+
+  +task("1", "Какой из перечисленных блоков кода выполнится успешно?")
+    +plsql("wrong").
+      BEGIN
+      END;
+    +plsql("wrong").
+      DECLARE
+        amount INTEGER(10);
+      END;
+    +plsql("wrong").
+      DECLARE
+      BEGIN
+      END;
+    +plsql("correct").
+      DECLARE
+        mark INTEGER(10);
+      BEGIN
+        DBMS_OUTPUT.PUT_LINE(amount);
+      END;
+
+    +task("2", "Напишите и выполните анонимный блок кода для вывода фразы <code>Hello, World!</code>. Сохраните созданный скрипт в файле <code>lab_01_02.sql</code>.")
+      +plsql.
+        BEGIN
+          DBMS_OUTPUT.PUT_LINE('Hello, World!');
+        END;
+      +output.
+        Hello, World!

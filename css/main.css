@@ -1,0 +1,58 @@
+h1, h2, h3, h4, h5, h6, p, li {
+	font-family: CMU Sans, Fira Sans, Scada, Arial;
+	/*font-weight: normal;*/
+}
+
+pre, code {
+	font-family: Fira Code;
+}
+
+h1, h2 {
+	text-align: center;
+}
+
+.aligment-center {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+  /*justify-content: center;*/
+	/*display: table-cell;*/
+  /*horizontal-align: middle;*/
+}
+
+.table-SQL {
+	font-family: Fira Code;
+	font-size: 0.8rem;
+	width: auto;
+}
+
+.correct {
+	border: 0.1rem solid #5cb85c;
+}
+.wrong {
+	border: 0.1rem solid #d9534f;
+}
+
+em.correct, em.wrong {
+	border: none;
+	font-style: normal;
+}
+em.correct {
+	color: #5cb85c;
+}
+em.wrong {
+	color: #d9534f;
+}
+
+code {
+	color: black;
+	background-color: RGBA(255, 25, 32, 0.05);
+}
+
+.lab h2 {
+	text-align: left;
+}
+
+.marked {
+	background-color: #f0ad4e;
+}
