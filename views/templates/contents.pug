@@ -1,0 +1,6 @@
+mixin contents(tasks)
+  each val in tasks
+    a(href="#lab-" + val[0]): h6 #{val[0]}-ая лабораторная
+    ul
+      - for (var i = 1; i <= val[1]; i++)
+        li(id="contents-task-" + val[0] + "-" + i): a(href="#task-" + val[0] + "-" + i) #{i}-ое задание

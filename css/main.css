@@ -1,10 +1,34 @@
+
+
+.labs, .menu {
+	box-sizing: border-box;
+}
+
+.labs {
+	/*width: 70vw;*/
+	padding: 0 1rem 0 1rem;
+}
+
+.menu::-webkit-scrollbar { width: 0; }
+.menu {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.menu {
+	position: fixed;
+	height: 100vh;
+	padding: 0 1rem 0 1rem;
+	overflow-y: scroll;
+}
+
 h1, h2, h3, h4, h5, h6, p, li {
 	font-family: CMU Sans, Fira Sans, Scada, Arial;
-	/*font-weight: normal;*/
+	font-weight: normal;
 }
 
 pre, code {
-	font-family: Fira Code;
+	font-family: Consolas, Fira Code;
 }
 
 h1, h2 {
@@ -15,9 +39,6 @@ h1, h2 {
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-  /*justify-content: center;*/
-	/*display: table-cell;*/
-  /*horizontal-align: middle;*/
 }
 
 .table-SQL {

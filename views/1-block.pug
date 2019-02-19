@@ -1,32 +1,35 @@
 include templates/mixins.pug
+include templates/contents.pug
 include templates/top.pug
   head
     title PL/SQL Лабы. Блок 1
     include templates/head.pug
   body
-    .container
-      h1
-        | Практические занятия по курсу
-        br
-        | «Разработка программных единиц PL/SQL»
-        br
-        | Часть 1
+    .container-fluid
+      .row
+        .col-md-8
+          .labs
+            .head
+              h1
+                | Практические занятия по курсу
+                br
+                | «Разработка программных единиц PL/SQL»
+                br
+                | Часть 1
 
-      h2 Блок 1
+              h2 Блок 1
 
-      h3
-        | Оглавление
+            include labs/1-lab.pug
+            include labs/2-lab.pug
+            include labs/3-lab.pug
+            include labs/4-lab.pug
 
-      a(href="#lab-1"): h6 Практическое занятие 1. Введение в PL/SQL
-      a(href="#lab-2"): h6 Практическое занятие 2. Объявление переменных PL/SQL
-      a(href="#lab-3"): h6 Практическое занятие 3. Команды исполняемой секции
-      a(href="#lab-4"): h6 Практическое занятие 4. Взаимодействие с сервером Oracle
+        .col-md-4
+          .menu
+            h3
+              | Оглавление
+            +contents([[1, 2], [2, 5], [3, 5], [4, 3]])
 
-      include labs/1-lab.pug
-      include labs/2-lab.pug
-      include labs/3-lab.pug
-      include labs/4-lab.pug
-        
     
     script(src="../dependencies/prism/prism.js")
     script(src="../js/setup.js")
