@@ -6,7 +6,7 @@
 
 .labs {
 	/*width: 70vw;*/
-	padding: 0 1rem 0 1rem;
+	padding: 0 0 0 1rem;
 }
 
 .menu::-webkit-scrollbar { width: 0; }
@@ -18,12 +18,12 @@
 .menu {
 	position: fixed;
 	height: 100vh;
-	padding: 0 1rem 0 1rem;
+	/*padding: 0 1rem 0 1rem;*/
 	overflow-y: scroll;
 }
 
 h1, h2, h3, h4, h5, h6, p, li {
-	font-family: CMU Sans, Fira Sans, Scada, Arial;
+	font-family: "Droid Serif", "Lora", Bookman, Georgia;
 	font-weight: normal;
 }
 
@@ -67,7 +67,7 @@ em.wrong {
 
 code {
 	color: black;
-	background-color: RGBA(255, 25, 32, 0.05);
+	background-color: RGBA(255, 25, 32, 0.02);
 }
 
 .lab h2 {

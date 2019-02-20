@@ -11,4 +11,4 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Today is ' || today || ' and tomorrow is ' || tomorrow);
 END;
 /
-PRINT :basic_perсent :pf_percent;
+PRINT basic_perсent pf_percent;

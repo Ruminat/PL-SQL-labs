@@ -52,11 +52,11 @@
       END;
       /
     ul
-      li Значение и тип данных переменной <code>customer</code> во вложенном блоке:
-      li Значение и тип данных переменной <code>credit_rating</code> во вложенном блоке: 
-      li Значение и тип данных переменной <code>customer</code> в основном (внешнем) блоке:
-      li Значение и тип данных переменной <code>name</code> в основном блоке:
-      li Значение и тип данных переменной <code>credit_rating</code> в основном блоке:
+      li Значение и тип данных переменной <code>customer</code> во вложенном блоке: <code>201, NUMBER(7)</code>.
+      li Значение и тип данных переменной <code>credit_rating</code> во вложенном блоке: <code>'GOOD', VARCHAR2(50)</code>.
+      li Значение и тип данных переменной <code>customer</code> в основном (внешнем) блоке: <code>'Womansport', VARCHAR2(50)</code>.
+      li Значение и тип данных переменной <code>name</code> в основном блоке: <code>not accessible</code>.
+      li Значение и тип данных переменной <code>credit_rating</code> в основном блоке: <code>'GOOD', VARCHAR2(50)</code>.
     +plsql
       include ../../labs/3 lab/3-2.sql
     +output.
@@ -85,6 +85,13 @@
           YOUR SALARY IS: 8200
           YOUR CONTRIBUTION TOWARDS PF: 442.8
           PL/SQL procedure successfully completed.
+    +plsql
+      include ../../labs/3 lab/3-3.sql
+    +output.
+      Hello, John
+      YOUR SALARY IS: 8200
+      YOUR CONTRIBUTION TOWARDS PF: 442.8
+
  
   +task("4", "В этом задании вы будете работать с переменными подстановки, запрашивая их значения в <code>run-time</code>. Продолжайте модифицировать скрипт из 3-го пункта.")
     <ul>

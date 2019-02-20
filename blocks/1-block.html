@@ -11,11 +11,10 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-9">
         <div class="labs">
-          <div class="head">
-            <h1>Практические занятия по курсу<br>«Разработка программных единиц PL/SQL»<br>Часть 1</h1>
-            <h2>Блок 1</h2>
+          <div class="header">
+            <h1>Первый Блок</h1>
           </div>
           <div class="lab" id="lab-1"><a name="#lab-1">
               <h2>Практическое занятие 1. Введение в PL/SQL</h2></a>
@@ -148,7 +147,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Today is ' || today || ' and tomorrow is ' || tomorrow);
 END;
 /
-PRINT :basic_perсent :pf_percent;</code></pre>
+PRINT basic_perсent pf_percent;</code></pre>
               <pre><code class="language-output">
                   BASIC_PERСENT
                   -------------
@@ -217,11 +216,11 @@ PRINT :basic_perсent :pf_percent;</code></pre>
                   END;
                   /</code></pre>
               <ul>
-                <li>Значение и тип данных переменной <code>customer</code> во вложенном блоке:</li>
-                <li>Значение и тип данных переменной <code>credit_rating</code> во вложенном блоке: </li>
-                <li>Значение и тип данных переменной <code>customer</code> в основном (внешнем) блоке:</li>
-                <li>Значение и тип данных переменной <code>name</code> в основном блоке:</li>
-                <li>Значение и тип данных переменной <code>credit_rating</code> в основном блоке:</li>
+                <li>Значение и тип данных переменной <code>customer</code> во вложенном блоке: <code>201, NUMBER(7)</code>.</li>
+                <li>Значение и тип данных переменной <code>credit_rating</code> во вложенном блоке: <code>'GOOD', VARCHAR2(50)</code>.</li>
+                <li>Значение и тип данных переменной <code>customer</code> в основном (внешнем) блоке: <code>'Womansport', VARCHAR2(50)</code>.</li>
+                <li>Значение и тип данных переменной <code>name</code> в основном блоке: <code>not accessible</code>.</li>
+                <li>Значение и тип данных переменной <code>credit_rating</code> в основном блоке: <code>'GOOD', VARCHAR2(50)</code>.</li>
               </ul>
               <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
   customer VARCHAR2(50) := 'Womansport';
@@ -268,10 +267,39 @@ END;
                       Hello John
                       YOUR SALARY IS: 8200
                       YOUR CONTRIBUTION TOWARDS PF: 442.8
-                      PL/SQL procedure successfully completed.
-                      </code></pre>
+                      PL/SQL procedure successfully completed.</code></pre>
                 </li>
               </ul>
+              <pre class="line-numbers undefined"><code class="language-plsql">-- VARIABLE basic_perсent NUMBER;
+-- VARIABLE pf_percent    NUMBER;
+DECLARE
+  -- today DATE := SYSDATE;
+  -- tomorrow today%type;
+  fname VARCHAR2(15);
+  emp_sal NUMBER(10);
+BEGIN
+  -- :basic_perсent := 45;
+  -- :pf_percent    := 12;
+  -- tomorrow       := today + 1;
+  SELECT first_name, salary
+  INTO fname, emp_sal FROM employees
+  WHERE employee_id=110;
+  DBMS_OUTPUT.PUT_LINE('Hello, ' || fname);
+  DBMS_OUTPUT.PUT_LINE('YOUR SALARY IS: ' || emp_sal);
+  DBMS_OUTPUT.PUT_LINE(
+       'YOUR CONTRIBUTION TOWARDS PF: '
+    || ROUND((0.12 * 0.45) * emp_sal, 1)
+  );
+  -- DBMS_OUTPUT.PUT_LINE('Today is ' || today || ' and tomorrow is ' || tomorrow);
+END;
+/
+-- PRINT basic_perсent pf_percent;</code></pre>
+              <pre><code class="language-output">
+                  Hello, John
+                  YOUR SALARY IS: 8200
+                  YOUR CONTRIBUTION TOWARDS PF: 442.8
+                  
+                  </code></pre>
             </div>
             <div class="task" id="task-3-4">
               <p class="task-text" name="task-3-4"><b>Задание 4.</b> В этом задании вы будете работать с переменными подстановки, запрашивая их значения в <code>run-time</code>. Продолжайте модифицировать скрипт из 3-го пункта.</p><ul>
@@ -336,9 +364,10 @@ END;
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="menu">
-          <h3>Оглавление</h3><a href="#lab-1">
+          <h3>Оглавление</h3><a href="../index.html">
+            <h6>На главную</h6></a><a href="#lab-1">
             <h6>1-ая лабораторная</h6></a>
           <ul>
             <li id="contents-task-1-1"><a href="#task-1-1">1-ое задание</a></li>
