@@ -54,6 +54,11 @@ h1, h2 {
 	border: 0.1rem solid #d9534f;
 }
 
+.comment {
+	color: rgba(0, 0, 0, 0.5);
+	font-style: italic;
+}
+
 em.correct, em.wrong {
 	border: none;
 	font-style: normal;
