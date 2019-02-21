@@ -13,7 +13,7 @@ BEGIN
   VALUES                  (:dept_id,      dept_name,       NULL       );
   
   DBMS_OUTPUT.PUT_LINE('The maximum department_id is: ' || max_deptno);
-  DBMS_OUTPUT.PUT_LINE('There were added ' || SQL%ROWCOUNT || ' rows.');
+  DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' row(s) added');
 END;
 /
 

@@ -216,8 +216,8 @@ BEGIN
   weight := weight + 1;
   message := message || ' is in stock';
   -- new_locn := 'Western ' || new_locn;
-    DBMS_OUTPUT.PUT_LINE('(2) weight = ' || weight);
-    DBMS_OUTPUT.PUT_LINE('(2) message = ' || message);
+  DBMS_OUTPUT.PUT_LINE('(2) weight = ' || weight);
+  DBMS_OUTPUT.PUT_LINE('(2) message = ' || message);
   /*(2)*/
 END;
 /</code></pre>
@@ -428,15 +428,15 @@ BEGIN
   VALUES                  (:dept_id,      dept_name,       NULL       );
   
   DBMS_OUTPUT.PUT_LINE('The maximum department_id is: ' || max_deptno);
-  DBMS_OUTPUT.PUT_LINE('There were added ' || SQL%ROWCOUNT || ' rows.');
+  DBMS_OUTPUT.PUT_LINE(SQL%ROWCOUNT || ' row(s) added');
 END;
 /
 
 SELECT *
 FROM Departments;</code></pre>
               <pre><code class="language-output">
-                  The maximum department_id is: 270
-                  There were added 1 rows.</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
+                  The maximum department_id is: 280
+                  1 row(s) added</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
             </div>
             <div class="task" id="task-4-3">
               <p class="task-text" name="task-4-3"><b>Задание 3.</b> С помощью инструкции <code>UPDATE</code> измените значение <code>location_id</code>, для вновь добавленного отдела на <code>3000</code>. Продолжите работу с предыдущим скриптом.</p>
