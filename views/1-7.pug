@@ -22,10 +22,14 @@ include templates/top.pug
       h2 Решение
 
       +plsql
-        | some pl/sql code
+        include extras/1-7.sql
+
+      p.comment Результат для отдела <code>60</code>:
 
       +output.
-        the output
+        Номер отдела, название: Отдел № 60, «IT»
+        Дом, улица: 2014 Jabberwocky Rd
+        Индекс, город, страна: 26192, Southlake, United States of America
 
     script(src="../dependencies/prism/prism.js")
     script(src="../js/setup.js")

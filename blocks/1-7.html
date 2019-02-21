@@ -23,9 +23,35 @@
         Индекс, город, страна: 197343, Санкт-Петербург, Россия
         </code></pre>
     <h2>Решение</h2>
-    <pre class="line-numbers undefined"><code class="language-plsql">some pl/sql code</code></pre>
+    <pre class="line-numbers undefined"><code class="language-plsql">ACCEPT dep NUMBER PROMPT 'Введите идентификатор отдела: ';
+DECLARE
+  dep_name  Departments.Department_Name%TYPE;
+  street    Locations.Street_Address%TYPE;
+  code      Locations.Postal_Code%TYPE;
+  city_name Locations.City%TYPE;
+  country   Countries.Country_Name%TYPE;
+BEGIN
+  SELECT
+    NVL(Department_Name , '?') ,
+    NVL(Street_Address  , '?') ,
+    NVL(Postal_Code     , '?') ,
+    NVL(City            , '?') ,
+    NVL(Country_Name    , '?')
+  INTO dep_name, street, code, city_name, country
+  FROM Departments
+    LEFT JOIN Locations USING (Location_ID)
+    LEFT JOIN Countries USING (Country_ID)
+  WHERE Department_ID = &&dep;
+
+  DBMS_OUTPUT.PUT_LINE('Номер отдела, название: Отдел № ' || &&dep || ', «' || dep_name || '»');
+  DBMS_OUTPUT.PUT_LINE('Дом, улица: ' || street);
+  DBMS_OUTPUT.PUT_LINE('Индекс, город, страна: ' || code || ', ' || city_name || ', ' || country);
+END;</code></pre>
+    <p class="comment">Результат для отдела <code>60</code>:</p>
     <pre><code class="language-output">
-        the output
+        Номер отдела, название: Отдел № 60, «IT»
+        Дом, улица: 2014 Jabberwocky Rd
+        Индекс, город, страна: 26192, Southlake, United States of America
         </code></pre>
   </div>
   <script src="../dependencies/prism/prism.js"></script>
