@@ -28,12 +28,20 @@
         /*(2)*/
       END;
       /
+    p.comment Данный блок кода не работает из-за 16-ой строки (обращение к переменной <code>new_locn</code>, которая определена лишь во вложенном блоке). Если убрать 16-ую строку, то получим: 
     ul
-      li Значение переменной <code>weight</code> в позиции <code>(1)</code>.
-      li Значение переменной <code>new_locn</code> в позиции <code>(1)</code>.
-      li Значение переменной <code>weight</code> в позиции <code>(2)</code>.
-      li Значение переменной <code>message</code> в позиции <code>(2)</code>.
-      li Значение переменной <code>new_locn</code> в позиции <code>(2)</code>.
+      li Значение переменной <code>weight</code> в позиции <code>(1)</code> — <code>2</code>.
+      li Значение переменной <code>new_locn</code> в позиции <code>(1)</code> — <code>'Western Europe'</code>.
+      li Значение переменной <code>weight</code> в позиции <code>(2)</code> — <code>601</code>.
+      li Значение переменной <code>message</code> в позиции <code>(2)</code> — <code>'Product 10012 is in stock'</code>.
+      li Значение переменной <code>new_locn</code> в позиции <code>(2)</code> — переменная не доступна в данной позиции.
+    +plsql
+      include ../../labs/3 lab/3-1.sql
+    +output.
+      (1) weight = 2
+      (1) new_locn = Western Europe
+      (2) weight = 601
+      (2) message = Product 10012 is in stock
 
   +task("2", "Проанализируйте блок кода и ответьте на вопросы (добавьте необходимые трассировочные инструкции):")
     +plsql.
@@ -94,7 +102,7 @@
 
  
   +task("4", "В этом задании вы будете работать с переменными подстановки, запрашивая их значения в <code>run-time</code>. Продолжайте модифицировать скрипт из 3-го пункта.")
-    <ul>
+    ul
       li Добавьте в скрипт инструкцию <code>PROMPT</code> с информационным сообщением «<code>Укажите номер сотрудника</code>».
       li Добавьте декларацию переменной <code>empno</code> так, чтобы она инициализировалась значением, полученным у пользователя.
       li Измените инструкцию <code>SELECT</code> так, чтобы при поиске информации о сотруднике использовать значение переменной <code>empno</code>.
@@ -105,5 +113,11 @@
         YOUR SALARY IS: 24000
         YOUR CONTRIBUTION TOWARDS PF: 1296
         PL/SQL procedure successfully completed.
+    +plsql
+      include ../../labs/3 lab/3-4.sql
+    +output.
+      Hello, Steven
+      YOUR SALARY IS: 24000
+      YOUR CONTRIBUTION TOWARDS PF: 1296
 
   +task("5", "Выполните скрипт <code>lab_03_05.sql</code> (<code>CREATE TABLE employee_details AS SELECT * FROM EMPLOYEES</code>). Будет создана таблица <code>EMPLOYEE_DETAILS</code>. Таблицы <code>employees</code> и <code>employee_details</code> имеют одинаковую структуру и данные. Все дальнейшие модификации выполняйте над данными из таблицы <code>employee_details</code>.")

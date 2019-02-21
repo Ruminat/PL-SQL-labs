@@ -9,12 +9,15 @@ BEGIN
   BEGIN
     weight := weight + 1;
     new_locn := 'Western ' || new_locn;
+    DBMS_OUTPUT.PUT_LINE('(1) weight = ' || weight);
+    DBMS_OUTPUT.PUT_LINE('(1) new_locn = ' || new_locn);
     /*(1)*/
-    -- DBMS_OUTPUT.PUT_LINE('weight = ' || weight);
   END;
   weight := weight + 1;
   message := message || ' is in stock';
-  new_locn := 'Western ' || new_locn;
+  -- new_locn := 'Western ' || new_locn;
+    DBMS_OUTPUT.PUT_LINE('(2) weight = ' || weight);
+    DBMS_OUTPUT.PUT_LINE('(2) message = ' || message);
   /*(2)*/
 END;
 /

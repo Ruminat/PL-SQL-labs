@@ -1,0 +1,32 @@
+include templates/mixins.pug
+include templates/contents.pug
+
+include templates/top.pug
+  head
+    title Допка 1.7
+    include templates/head.pug
+  body
+    .container
+      .labs
+        .header
+          h1 Дополнительное задание 1.7
+
+      h2 Постановка задачи
+
+      p.task-text Создайте программу, которая выводит сводную информацию об отделе (используются таблицы <code>Departments</code>, <code>Locations</code>, <code>Countries</code>). Номер отдела вводится с клавиатуры по приглашению <code>«Введите идентификатор отдела: </code>». Информация выводится в виде:
+      +output.
+        Номер отдела, название: Отдел № 00, «Бухгалтерия»    
+        Дом, улица: 127 ул. Пушкина                          
+        Индекс, город, страна: 197343, Санкт-Петербург, Россия
+
+      h2 Решение
+
+      +plsql
+        | some pl/sql code
+
+      +output.
+        the output
+
+    script(src="../dependencies/prism/prism.js")
+    script(src="../js/setup.js")
+    script(src="../js/main.js")

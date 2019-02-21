@@ -17,6 +17,10 @@
       +output.
         The maximum department_id is: 270
         PL/SQL procedure successfully completed.
+    +plsql
+      include ../../labs/4 lab/4-1.sql
+    +output.
+      The maximum department_id is: 270
 
   +task("2", "Измените скрипт из упражнения 1.")
     ul
@@ -27,6 +31,12 @@
       li С помощью атрибута <code>SQL%ROWCOUNT</code> узнайте количество строк обработанных инструкцией <code>INSERT</code>.
       li С помощью <code>SELECT</code> инструкции убедитесь, что строчка добавлена.
       li Сохраните скрипт в файле <code>lab_04_02_soln.sql</code>.
+    +plsql
+      include ../../labs/4 lab/4-2.sql
+    +output.
+      The maximum department_id is: 270
+      There were added 1 rows.
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
 
   +task("3", "С помощью инструкции <code>UPDATE</code> измените значение <code>location_id</code>, для вновь добавленного отдела на <code>3000</code>. Продолжите работу с предыдущим скриптом.")
     ul
@@ -34,3 +44,14 @@
       li Выведите новое состояние записи с помощью инструкции <code>SELECT</code>.
       li После проверки удалите добавленную строку.
       li Сохраните скрипт под именем <code>lab_04_03_soln.sql</code>.
+    +plsql
+      include ../../labs/4 lab/4-3.sql
+    +output.
+      The maximum department_id is: 270
+      There were added 1 rows.
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>3000</td></tr></tbody></table></row>
+    +plsql.
+      DELETE FROM Departments
+      WHERE Department_ID = (SELECT MAX(Department_ID) FROM Departments);
+    +output.
+      1 row deleted.
