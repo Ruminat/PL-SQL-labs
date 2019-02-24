@@ -1,0 +1,13 @@
+include mixins.pug
+
+doctype htmls
+html(lang='ru')
+  head
+    block head
+    include head.pug
+  body
+    .container
+      //- a(href="../index.html"): h6 На главную
+      block content
+
+    include scripts.pug
