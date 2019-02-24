@@ -1,0 +1,60 @@
+- var lab_n = 7;
+- var title = "Практическое занятие 7. Использование явных курсоров";
+
++lab
+  ul
+    li Явные курсоры.
+    li Атрибуты явных курсоров.
+    li Разделы <code>FOR UPDATE</code> и <code>CURRENT OF</code>.
+
+  +task("1", "Напишите PL/SQL блок для определения n самых высоких зарплат сотрудников.")
+    ul
+      li Выполните скрипт <code>lab_07_01.sql</code> для создания новой таблицы <code>top_salaries</code>, предназначенной для хранения зарплаты сотрудников.
+      li Запросите у пользователя значение переменной <code>n</code>. Пользователи могут захотеть увидеть зарплату 5-ти, 10-ти и так далее самых высокооплачиваемых сотрудников. С помощью инструкции <code>DEFINE</code> заранее определите переменную <code>p_num</code> для хранения значения <code>n</code>.
+      li Декларируйте переменную num типа <code>NUMBER</code> для хранения значения <code>p_num</code>, переменную <code>sal</code> типа <code>employees.salary</code>, курсор <code>emp_cursor</code>, который выбирает зарплату сотрудников в порядке убывания. Помните, что повторов значений быть не должно.
+      li В исполняемой секции кода откройте цикл и выберите первые <code>n</code> записей из курсора и добавьте их в таблицу <code>top_salaries</code>. Не забывайте про атрибуты <code>%ROWCOUNT</code> и <code>%FOUND</code>.
+      li После добавления значений в таблицу просмотрите их с помощью инструкции <code>SELECT</code>. Пример результата:
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr></tbody></table></row>
+      li Протестируйте работу скрипта на различных значениях <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>. Не забывайте очищать таблицу <code>top_salaries</code> после каждого теста.
+    //- +plsql
+    //-   include ../../labs/4 lab/4-1.sql
+    //- +output.
+    //-   The maximum department_id is: 270
+
+  +task("2", "Создайте PL/SQL блок, который делает следующее:")
+    ul
+      li С помощью директивы <code>DEFINE</code> определите переменную <code>p_deptno</code> для хранения <code>department_id</code> значения.
+      li Декларируйте переменную deptno типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.
+      li Декларируйте курсор <code>emp_cursor</code> для выборки <code>last_name</code>, <code>salary</code> и <code>manager_id</code> сотрудников, работающих в отделе с указанным значением <code>deptno</code>.
+      li В исполняемой секции с помощью инструкции <code>FOR</code> и цикла пройдитесь по курсору и если <code>salary</code> меньше <code>5000</code> и <code>manager_id</code> <code>101</code> или <code>124</code> отобразите сообщение «<code>&lt&ltlast_name&gt&gt Due for a raise</code>» иначе покажите сообщение «<code>&lt&ltlast_name&gt&gt Not due for a raise</code>».
+      li Примерный результат:
+        +output.
+          Смотри в Word-файле, опёрдыш
+    //- +plsql
+    //-   include ../../labs/4 lab/4-2.sql
+    //- +output.
+    //-   The maximum department_id is: 280
+    //-   1 row(s) added
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
+
+  +task("3", "Напишите PL/SQL для работы с параметризованным курсором.")
+    ul
+      li Декларируйте курсор <code>dept_cursor</code> для извлечения <code>department_id</code>, <code>department_name</code> для отделов с номером меньше <code>100</code>. Отсортируйте выборку по возрастанию номеров отделов.
+      li Декларируйте другой курсор <code>emp_cursor</code>, который принимает <code>deptartment_id</code> на вход в качестве параметра и извлекает <code>last_name</code>, <code>job_id</code>, <code>hire_date</code> и <code>salary</code> для тех сотрудников, у которых <code>employee_id</code> меньше <code>120</code> и работающих в соответствующем отделе.
+      li Декларируйте переменные, для хранения значений, извлеченных из каждого курсора. Воспользуйтесь директивой <code>%TYPE</code>.
+      li Откройте <code>dept_cursor</code> и с помощью простого цикла и инструкции <code>fetch</code> выберите значения в соответствующую переменную. Распечатайте имя и номер отдела.
+      li Для каждого отдела отройте <code>emp_cursor</code>. С помощью вложенного цикла пробегитесь по нему, и извлеките значения в соответствующую переменную и распечатайте их.
+      li Закройте все циклы и курсоры в правильной последовательности. Выполните скрипт. Результат должен быть похож на рисунок:
+        +output.
+          Смотри в Word-файле, чёрт обоссанный
+    //- +plsql
+    //-   include ../../labs/4 lab/4-3.sql
+    //- +output.
+    //-   The maximum department_id is: 270
+    //-   There were added 1 rows.
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>3000</td></tr></tbody></table></row>
+    //- +plsql.
+    //-   DELETE FROM Departments
+    //-   WHERE Department_ID = (SELECT MAX(Department_ID) FROM Departments);
+    //- +output.
+    //-   1 row deleted.

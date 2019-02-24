@@ -1,30 +1,16 @@
-include templates/mixins.pug
-include templates/contents.pug
+extends templates/block.pug
 
-include templates/top.pug
-  head
-    title PL/SQL Лабы. Блок 1
-    include templates/head.pug
-  body
-    .container-fluid
-      .row
-        .col-md-9
-          .labs
-            .header
-              h1 Первый Блок
+block head
+  title PL/SQL Лабы. Блок 1
 
-            include labs/1-lab.pug
-            include labs/2-lab.pug
-            include labs/3-lab.pug
-            include labs/4-lab.pug
+block content
+  .header
+    h1 Первый Блок
 
-        .col-md-3
-          .menu
-            h3 Оглавление
-            a(href="../index.html"): h6 На главную
-            +contents([[1, 2], [2, 5], [3, 5], [4, 3]])
+  include labs/1-lab.pug
+  include labs/2-lab.pug
+  include labs/3-lab.pug
+  include labs/4-lab.pug
 
-    
-    script(src="../dependencies/prism/prism.js")
-    script(src="../js/setup.js")
-    script(src="../js/main.js")
+block contents
+  +contents([[1, 2], [2, 5], [3, 5], [4, 3]])

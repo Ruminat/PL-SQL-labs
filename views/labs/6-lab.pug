@@ -1,0 +1,72 @@
+- var lab_n = 6;
+- var title = "Практическое занятие 6. Работа с составными типами данных";
+
++lab
+  ul
+    li Композитные типы данных.
+    li Записи PL/SQL.
+    li Коллекции PL/SQL.
+    li Методы коллекций.
+
+  +task("1", "Напишите скрипт для распечатки информации о выбранной стране:")
+    ul
+      li Декларируйте переменную <code>country_record</code> типа <code>countries%ROWTYPE</code>.
+      li С помощью директивы <code>DEFINE</code> определите переменную <code>countryid</code> и присвойте ей значение <code>CA</code> по умолчанию. В исполняемой секции кода присвойте ей значение через переменную подстановки.
+      li Извлеките информацию из таблицы <code>countries</code> для страны с заданным значением countryid в переменную, и выведите данные с помощью переменной <code>country_record</code>.
+      li Результат должен выглядеть примерно так:
+        +output.
+          Country Id: CA Country Name: Canada Region 2
+          PL/SQL procedure successfully completed.
+      li Протестируйте работу скрипта на странах с идентификаторами <code>DE</code>, <code>UK</code>, <code>US</code>.
+    //- +plsql
+    //-   include ../../labs/4 lab/4-1.sql
+    //- +output.
+    //-   The maximum department_id is: 270
+
+  +task("2", "Напишите блок кода для выборки имени департамента из специальной структуры хранения <code>INDEX BY … TABLE</code>. Сохраните скрипт как <code>lab_06_02_soln.sql</code>.")
+    ul
+      li Декларируйте тип <code>INDEX BY TABLE</code> с именем <code>dept_table_type</code> предназначенный для хранения значений типа <code>departments.department_name%TYPE</code>. Декларируйте переменную <code>my_dept_table</code> типа <code>dept_table_type</code>.
+      li Декларируйте две переменные <code>loop_count</code> и <code>deptno</code> типа <code>NUMBER</code>. Присвойте им значения по умолчанию <code>10</code> и <code>0</code> соответственно.
+      li С помощью цикла, получите из таблицы departments имена 10 отделов и сохраните их в <code>my_dept_table</code>. Начните с <code>dept_id</code> равного <code>10</code>. Увеличивайте счетчик и номер отдела соответственно с шагом в 10 единиц. Номера и названия отделов, которые необходимо скопировать в индексированную таблицу, показаны на рисунке:
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th></tr></thead><tbody><tr><td>20</td><td>Administration</td></tr><tr><td>10</td><td>Marketing</td></tr><tr><td>30</td><td>Purchasing</td></tr><tr><td>40</td><td>Human Resourses</td></tr><tr><td>50</td><td>Shipping</td></tr><tr><td>60</td><td>IT</td></tr><tr><td>70</td><td>Public Relations</td></tr><tr><td>80</td><td>Sales</td></tr><tr><td>90</td><td>Executive</td></tr><tr><td>100</td><td>Finance</td></tr></tbody></table></row>
+      li С помощью другого цикла, извлеките значения из индексированной таблицы и распечатайте их.
+      li Сохраните скрипт под именем lab_06_02_soln.sql. Результат работы показан на рисунке:
+        +output.
+          Administration
+          Marketing
+          Purchasing
+          Human Resourses
+          Shipping
+          IT
+          Public Relations
+          Sales
+          Executive
+          Finance
+          PL/SQL procedure successfully completed.
+    //- +plsql
+    //-   include ../../labs/4 lab/4-2.sql
+    //- +output.
+    //-   The maximum department_id is: 280
+    //-   1 row(s) added
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
+
+  +task("3", "Измените скрипт из второго пункта, таким образом, чтобы в индексированной таблице хранились записи (<code>record</code>), содержащие всю информацию об отделах.")
+    ul
+      li Продолжайте работать с предыдущим скриптом.
+      li Измените декларирование типа <code>dept_table_type</code> так, чтобы теперь в индексированной таблице хранились элементы типа <code>departments%ROWTYPE</code>.
+      li Измените инструкцию <code>SELECT</code> таким образом, чтобы извлекать все колонки из таблицы <code>departments</code> для каждой записи.
+      li Измените второй цикл, чтобы вывести все данные сохраненные в индексированной таблице.
+      li Сохраните скрипт под новым именем. Результат должен выглядеть примерно так:
+        +output.
+          Смотри в Word-файле, мудила гороховая
+    //- +plsql
+    //-   include ../../labs/4 lab/4-3.sql
+    //- +output.
+    //-   The maximum department_id is: 270
+    //-   There were added 1 rows.
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>3000</td></tr></tbody></table></row>
+    //- +plsql.
+    //-   DELETE FROM Departments
+    //-   WHERE Department_ID = (SELECT MAX(Department_ID) FROM Departments);
+    //- +output.
+    //-   1 row deleted.

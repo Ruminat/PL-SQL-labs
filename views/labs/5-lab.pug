@@ -1,0 +1,40 @@
+- var lab_n = 5;
+- var title = "Практическое занятие 5. Управляющие конструкции";
+
++lab
+  ul
+    li Виды структур управления.
+    li Значение <code>NULL</code> в условии <code>IF</code>.
+    li Обработка значений <code>NULL</code>.
+    li Виды циклов в PL/SQL.
+    li Вложенные циклы и метки.
+    li Команда <code>CONTINUE</code>.
+
+  +task("1", "Выполните скрипт <code>lab_05_01.sql</code> для создания таблицы <code>messages</code>. Напишите блок кода для заполнения таблицы:")
+    ul
+      li Добавьте числа в интервале от 1 до 10, пропустив 6 и 8. По одному числу на строку.
+      li Добавьте инструкцию <code>COMMIT</code> в конце блока.
+      li Проверьте результат с помощью инструкции <code>SELECT</code>.
+    //- +plsql
+    //-   include ../../labs/4 lab/4-1.sql
+    //- +output.
+    //-   The maximum department_id is: 270
+
+  +task("2", "Выполните скрипт <code>lab_05_02.sql</code>. Этот скрипт создает реплику таблицы <code>employees</code> с именем <code>emp</code> и добавляет в нее новый столбец <code>stars</code> типа <code>VARCHR2(50)</code>. Вам надо создать PL/SQL блок, который добавляет по одной «<code>*</code>» за каждую 1000$ в зарплате сотрудника.")
+    ul
+      li С помощью инструкции <code>DEFINE</code> определите переменную empno и присвойте ей значение <code>176</code>.
+      li В начале исполняемого блока инициализируйте empno с помощью переменной подстановки.
+      li Декларируйте переменную <code>asteriks</code> типа <code>emp.stars</code> и присвойте ей значение <code>NULL</code>; Декларируйте переменную <code>sal</code> типа <code>emp.salary</code>.
+      li В исполняемой секции напишите блок кода, с помощью которого переменная <code>asteriks</code> получает по одной звездочке за каждую $1000 в зарплате сотрудника.
+      li Обновите столбец stars сотрудника с помощью полученного значения строчной переменной <code>asteriks</code>.
+      li Добавьте в конец исполняемого блока инструкцию <code>COMMIT</code>.
+      li С помощью инструкции <code>SELECT</code> выведите из таблицы измененную строчку.
+      li Сохраните скрипт в файле <code>lab_05_02_soln.sql</code>.
+      li Результат должен выглядеть примерно так:
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>SALARY</th><th>STARS</th></tr></thead><tbody><tr><td>176</td><td>8600</td><td>*********</td></tr></tbody></table></row>
+    //- +plsql
+    //-   include ../../labs/4 lab/4-2.sql
+    //- +output.
+    //-   The maximum department_id is: 280
+    //-   1 row(s) added
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>

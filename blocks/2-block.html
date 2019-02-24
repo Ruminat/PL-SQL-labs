@@ -1,0 +1,222 @@
+<!DOCTYPE htmls>
+<html lang="ru">
+  <head>
+    <title>PL/SQL Лабы. Блок 2</title>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="../img/common/database.png"/>
+    <link rel="stylesheet" href="../dependencies/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../dependencies/prism/prism.css"/>
+    <link rel="stylesheet" href="../css/main.css"/>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="labs">
+            <div class="header">
+              <h1>Второй Блок</h1>
+            </div>
+            <div class="lab" id="lab-5"><a name="#lab-5">
+                <h2>Практическое занятие 5. Управляющие конструкции</h2></a>
+              <ul>
+                <li>Виды структур управления.</li>
+                <li>Значение <code>NULL</code> в условии <code>IF</code>.</li>
+                <li>Обработка значений <code>NULL</code>.</li>
+                <li>Виды циклов в PL/SQL.</li>
+                <li>Вложенные циклы и метки.</li>
+                <li>Команда <code>CONTINUE</code>.</li>
+              </ul>
+              <div class="task" id="task-5-1">
+                <p class="task-text" name="task-5-1"><b>Задание 1.</b> Выполните скрипт <code>lab_05_01.sql</code> для создания таблицы <code>messages</code>. Напишите блок кода для заполнения таблицы:</p>
+                <ul>
+                  <li>Добавьте числа в интервале от 1 до 10, пропустив 6 и 8. По одному числу на строку.</li>
+                  <li>Добавьте инструкцию <code>COMMIT</code> в конце блока.</li>
+                  <li>Проверьте результат с помощью инструкции <code>SELECT</code>.</li>
+                </ul>
+              </div>
+              <div class="task" id="task-5-2">
+                <p class="task-text" name="task-5-2"><b>Задание 2.</b> Выполните скрипт <code>lab_05_02.sql</code>. Этот скрипт создает реплику таблицы <code>employees</code> с именем <code>emp</code> и добавляет в нее новый столбец <code>stars</code> типа <code>VARCHR2(50)</code>. Вам надо создать PL/SQL блок, который добавляет по одной «<code>*</code>» за каждую 1000$ в зарплате сотрудника.</p>
+                <ul>
+                  <li>С помощью инструкции <code>DEFINE</code> определите переменную empno и присвойте ей значение <code>176</code>.</li>
+                  <li>В начале исполняемого блока инициализируйте empno с помощью переменной подстановки.</li>
+                  <li>Декларируйте переменную <code>asteriks</code> типа <code>emp.stars</code> и присвойте ей значение <code>NULL</code>; Декларируйте переменную <code>sal</code> типа <code>emp.salary</code>.</li>
+                  <li>В исполняемой секции напишите блок кода, с помощью которого переменная <code>asteriks</code> получает по одной звездочке за каждую $1000 в зарплате сотрудника.</li>
+                  <li>Обновите столбец stars сотрудника с помощью полученного значения строчной переменной <code>asteriks</code>.</li>
+                  <li>Добавьте в конец исполняемого блока инструкцию <code>COMMIT</code>.</li>
+                  <li>С помощью инструкции <code>SELECT</code> выведите из таблицы измененную строчку.</li>
+                  <li>Сохраните скрипт в файле <code>lab_05_02_soln.sql</code>.</li>
+                  <li>
+                    Результат должен выглядеть примерно так:<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>SALARY</th><th>STARS</th></tr></thead><tbody><tr><td>176</td><td>8600</td><td>*********</td></tr></tbody></table></row></li>
+                </ul>
+              </div>
+            </div>
+            <div class="lab" id="lab-6"><a name="#lab-6">
+                <h2>Практическое занятие 6. Работа с составными типами данных</h2></a>
+              <ul>
+                <li>Композитные типы данных.</li>
+                <li>Записи PL/SQL.</li>
+                <li>Коллекции PL/SQL.</li>
+                <li>Методы коллекций.</li>
+              </ul>
+              <div class="task" id="task-6-1">
+                <p class="task-text" name="task-6-1"><b>Задание 1.</b> Напишите скрипт для распечатки информации о выбранной стране:</p>
+                <ul>
+                  <li>Декларируйте переменную <code>country_record</code> типа <code>countries%ROWTYPE</code>.</li>
+                  <li>С помощью директивы <code>DEFINE</code> определите переменную <code>countryid</code> и присвойте ей значение <code>CA</code> по умолчанию. В исполняемой секции кода присвойте ей значение через переменную подстановки.</li>
+                  <li>Извлеките информацию из таблицы <code>countries</code> для страны с заданным значением countryid в переменную, и выведите данные с помощью переменной <code>country_record</code>.</li>
+                  <li>Результат должен выглядеть примерно так:
+                    <pre><code class="language-output">
+                        Country Id: CA Country Name: Canada Region 2
+                        PL/SQL procedure successfully completed.</code></pre>
+                  </li>
+                  <li>Протестируйте работу скрипта на странах с идентификаторами <code>DE</code>, <code>UK</code>, <code>US</code>.</li>
+                </ul>
+              </div>
+              <div class="task" id="task-6-2">
+                <p class="task-text" name="task-6-2"><b>Задание 2.</b> Напишите блок кода для выборки имени департамента из специальной структуры хранения <code>INDEX BY … TABLE</code>. Сохраните скрипт как <code>lab_06_02_soln.sql</code>.</p>
+                <ul>
+                  <li>Декларируйте тип <code>INDEX BY TABLE</code> с именем <code>dept_table_type</code> предназначенный для хранения значений типа <code>departments.department_name%TYPE</code>. Декларируйте переменную <code>my_dept_table</code> типа <code>dept_table_type</code>.</li>
+                  <li>Декларируйте две переменные <code>loop_count</code> и <code>deptno</code> типа <code>NUMBER</code>. Присвойте им значения по умолчанию <code>10</code> и <code>0</code> соответственно.</li>
+                  <li>
+                    С помощью цикла, получите из таблицы departments имена 10 отделов и сохраните их в <code>my_dept_table</code>. Начните с <code>dept_id</code> равного <code>10</code>. Увеличивайте счетчик и номер отдела соответственно с шагом в 10 единиц. Номера и названия отделов, которые необходимо скопировать в индексированную таблицу, показаны на рисунке:<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th></tr></thead><tbody><tr><td>20</td><td>Administration</td></tr><tr><td>10</td><td>Marketing</td></tr><tr><td>30</td><td>Purchasing</td></tr><tr><td>40</td><td>Human Resourses</td></tr><tr><td>50</td><td>Shipping</td></tr><tr><td>60</td><td>IT</td></tr><tr><td>70</td><td>Public Relations</td></tr><tr><td>80</td><td>Sales</td></tr><tr><td>90</td><td>Executive</td></tr><tr><td>100</td><td>Finance</td></tr></tbody></table></row></li>
+                  <li>С помощью другого цикла, извлеките значения из индексированной таблицы и распечатайте их.</li>
+                  <li>Сохраните скрипт под именем lab_06_02_soln.sql. Результат работы показан на рисунке:
+                    <pre><code class="language-output">
+                        Administration
+                        Marketing
+                        Purchasing
+                        Human Resourses
+                        Shipping
+                        IT
+                        Public Relations
+                        Sales
+                        Executive
+                        Finance
+                        PL/SQL procedure successfully completed.</code></pre>
+                  </li>
+                </ul>
+              </div>
+              <div class="task" id="task-6-3">
+                <p class="task-text" name="task-6-3"><b>Задание 3.</b> Измените скрипт из второго пункта, таким образом, чтобы в индексированной таблице хранились записи (<code>record</code>), содержащие всю информацию об отделах.</p>
+                <ul>
+                  <li>Продолжайте работать с предыдущим скриптом.</li>
+                  <li>Измените декларирование типа <code>dept_table_type</code> так, чтобы теперь в индексированной таблице хранились элементы типа <code>departments%ROWTYPE</code>.</li>
+                  <li>Измените инструкцию <code>SELECT</code> таким образом, чтобы извлекать все колонки из таблицы <code>departments</code> для каждой записи.</li>
+                  <li>Измените второй цикл, чтобы вывести все данные сохраненные в индексированной таблице.</li>
+                  <li>Сохраните скрипт под новым именем. Результат должен выглядеть примерно так:
+                    <pre><code class="language-output">Смотри в Word-файле, мудила гороховая</code></pre>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="lab" id="lab-7"><a name="#lab-7">
+                <h2>Практическое занятие 7. Использование явных курсоров</h2></a>
+              <ul>
+                <li>Явные курсоры.</li>
+                <li>Атрибуты явных курсоров.</li>
+                <li>Разделы <code>FOR UPDATE</code> и <code>CURRENT OF</code>.</li>
+              </ul>
+              <div class="task" id="task-7-1">
+                <p class="task-text" name="task-7-1"><b>Задание 1.</b> Напишите PL/SQL блок для определения n самых высоких зарплат сотрудников.</p>
+                <ul>
+                  <li>Выполните скрипт <code>lab_07_01.sql</code> для создания новой таблицы <code>top_salaries</code>, предназначенной для хранения зарплаты сотрудников.</li>
+                  <li>Запросите у пользователя значение переменной <code>n</code>. Пользователи могут захотеть увидеть зарплату 5-ти, 10-ти и так далее самых высокооплачиваемых сотрудников. С помощью инструкции <code>DEFINE</code> заранее определите переменную <code>p_num</code> для хранения значения <code>n</code>.</li>
+                  <li>Декларируйте переменную num типа <code>NUMBER</code> для хранения значения <code>p_num</code>, переменную <code>sal</code> типа <code>employees.salary</code>, курсор <code>emp_cursor</code>, который выбирает зарплату сотрудников в порядке убывания. Помните, что повторов значений быть не должно.</li>
+                  <li>В исполняемой секции кода откройте цикл и выберите первые <code>n</code> записей из курсора и добавьте их в таблицу <code>top_salaries</code>. Не забывайте про атрибуты <code>%ROWCOUNT</code> и <code>%FOUND</code>.</li>
+                  <li>
+                    После добавления значений в таблицу просмотрите их с помощью инструкции <code>SELECT</code>. Пример результата:<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr></tbody></table></row></li>
+                  <li>Протестируйте работу скрипта на различных значениях <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>. Не забывайте очищать таблицу <code>top_salaries</code> после каждого теста.</li>
+                </ul>
+              </div>
+              <div class="task" id="task-7-2">
+                <p class="task-text" name="task-7-2"><b>Задание 2.</b> Создайте PL/SQL блок, который делает следующее:</p>
+                <ul>
+                  <li>С помощью директивы <code>DEFINE</code> определите переменную <code>p_deptno</code> для хранения <code>department_id</code> значения.</li>
+                  <li>Декларируйте переменную deptno типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.</li>
+                  <li>Декларируйте курсор <code>emp_cursor</code> для выборки <code>last_name</code>, <code>salary</code> и <code>manager_id</code> сотрудников, работающих в отделе с указанным значением <code>deptno</code>.</li>
+                  <li>В исполняемой секции с помощью инструкции <code>FOR</code> и цикла пройдитесь по курсору и если <code>salary</code> меньше <code>5000</code> и <code>manager_id</code> <code>101</code> или <code>124</code> отобразите сообщение «<code>&lt&ltlast_name&gt&gt Due for a raise</code>» иначе покажите сообщение «<code>&lt&ltlast_name&gt&gt Not due for a raise</code>».</li>
+                  <li>Примерный результат:
+                    <pre><code class="language-output">Смотри в Word-файле, опёрдыш</code></pre>
+                  </li>
+                </ul>
+              </div>
+              <div class="task" id="task-7-3">
+                <p class="task-text" name="task-7-3"><b>Задание 3.</b> Напишите PL/SQL для работы с параметризованным курсором.</p>
+                <ul>
+                  <li>Декларируйте курсор <code>dept_cursor</code> для извлечения <code>department_id</code>, <code>department_name</code> для отделов с номером меньше <code>100</code>. Отсортируйте выборку по возрастанию номеров отделов.</li>
+                  <li>Декларируйте другой курсор <code>emp_cursor</code>, который принимает <code>deptartment_id</code> на вход в качестве параметра и извлекает <code>last_name</code>, <code>job_id</code>, <code>hire_date</code> и <code>salary</code> для тех сотрудников, у которых <code>employee_id</code> меньше <code>120</code> и работающих в соответствующем отделе.</li>
+                  <li>Декларируйте переменные, для хранения значений, извлеченных из каждого курсора. Воспользуйтесь директивой <code>%TYPE</code>.</li>
+                  <li>Откройте <code>dept_cursor</code> и с помощью простого цикла и инструкции <code>fetch</code> выберите значения в соответствующую переменную. Распечатайте имя и номер отдела.</li>
+                  <li>Для каждого отдела отройте <code>emp_cursor</code>. С помощью вложенного цикла пробегитесь по нему, и извлеките значения в соответствующую переменную и распечатайте их.</li>
+                  <li>Закройте все циклы и курсоры в правильной последовательности. Выполните скрипт. Результат должен быть похож на рисунок:
+                    <pre><code class="language-output">Смотри в Word-файле, чёрт обоссанный</code></pre>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="lab" id="lab-8"><a name="#lab-8">
+                <h2>Практическое занятие 8. Обработка исключений</h2></a>
+              <ul>
+                <li>Предопределенные исключения Oracle.</li>
+                <li>Функция <code>PRAGMA_EXCEPTION_INIT</code>.</li>
+                <li>Функции <code>SQLCODE</code> и <code>SQLERRM</code>.</li>
+                <li>Распространение исключений в подблоках.</li>
+                <li>Процедура <code>RAISE_APPLICATION_ERROR</code>.</li>
+                <li>Команда <code>RAISE</code>.</li>
+              </ul>
+              <div class="task" id="task-8-1">
+                <p class="task-text" name="task-8-1"><b>Задание 1.</b> Основная задача этого упражнения — продемонстрировать использование предопределенных исключений. Напишите PL/SQL блок для выборки сотрудников с определенной зарплатой.</p>
+                <ul>
+                  <li>Удалите все записи из таблицы <code>messages</code>. С помощью директивы <code>DEFINE</code> определите переменную <code>sal</code> и инициализируйте ее значением <code>6000</code>.</li>
+                  <li>В секции декларации исполняемого блока определите переменную ename типа <code>employees.last_name%TYPE</code> и переменную <code>emp_sal</code> типа <code>employees.salary%TYPE</code> и инициализируйте ее с помощью подстановочной переменной <code>&sal</code>.</li>
+                  <li>В исполняемой секции выберите фамилии тех сотрудников, чьи зарплаты равны значению переменной <code>emp_sal</code>. Не используйте явных курсоров! Если выборка вернет одну строку — добавьте в таблицу <code>messages</code> имя и зарплату сотрудника.</li>
+                  <li>Если для заданного значения зарплаты не найдено соответствующих записей или найдено несколько записей, обработайте соответствующие исключительные ситуации, и добавьте в таблицу <code>messages</code> записи «<code>No employee with a salary of &ltsalary&gt</code>» или «<code>More than one employee with a salary of &ltsalary&gt</code>».</li>
+                  <li>Просмотрите таблицу <code>messages</code>, чтобы оценить успешно или нет отработал PL/SQL блок.</li>
+                </ul>
+              </div>
+              <div class="task" id="task-8-2">
+                <p class="task-text" name="task-8-2"><b>Задание 2.</b> В этом упражнении вы посмотрите, как создавать именованные исключения для стандартных системных ошибок Oracle сервера <code>ORA-02292</code> (нарушение ограничений целостности).</p>
+                <ul>
+                  <li>В декларативной секции объявите <code>childrecord_exists</code> типа <code>EXCEPTION</code>. Проассоциируйте эту переменную со стандартной ошибкой <code>Oracle -02292</code>. Воспользуйтесь инструкцией <code>PRAGMA EXCEPTION_INIT</code>.</li>
+                  <li>В исполняемой секции блока напечатайте сообщение «<code>Deleting department 40........</code>» и выполните инструкцию <code>DELETE</code> для удаления отдела с <code>department_id</code> равным <code>40</code>.</li>
+                  <li>Добавьте секцию перехвата и обработки ошибок и поймайте в ней <code>childrecord_exists</code>. При обработке ошибке выведите соответствующее сообщение («<code>Cannot delete this department. There are employees in this department</code>»).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="menu">
+            <h3>Оглавление</h3><a href="../index.html">
+              <h6>На главную</h6></a><a href="#lab-5">
+              <h6>5-ая лабораторная</h6></a>
+            <ul>
+              <li id="contents-task-5-1"><a href="#task-5-1">1-ое задание</a></li>
+              <li id="contents-task-5-2"><a href="#task-5-2">2-ое задание</a></li>
+            </ul><a href="#lab-6">
+              <h6>6-ая лабораторная</h6></a>
+            <ul>
+              <li id="contents-task-6-1"><a href="#task-6-1">1-ое задание</a></li>
+              <li id="contents-task-6-2"><a href="#task-6-2">2-ое задание</a></li>
+              <li id="contents-task-6-3"><a href="#task-6-3">3-ое задание</a></li>
+            </ul><a href="#lab-7">
+              <h6>7-ая лабораторная</h6></a>
+            <ul>
+              <li id="contents-task-7-1"><a href="#task-7-1">1-ое задание</a></li>
+              <li id="contents-task-7-2"><a href="#task-7-2">2-ое задание</a></li>
+              <li id="contents-task-7-3"><a href="#task-7-3">3-ое задание</a></li>
+            </ul><a href="#lab-8">
+              <h6>8-ая лабораторная</h6></a>
+            <ul>
+              <li id="contents-task-8-1"><a href="#task-8-1">1-ое задание</a></li>
+              <li id="contents-task-8-2"><a href="#task-8-2">2-ое задание</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../dependencies/prism/prism.js"></script>
+    <script src="../js/setup.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
