@@ -1,5 +1,3 @@
-
-
 .labs, .menu {
 	box-sizing: border-box;
 }
@@ -22,13 +20,13 @@
 	overflow-y: scroll;
 }
 
-h1, h2, h3, h4, h5, h6, p, li {
+h1, h2, h3, h4, h5, h6, p, li, footer {
 	font-family: "Droid Serif", "Lora", Bookman, Georgia;
 	font-weight: normal;
 }
 
 pre, code {
-	font-family: Consolas, Fira Code;
+	font-family: "Fira Code", monospace, Consolas;
 }
 
 h1, h2 {
@@ -81,4 +79,11 @@ code {
 
 .marked {
 	background-color: #f0ad4e;
+}
+
+.page-footer {
+  background: #f8f8f8;
+  padding: 1em;
+  margin-top: 1em;
+  box-sizing: border-box;
 }
