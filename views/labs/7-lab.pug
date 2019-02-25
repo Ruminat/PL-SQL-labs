@@ -16,26 +16,74 @@
       li После добавления значений в таблицу просмотрите их с помощью инструкции <code>SELECT</code>. Пример результата:
         <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr></tbody></table></row>
       li Протестируйте работу скрипта на различных значениях <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>. Не забывайте очищать таблицу <code>top_salaries</code> после каждого теста.
-    //- +plsql
-    //-   include ../../labs/4 lab/4-1.sql
-    //- +output.
-    //-   The maximum department_id is: 270
+    +plsql
+      include ../../labs/7 lab/7-1.sql
+    p.comment Запросы для <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>:
+    .row
+      .col-md-2.aligment-center
+        code (0 строк)
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead></table></row>
+      .col-md-2.aligment-center
+        code (5 строк)
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13001</td></tr></tbody></table></row>
+      .col-md-2.aligment-center
+        code (10 строк)
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr></tbody></table></row>
+      .col-md-2.aligment-center
+        code (58 строк)
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr><tr><td>10000</td></tr><tr><td>...</td></tr><tr><td>2800</td></tr><tr><td>2700</td></tr><tr><td>2600</td></tr><tr><td>2500</td></tr><tr><td>2400</td></tr><tr><td>2200</td></tr><tr><td>2100</td></tr></tbody></table></row>
+      .col-md-2.aligment-center
+        code (58 строк)
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr><tr><td>10000</td></tr><tr><td>...</td></tr><tr><td>2800</td></tr><tr><td>2700</td></tr><tr><td>2600</td></tr><tr><td>2500</td></tr><tr><td>2400</td></tr><tr><td>2200</td></tr><tr><td>2100</td></tr></tbody></table></row>
 
   +task("2", "Создайте PL/SQL блок, который делает следующее:")
     ul
       li С помощью директивы <code>DEFINE</code> определите переменную <code>p_deptno</code> для хранения <code>department_id</code> значения.
-      li Декларируйте переменную deptno типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.
+      li Декларируйте переменную <code>deptno</code> типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.
       li Декларируйте курсор <code>emp_cursor</code> для выборки <code>last_name</code>, <code>salary</code> и <code>manager_id</code> сотрудников, работающих в отделе с указанным значением <code>deptno</code>.
       li В исполняемой секции с помощью инструкции <code>FOR</code> и цикла пройдитесь по курсору и если <code>salary</code> меньше <code>5000</code> и <code>manager_id</code> <code>101</code> или <code>124</code> отобразите сообщение «<code>&lt&ltlast_name&gt&gt Due for a raise</code>» иначе покажите сообщение «<code>&lt&ltlast_name&gt&gt Not due for a raise</code>».
       li Примерный результат:
-        +output.
-          Смотри в Word-файле, опёрдыш
-    //- +plsql
-    //-   include ../../labs/4 lab/4-2.sql
-    //- +output.
-    //-   The maximum department_id is: 280
-    //-   1 row(s) added
-    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
+        <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Department_ID</th><th>Message</th></tr></thead><tbody>
+          <tr><td>10</td><td>
+            +output.
+              Whalen Due for a raise
+          </td></tr>
+          <tr><td>20</td><td>
+            +output.
+              Hartstein Not due for a raise
+              Fay Not due for a raise
+          </td></tr>
+          <tr><td>50</td><td>
+            +output.
+              Weiss Not due for a raise
+              Fripp Not due for a raise
+              Kaufling Not due for a raise
+              Vollman Not due for a raise
+              Mourgos Not due for a raise
+              ......................
+              Grant Due for a raise
+          </td></tr>
+          <tr><td>80</td><td>
+            +output.
+              Russell Not due for a raise
+              Partners Not due for a raise
+              Errazuriz Not due for a raise
+              ...........................
+              Hutton Not due for a raise
+              Taylor Not due for a raise
+              Livingston Not due for a raise
+              Johnson Not due for a raise
+          </td></tr>
+        </tbody></table></row>
+    +plsql
+      include ../../labs/7 lab/7-2.sql
+    p.comment Результат для отдела <code>10</code>:
+    +output.
+      Whalen Due for a raise
+    p.comment Результат для отдела <code>20</code>:
+    +output.
+      Hartstein Not due for a raise
+      Fay Not due for a raise
 
   +task("3", "Напишите PL/SQL для работы с параметризованным курсором.")
     ul
@@ -46,15 +94,70 @@
       li Для каждого отдела отройте <code>emp_cursor</code>. С помощью вложенного цикла пробегитесь по нему, и извлеките значения в соответствующую переменную и распечатайте их.
       li Закройте все циклы и курсоры в правильной последовательности. Выполните скрипт. Результат должен быть похож на рисунок:
         +output.
-          Смотри в Word-файле, чёрт обоссанный
-    //- +plsql
-    //-   include ../../labs/4 lab/4-3.sql
-    //- +output.
-    //-   The maximum department_id is: 270
-    //-   There were added 1 rows.
-    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPARTMENT_ID</th><th>DEPARTMENT_NAME</th><th>MANAGER_ID</th><th>LOCATION_ID</th></tr></thead><tbody><tr><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>260</td><td>Recruiting</td><td>(null)</td><td>1700</td></tr><tr><td>270</td><td>Payroll</td><td>(null)</td><td>1700</td></tr><tr><td>280</td><td>Education</td><td>(null)</td><td>3000</td></tr></tbody></table></row>
-    //- +plsql.
-    //-   DELETE FROM Departments
-    //-   WHERE Department_ID = (SELECT MAX(Department_ID) FROM Departments);
-    //- +output.
-    //-   1 row deleted.
+          Department Number: 10 Department Name: Administration
+          ---------------------------------------------------------
+          Department Number: 20 Department Name: Marketing
+          ---------------------------------------------------------
+          Department Number: 30 Department Name: Purchasing
+          Raphaely PU_MAN 07-DEC-02 11000
+          Khoo PU_CLERK 18-MAY-03 3100
+          Baida PU_CLERK 24-DEC-05 2900
+          Tubias PU_CLERK 24-JUL-05 2800
+          Himuro PU_CLERK 15-NOV-06 2600
+          Colmenares PU_CLERK 10-AUG-07 2500
+          ---------------------------------------------------------
+          Department Number: 40 Department Name: Human Resources
+          ---------------------------------------------------------
+          Department Number: 50 Department Name: Shipping
+          ---------------------------------------------------------
+          Department Number: 60 Department Name: IT
+          Hunold IT_PROG 03-JAN-06 9000
+          Ernst IT_PROG 21-MAY-07 6000
+          Austin IT_PROG 25-JUN-05 4800
+          Pataballa IT_PROG 05-FEB-06 4800
+          Lorentz IT_PROG 07-FEB-07 4200
+          ---------------------------------------------------------
+          Department Number: 70 Department Name: Public Relations
+          ---------------------------------------------------------
+          Department Number: 80 Department Name: Sales
+          ---------------------------------------------------------
+          Department Number: 90 Department Name: Executive
+          King AD_PRES 17-JUN-03 24000
+          Kochhar AD_VP 21-SEP-05 17000
+          De Haan AD_VP 13-JAN-01 17000
+          ---------------------------------------------------------
+    +plsql
+      include ../../labs/7 lab/7-3.sql
+    +output.
+      Department Number: 10 Department Name: Administration
+      ---------------------------------------------------------
+      Department Number: 20 Department Name: Marketing
+      ---------------------------------------------------------
+      Department Number: 30 Department Name: Purchasing
+      Raphaely PU_MAN 07-DEC-02 11000
+      Khoo PU_CLERK 18-MAY-03 3100
+      Baida PU_CLERK 24-DEC-05 2900
+      Tubias PU_CLERK 24-JUL-05 2800
+      Himuro PU_CLERK 15-NOV-06 2600
+      Colmenares PU_CLERK 10-AUG-07 2500
+      ---------------------------------------------------------
+      Department Number: 40 Department Name: Human Resources
+      ---------------------------------------------------------
+      Department Number: 50 Department Name: Shipping
+      ---------------------------------------------------------
+      Department Number: 60 Department Name: IT
+      Hunold IT_PROG 03-JAN-06 9000
+      Ernst IT_PROG 21-MAY-07 6000
+      Austin IT_PROG 25-JUN-05 4800
+      Pataballa IT_PROG 05-FEB-06 4800
+      Lorentz IT_PROG 07-FEB-07 4200
+      ---------------------------------------------------------
+      Department Number: 70 Department Name: Public Relations
+      ---------------------------------------------------------
+      Department Number: 80 Department Name: Sales
+      ---------------------------------------------------------
+      Department Number: 90 Department Name: Executive
+      King AD_PRES 17-JUN-03 24000
+      Kochhar AD_VP 21-SEP-05 17000
+      De Haan AD_VP 13-JAN-01 17000
+      ---------------------------------------------------------

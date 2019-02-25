@@ -275,18 +275,99 @@ END;</code></pre>
                     После добавления значений в таблицу просмотрите их с помощью инструкции <code>SELECT</code>. Пример результата:<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr></tbody></table></row></li>
                   <li>Протестируйте работу скрипта на различных значениях <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>. Не забывайте очищать таблицу <code>top_salaries</code> после каждого теста.</li>
                 </ul>
+                <pre class="line-numbers undefined"><code class="language-plsql">DEFINE p_num = &Enter_The_n
+
+TRUNCATE TABLE Top_Salaries;
+
+DECLARE
+  num NUMBER := &p_num;
+  sal Employees.Salary%TYPE;
+  CURSOR emp_cursor IS
+    SELECT DISTINCT Salary
+    FROM Employees
+    ORDER BY Salary DESC;
+BEGIN
+  OPEN emp_cursor;
+  LOOP
+    FETCH emp_cursor INTO sal;
+    EXIT WHEN emp_cursor%NOTFOUND OR emp_cursor%ROWCOUNT > num;
+    INSERT INTO Top_Salaries (Salary) VALUES (sal);
+  END LOOP;
+END;
+/
+
+SELECT *
+FROM Top_Salaries;</code></pre>
+                <p class="comment">Запросы для <code>n</code>: <code>0</code>, <code>5</code>, <code>10</code>, <code>100</code>, <code>1000</code>:</p>
+                <div class="row">
+                  <div class="col-md-2 aligment-center"><code>(0 строк)</code><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead></table></row></div>
+                  <div class="col-md-2 aligment-center"><code>(5 строк)</code><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13001</td></tr></tbody></table></row></div>
+                  <div class="col-md-2 aligment-center"><code>(10 строк)</code><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr></tbody></table></row></div>
+                  <div class="col-md-2 aligment-center"><code>(58 строк)</code><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr><tr><td>10000</td></tr><tr><td>...</td></tr><tr><td>2800</td></tr><tr><td>2700</td></tr><tr><td>2600</td></tr><tr><td>2500</td></tr><tr><td>2400</td></tr><tr><td>2200</td></tr><tr><td>2100</td></tr></tbody></table></row></div>
+                  <div class="col-md-2 aligment-center"><code>(58 строк)</code><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>SALARY</th></tr></thead><tbody><tr><td>24000</td></tr><tr><td>17000</td></tr><tr><td>14000</td></tr><tr><td>13500</td></tr><tr><td>13000</td></tr><tr><td>12008</td></tr><tr><td>12000</td></tr><tr><td>11500</td></tr><tr><td>11000</td></tr><tr><td>10500</td></tr><tr><td>10000</td></tr><tr><td>...</td></tr><tr><td>2800</td></tr><tr><td>2700</td></tr><tr><td>2600</td></tr><tr><td>2500</td></tr><tr><td>2400</td></tr><tr><td>2200</td></tr><tr><td>2100</td></tr></tbody></table></row></div>
+                </div>
               </div>
               <div class="task" id="task-7-2">
                 <p class="task-text" name="task-7-2"><b>Задание 2.</b> Создайте PL/SQL блок, который делает следующее:</p>
                 <ul>
                   <li>С помощью директивы <code>DEFINE</code> определите переменную <code>p_deptno</code> для хранения <code>department_id</code> значения.</li>
-                  <li>Декларируйте переменную deptno типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.</li>
+                  <li>Декларируйте переменную <code>deptno</code> типа <code>NUMBER</code> и присвойте ей значение <code>p_deptno</code>.</li>
                   <li>Декларируйте курсор <code>emp_cursor</code> для выборки <code>last_name</code>, <code>salary</code> и <code>manager_id</code> сотрудников, работающих в отделе с указанным значением <code>deptno</code>.</li>
                   <li>В исполняемой секции с помощью инструкции <code>FOR</code> и цикла пройдитесь по курсору и если <code>salary</code> меньше <code>5000</code> и <code>manager_id</code> <code>101</code> или <code>124</code> отобразите сообщение «<code>&lt&ltlast_name&gt&gt Due for a raise</code>» иначе покажите сообщение «<code>&lt&ltlast_name&gt&gt Not due for a raise</code>».</li>
-                  <li>Примерный результат:
-                    <pre><code class="language-output">Смотри в Word-файле, опёрдыш</code></pre>
+                  <li>
+                    Примерный результат:<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Department_ID</th><th>Message</th></tr></thead><tbody>
+<tr><td>10</td><td>
+                    <pre><code class="language-output">Whalen Due for a raise</code></pre></td></tr>
+<tr><td>20</td><td>
+                    <pre><code class="language-output">
+                        Hartstein Not due for a raise
+                        Fay Not due for a raise</code></pre></td></tr>
+<tr><td>50</td><td>
+                    <pre><code class="language-output">
+                        Weiss Not due for a raise
+                        Fripp Not due for a raise
+                        Kaufling Not due for a raise
+                        Vollman Not due for a raise
+                        Mourgos Not due for a raise
+                        ......................
+                        Grant Due for a raise</code></pre></td></tr>
+<tr><td>80</td><td>
+                    <pre><code class="language-output">
+                        Russell Not due for a raise
+                        Partners Not due for a raise
+                        Errazuriz Not due for a raise
+                        ...........................
+                        Hutton Not due for a raise
+                        Taylor Not due for a raise
+                        Livingston Not due for a raise
+                        Johnson Not due for a raise</code></pre></td></tr>
+</tbody></table></row>
                   </li>
                 </ul>
+                <pre class="line-numbers undefined"><code class="language-plsql">DEFINE p_deptno = &Enter_The_Department
+
+DECLARE
+  deptno NUMBER := &p_deptno;
+  CURSOR emp_cursor IS
+    SELECT Last_Name, Salary, Manager_ID
+    FROM Employees
+    WHERE Department_ID = deptno;
+BEGIN
+  FOR emp IN emp_cursor LOOP
+    IF emp.Salary < 5000 AND emp.Manager_ID IN (101, 124) THEN
+      DBMS_OUTPUT.PUT_LINE(emp.Last_Name || ' Due for a raise');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE(emp.Last_Name || ' Not due for a raise');
+    END IF;
+  END LOOP;
+END;</code></pre>
+                <p class="comment">Результат для отдела <code>10</code>:</p>
+                <pre><code class="language-output">Whalen Due for a raise</code></pre>
+                <p class="comment">Результат для отдела <code>20</code>:</p>
+                <pre><code class="language-output">
+                    Hartstein Not due for a raise
+                    Fay Not due for a raise
+                    </code></pre>
               </div>
               <div class="task" id="task-7-3">
                 <p class="task-text" name="task-7-3"><b>Задание 3.</b> Напишите PL/SQL для работы с параметризованным курсором.</p>
@@ -297,9 +378,118 @@ END;</code></pre>
                   <li>Откройте <code>dept_cursor</code> и с помощью простого цикла и инструкции <code>fetch</code> выберите значения в соответствующую переменную. Распечатайте имя и номер отдела.</li>
                   <li>Для каждого отдела отройте <code>emp_cursor</code>. С помощью вложенного цикла пробегитесь по нему, и извлеките значения в соответствующую переменную и распечатайте их.</li>
                   <li>Закройте все циклы и курсоры в правильной последовательности. Выполните скрипт. Результат должен быть похож на рисунок:
-                    <pre><code class="language-output">Смотри в Word-файле, чёрт обоссанный</code></pre>
+                    <pre><code class="language-output">
+                        Department Number: 10 Department Name: Administration
+                        ---------------------------------------------------------
+                        Department Number: 20 Department Name: Marketing
+                        ---------------------------------------------------------
+                        Department Number: 30 Department Name: Purchasing
+                        Raphaely PU_MAN 07-DEC-02 11000
+                        Khoo PU_CLERK 18-MAY-03 3100
+                        Baida PU_CLERK 24-DEC-05 2900
+                        Tubias PU_CLERK 24-JUL-05 2800
+                        Himuro PU_CLERK 15-NOV-06 2600
+                        Colmenares PU_CLERK 10-AUG-07 2500
+                        ---------------------------------------------------------
+                        Department Number: 40 Department Name: Human Resources
+                        ---------------------------------------------------------
+                        Department Number: 50 Department Name: Shipping
+                        ---------------------------------------------------------
+                        Department Number: 60 Department Name: IT
+                        Hunold IT_PROG 03-JAN-06 9000
+                        Ernst IT_PROG 21-MAY-07 6000
+                        Austin IT_PROG 25-JUN-05 4800
+                        Pataballa IT_PROG 05-FEB-06 4800
+                        Lorentz IT_PROG 07-FEB-07 4200
+                        ---------------------------------------------------------
+                        Department Number: 70 Department Name: Public Relations
+                        ---------------------------------------------------------
+                        Department Number: 80 Department Name: Sales
+                        ---------------------------------------------------------
+                        Department Number: 90 Department Name: Executive
+                        King AD_PRES 17-JUN-03 24000
+                        Kochhar AD_VP 21-SEP-05 17000
+                        De Haan AD_VP 13-JAN-01 17000
+                        ---------------------------------------------------------</code></pre>
                   </li>
                 </ul>
+                <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
+  -- Department cursor
+  CURSOR dept_cursor IS
+    SELECT Department_ID, Department_Name
+    FROM Departments
+    WHERE Department_ID < 100;
+
+  -- Employee cursor
+  CURSOR emp_cursor (depID Departments.Department_ID%TYPE) IS
+    SELECT Last_Name, Job_ID, Hire_Date, Salary
+    FROM Employees
+    WHERE Employee_ID < 120 AND Department_ID = depID;
+
+  -- Department variables
+  depID   Departments.Department_ID%TYPE;
+  depName Departments.Department_Name%TYPE;
+
+  -- Employee variables
+  lastName Employees.Last_Name%TYPE;
+  jobID    Employees.Job_ID%TYPE;
+  hireDate Employees.Hire_Date%TYPE;
+  sal      Employees.Salary%TYPE;
+BEGIN
+  OPEN dept_cursor;
+  LOOP -- Department
+    FETCH dept_cursor INTO depID, depName;
+    EXIT WHEN dept_cursor%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('Department Number: ' || depID || ' Department Name: ' || depName);
+    OPEN emp_cursor (depID);
+    LOOP -- Employee
+      FETCH emp_cursor INTO lastName, jobID, hireDate, sal;
+      EXIT WHEN emp_cursor%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE(
+           lastName || ' '
+        || jobID    || ' '
+        || TO_CHAR(hireDate, 'dd-MON-rr', 'NLS_DATE_LANGUAGE = English') || ' '
+        || sal
+      );
+    END LOOP; -- Employee
+    CLOSE emp_cursor;
+    DBMS_OUTPUT.PUT_LINE('---------------------------------------------------------');
+  END LOOP; -- Department
+  CLOSE dept_cursor;
+END;</code></pre>
+                <pre><code class="language-output">
+                    Department Number: 10 Department Name: Administration
+                    ---------------------------------------------------------
+                    Department Number: 20 Department Name: Marketing
+                    ---------------------------------------------------------
+                    Department Number: 30 Department Name: Purchasing
+                    Raphaely PU_MAN 07-DEC-02 11000
+                    Khoo PU_CLERK 18-MAY-03 3100
+                    Baida PU_CLERK 24-DEC-05 2900
+                    Tubias PU_CLERK 24-JUL-05 2800
+                    Himuro PU_CLERK 15-NOV-06 2600
+                    Colmenares PU_CLERK 10-AUG-07 2500
+                    ---------------------------------------------------------
+                    Department Number: 40 Department Name: Human Resources
+                    ---------------------------------------------------------
+                    Department Number: 50 Department Name: Shipping
+                    ---------------------------------------------------------
+                    Department Number: 60 Department Name: IT
+                    Hunold IT_PROG 03-JAN-06 9000
+                    Ernst IT_PROG 21-MAY-07 6000
+                    Austin IT_PROG 25-JUN-05 4800
+                    Pataballa IT_PROG 05-FEB-06 4800
+                    Lorentz IT_PROG 07-FEB-07 4200
+                    ---------------------------------------------------------
+                    Department Number: 70 Department Name: Public Relations
+                    ---------------------------------------------------------
+                    Department Number: 80 Department Name: Sales
+                    ---------------------------------------------------------
+                    Department Number: 90 Department Name: Executive
+                    King AD_PRES 17-JUN-03 24000
+                    Kochhar AD_VP 21-SEP-05 17000
+                    De Haan AD_VP 13-JAN-01 17000
+                    ---------------------------------------------------------</code></pre>
               </div>
             </div>
             <div class="lab" id="lab-8"><a name="#lab-8">
