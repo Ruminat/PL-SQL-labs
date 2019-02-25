@@ -3,7 +3,6 @@
 }
 
 .labs {
-	/*width: 70vw;*/
 	padding: 0 0 0 1rem;
 }
 
@@ -16,7 +15,6 @@
 .menu {
 	position: fixed;
 	height: 100vh;
-	/*padding: 0 1rem 0 1rem;*/
 	overflow-y: scroll;
 }
 
