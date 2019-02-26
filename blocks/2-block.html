@@ -506,19 +506,64 @@ END;</code></pre>
                 <p class="task-text" name="task-8-1"><b>Задание 1.</b> Основная задача этого упражнения — продемонстрировать использование предопределенных исключений. Напишите PL/SQL блок для выборки сотрудников с определенной зарплатой.</p>
                 <ul>
                   <li>Удалите все записи из таблицы <code>messages</code>. С помощью директивы <code>DEFINE</code> определите переменную <code>sal</code> и инициализируйте ее значением <code>6000</code>.</li>
-                  <li>В секции декларации исполняемого блока определите переменную ename типа <code>employees.last_name%TYPE</code> и переменную <code>emp_sal</code> типа <code>employees.salary%TYPE</code> и инициализируйте ее с помощью подстановочной переменной <code>&sal</code>.</li>
+                  <li>В секции декларации исполняемого блока определите переменную <code>ename</code> типа <code>employees.last_name%TYPE</code> и переменную <code>emp_sal</code> типа <code>employees.salary%TYPE</code> и инициализируйте ее с помощью подстановочной переменной <code>&sal</code>.</li>
                   <li>В исполняемой секции выберите фамилии тех сотрудников, чьи зарплаты равны значению переменной <code>emp_sal</code>. Не используйте явных курсоров! Если выборка вернет одну строку — добавьте в таблицу <code>messages</code> имя и зарплату сотрудника.</li>
                   <li>Если для заданного значения зарплаты не найдено соответствующих записей или найдено несколько записей, обработайте соответствующие исключительные ситуации, и добавьте в таблицу <code>messages</code> записи «<code>No employee with a salary of &ltsalary&gt</code>» или «<code>More than one employee with a salary of &ltsalary&gt</code>».</li>
                   <li>Просмотрите таблицу <code>messages</code>, чтобы оценить успешно или нет отработал PL/SQL блок.</li>
                 </ul>
+                <pre class="line-numbers undefined"><code class="language-plsql">TRUNCATE TABLE Messages;
+
+DEFINE sal = 6000
+
+DECLARE
+  ename Employees.Last_Name%TYPE;
+  emp_sal Employees.Salary%TYPE := &sal;
+BEGIN
+  SELECT Last_Name
+  INTO ename
+  FROM Employees
+  WHERE Salary = emp_sal;
+  
+  INSERT INTO Messages (Results)
+  VALUES (ename || ': ' || emp_sal || '$');
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    INSERT INTO Messages (Results)
+    VALUES ('No employee with a salary of ' || emp_sal);
+  WHEN TOO_MANY_ROWS THEN
+    INSERT INTO Messages (Results)
+    VALUES ('More than one employee with a salary of ' || emp_sal);
+END;
+/
+
+COMMIT;
+
+SELECT *
+FROM Messages;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
               </div>
               <div class="task" id="task-8-2">
                 <p class="task-text" name="task-8-2"><b>Задание 2.</b> В этом упражнении вы посмотрите, как создавать именованные исключения для стандартных системных ошибок Oracle сервера <code>ORA-02292</code> (нарушение ограничений целостности).</p>
                 <ul>
-                  <li>В декларативной секции объявите <code>childrecord_exists</code> типа <code>EXCEPTION</code>. Проассоциируйте эту переменную со стандартной ошибкой <code>Oracle -02292</code>. Воспользуйтесь инструкцией <code>PRAGMA EXCEPTION_INIT</code>.</li>
+                  <li>В декларативной секции объявите <code>childrecord_exists</code> типа <code>EXCEPTION</code>. Проассоциируйте эту переменную со стандартной ошибкой Oracle <code>-02292</code>. Воспользуйтесь инструкцией <code>PRAGMA EXCEPTION_INIT</code>.</li>
                   <li>В исполняемой секции блока напечатайте сообщение «<code>Deleting department 40........</code>» и выполните инструкцию <code>DELETE</code> для удаления отдела с <code>department_id</code> равным <code>40</code>.</li>
                   <li>Добавьте секцию перехвата и обработки ошибок и поймайте в ней <code>childrecord_exists</code>. При обработке ошибке выведите соответствующее сообщение («<code>Cannot delete this department. There are employees in this department</code>»).</li>
                 </ul>
+                <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
+  childrecord_exists EXCEPTION;
+  PRAGMA EXCEPTION_INIT (childrecord_exists, -02292);
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Deleting department 40........');
+  DELETE FROM Departments
+  WHERE Department_ID = 40;
+
+EXCEPTION
+  WHEN childrecord_exists THEN
+    DBMS_OUTPUT.PUT_LINE('Cannot delete this department. There are employees in this department');
+END;
+/</code></pre>
+                <pre><code class="language-output">
+                    Deleting department 40........
+                    Cannot delete this department. There are employees in this department</code></pre>
               </div>
             </div>
           </div>
