@@ -1,6 +1,16 @@
+//- mixin contents(tasks)
+  //- each val in tasks
+  //-   a(href="#lab-" + val[0]): h6 #{val[0]}-ая лабораторная
+  //-   ul
+  //-     - for (var i = 1; i <= val[1]; i++)
+  //-       li(id="contents-task-" + val[0] + "-" + i): a(href="#task-" + val[0] + "-" + i) #{i}-ое задание
+
 mixin contents(tasks)
   each val in tasks
-    a(href="#lab-" + val[0]): h6 #{val[0]}-ая лабораторная
-    ul
-      - for (var i = 1; i <= val[1]; i++)
-        li(id="contents-task-" + val[0] + "-" + i): a(href="#task-" + val[0] + "-" + i) #{i}-ое задание
+    a(href="#lab-" + val[0]): .element #{val[0]}-ая лабораторная
+    - for (var i = 1; i <= val[1]; i++)
+      a(href="#task-" + val[0] + "-" + i): .element.sub(id="contents-task-" + val[0] + "-" + i)
+        | #{i}-ое задание
+    //- ul
+      //- - for (var i = 1; i <= val[1]; i++)
+      //-   li(id="contents-task-" + val[0] + "-" + i): a(href="#task-" + val[0] + "-" + i) #{i}-ое задание

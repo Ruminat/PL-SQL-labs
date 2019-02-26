@@ -1,4 +1,5 @@
 include mixins.pug
+include contents.pug
 
 doctype htmls
 html(lang='ru')
@@ -6,10 +7,16 @@ html(lang='ru')
     block head
     include head.pug
   body
-    .container
-      //- a(href="../index.html"): h6 На главную
-      block content
+    .menu
+      a(href="../index.html"): .element.link
+        img(src="../img/icons/home.png" class="icon")
+        | На главную
+      a(href="https://github.com/Ruminat/PL-SQL-labs"): .element.link
+        img(src="../img/icons/github.png" class="icon")
+        | GitHub
 
-    //- include footer.pug
+    .main
+      .labs
+        block content
 
     include scripts.pug

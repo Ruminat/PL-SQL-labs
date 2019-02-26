@@ -7,18 +7,17 @@ html(lang='ru')
     block head
     include head.pug
   body
-    .container-fluid
-      .row
-        .col-md-9
-          .labs
-            block content
+    .menu
+      a(href="../index.html"): .element.link
+        img(src="../img/icons/home.png" class="icon")
+        | На главную
+      a(href="https://github.com/Ruminat/PL-SQL-labs"): .element.link
+        img(src="../img/icons/github.png" class="icon")
+        | GitHub
+      block contents
 
-        .col-md-3
-          .menu
-            h3 Оглавление
-            a(href="../index.html"): h6 На главную
-            block contents
-
-    //- include footer.pug
+    .main
+      .labs
+        block content
 
     include scripts.pug

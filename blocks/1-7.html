@@ -9,21 +9,25 @@
     <link rel="stylesheet" href="../css/main.css"/>
   </head>
   <body>
-    <div class="container">
+    <div class="menu"><a href="../index.html">
+        <div class="element link"><img class="icon" src="../img/icons/home.png"/>На главную</div></a><a href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="element link"><img class="icon" src="../img/icons/github.png"/>GitHub</div></a></div>
+    <div class="main">
       <div class="labs">
-        <div class="header">
-          <h1>Дополнительное задание 1.7</h1>
+        <div class="labs">
+          <div class="header">
+            <h1>Дополнительное задание 1.7</h1>
+          </div>
         </div>
-      </div>
-      <h2>Постановка задачи</h2>
-      <p class="task-text">Создайте программу, которая выводит сводную информацию об отделе (используются таблицы <code>Departments</code>, <code>Locations</code>, <code>Countries</code>). Номер отдела вводится с клавиатуры по приглашению <code>«Введите идентификатор отдела: </code>». Информация выводится в виде:</p>
-      <pre><code class="language-output">
-          Номер отдела, название: Отдел № 00, «Бухгалтерия»    
-          Дом, улица: 127 ул. Пушкина                          
-          Индекс, город, страна: 197343, Санкт-Петербург, Россия
-          </code></pre>
-      <h2>Решение</h2>
-      <pre class="line-numbers undefined"><code class="language-plsql">ACCEPT dep NUMBER PROMPT 'Введите идентификатор отдела: ';
+        <h2>Постановка задачи</h2>
+        <p class="task-text">Создайте программу, которая выводит сводную информацию об отделе (используются таблицы <code>Departments</code>, <code>Locations</code>, <code>Countries</code>). Номер отдела вводится с клавиатуры по приглашению <code>«Введите идентификатор отдела: </code>». Информация выводится в виде:</p>
+        <pre><code class="language-output">
+            Номер отдела, название: Отдел № 00, «Бухгалтерия»    
+            Дом, улица: 127 ул. Пушкина                          
+            Индекс, город, страна: 197343, Санкт-Петербург, Россия
+            </code></pre>
+        <h2>Решение</h2>
+        <pre class="line-numbers undefined"><code class="language-plsql">ACCEPT dep NUMBER PROMPT 'Введите идентификатор отдела: ';
 DECLARE
   dep_name  Departments.Department_Name%TYPE;
   street    Locations.Street_Address%TYPE;
@@ -47,11 +51,12 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Дом, улица: ' || street);
   DBMS_OUTPUT.PUT_LINE('Индекс, город, страна: ' || code || ', ' || city_name || ', ' || country);
 END;</code></pre>
-      <p class="comment">Результат для отдела <code>60</code>:</p>
-      <pre><code class="language-output">
-          Номер отдела, название: Отдел № 60, «IT»
-          Дом, улица: 2014 Jabberwocky Rd
-          Индекс, город, страна: 26192, Southlake, United States of America</code></pre>
+        <p class="comment">Результат для отдела <code>60</code>:</p>
+        <pre><code class="language-output">
+            Номер отдела, название: Отдел № 60, «IT»
+            Дом, улица: 2014 Jabberwocky Rd
+            Индекс, город, страна: 26192, Southlake, United States of America</code></pre>
+      </div>
     </div>
     <script src="../dependencies/prism/prism.js"></script>
     <script src="../js/setup.js"></script>
