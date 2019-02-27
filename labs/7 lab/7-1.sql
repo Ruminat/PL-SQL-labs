@@ -16,6 +16,7 @@ BEGIN
     EXIT WHEN emp_cursor%NOTFOUND OR emp_cursor%ROWCOUNT > num;
     INSERT INTO Top_Salaries (Salary) VALUES (sal);
   END LOOP;
+  CLOSE emp_cursor;
 END;
 /
 
