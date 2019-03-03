@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "Fira Code Regular";
+  src: url(FiraCode-Regular.ttf);
+}
+
 html, body {
 	width: 100vw;
 	min-height: 100vh;
@@ -8,6 +13,12 @@ html, body {
 	padding: 0rem 2rem 2rem 2rem;
 	margin-left: 20vw;
 	box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p, li, footer, .menu * {
+	text-rendering: optimizeLegibility;
+	font-family: "Droid Serif", "Lora", Bookman, Georgia;
+	font-weight: normal;
 }
 
 .menu::-webkit-scrollbar { width: 0; }
@@ -74,13 +85,9 @@ html, body {
 	margin-top: -0.3rem;
 }
 
-h1, h2, h3, h4, h5, h6, p, li, footer {
-	font-family: "Droid Serif", "Lora", Bookman, Georgia;
-	font-weight: normal;
-}
 
 pre, code {
-	font-family: "Fira Code", monospace, Consolas;
+	font-family: "Fira Code Regular", monospace, Consolas;
 }
 
 h1, h2 {
