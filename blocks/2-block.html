@@ -3,31 +3,48 @@
   <head>
     <title>PL/SQL Лабы. Блок 2</title>
     <meta charset="UTF-8"/>
-    <link rel="icon" href="../img/common/database.png"/>
-    <link rel="stylesheet" href="../dependencies/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../dependencies/prism/prism.css"/>
+    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/prism.css"/>
     <link rel="stylesheet" href="../css/main.css"/>
   </head>
   <body>
-    <nav class="menu"><a href="../index.html">
-        <div class="element link"><img class="icon" src="../img/icons/home.png"/>На главную</div></a><a href="https://github.com/Ruminat/PL-SQL-labs">
-        <div class="element link"><img class="icon" src="../img/icons/github.png"/>GitHub</div></a><a href="#lab-5">
-        <div class="element">5-ая лабораторная</div></a><a href="#task-5-1">
-        <div class="element sub" id="contents-task-5-1">1-ое задание</div></a><a href="#task-5-2">
-        <div class="element sub" id="contents-task-5-2">2-ое задание</div></a><a href="#lab-6">
-        <div class="element">6-ая лабораторная</div></a><a href="#task-6-1">
-        <div class="element sub" id="contents-task-6-1">1-ое задание</div></a><a href="#task-6-2">
-        <div class="element sub" id="contents-task-6-2">2-ое задание</div></a><a href="#task-6-3">
-        <div class="element sub" id="contents-task-6-3">3-ое задание</div></a><a href="#lab-7">
-        <div class="element">7-ая лабораторная</div></a><a href="#task-7-1">
-        <div class="element sub" id="contents-task-7-1">1-ое задание</div></a><a href="#task-7-2">
-        <div class="element sub" id="contents-task-7-2">2-ое задание</div></a><a href="#task-7-3">
-        <div class="element sub" id="contents-task-7-3">3-ое задание</div></a><a href="#lab-8">
-        <div class="element">8-ая лабораторная</div></a><a href="#task-8-1">
-        <div class="element sub" id="contents-task-8-1">1-ое задание</div></a><a href="#task-8-2">
-        <div class="element sub" id="contents-task-8-2">2-ое задание</div></a>
+    <nav id="menu"><a class="element" id="menu-switch">
+        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"/></div>
+        <div class="text-part"></div></a><a class="element" href="../index.html">
+        <div class="icon-part"><img class="icon" src="../img/icons/home.png"/></div>
+        <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="icon-part"><img class="icon" src="../img/icons/github.png"/></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#lab-5">
+        <div class="icon-part">5.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-5-1" href="#task-5-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-5-2" href="#task-5-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-6">
+        <div class="icon-part">6.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-6-1" href="#task-6-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-6-2" href="#task-6-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-6-3" href="#task-6-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-7">
+        <div class="icon-part">7.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-7-1" href="#task-7-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-7-2" href="#task-7-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-7-3" href="#task-7-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-8">
+        <div class="icon-part">8.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-8-1" href="#task-8-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-8-2" href="#task-8-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a>
     </nav>
-    <div class="main">
+    <div id="main">
       <div class="labs">
         <div class="header">
           <h1>Второй Блок</h1>
@@ -585,7 +602,7 @@ END;
         </div>
       </div>
     </div>
-    <script src="../dependencies/prism/prism.js"></script>
+    <script src="../js/prism.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/main.js"></script>
   </body>

@@ -7,15 +7,9 @@ html(lang='ru')
     block head
     include head.pug
   body
-    .menu
-      a(href="../index.html"): .element.link
-        img(src="../img/icons/home.png" class="icon")
-        | На главную
-      a(href="https://github.com/Ruminat/PL-SQL-labs"): .element.link
-        img(src="../img/icons/github.png" class="icon")
-        | GitHub
+    include menu.pug
 
-    .main
+    #main
       .labs
         block content
 

@@ -3,36 +3,58 @@
   <head>
     <title>PL/SQL Лабы. Блок 1</title>
     <meta charset="UTF-8"/>
-    <link rel="icon" href="../img/common/database.png"/>
-    <link rel="stylesheet" href="../dependencies/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../dependencies/prism/prism.css"/>
+    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/prism.css"/>
     <link rel="stylesheet" href="../css/main.css"/>
   </head>
   <body>
-    <nav class="menu"><a href="../index.html">
-        <div class="element link"><img class="icon" src="../img/icons/home.png"/>На главную</div></a><a href="https://github.com/Ruminat/PL-SQL-labs">
-        <div class="element link"><img class="icon" src="../img/icons/github.png"/>GitHub</div></a><a href="#lab-1">
-        <div class="element">1-ая лабораторная</div></a><a href="#task-1-1">
-        <div class="element sub" id="contents-task-1-1">1-ое задание</div></a><a href="#task-1-2">
-        <div class="element sub" id="contents-task-1-2">2-ое задание</div></a><a href="#lab-2">
-        <div class="element">2-ая лабораторная</div></a><a href="#task-2-1">
-        <div class="element sub" id="contents-task-2-1">1-ое задание</div></a><a href="#task-2-2">
-        <div class="element sub" id="contents-task-2-2">2-ое задание</div></a><a href="#task-2-3">
-        <div class="element sub" id="contents-task-2-3">3-ое задание</div></a><a href="#task-2-4">
-        <div class="element sub" id="contents-task-2-4">4-ое задание</div></a><a href="#task-2-5">
-        <div class="element sub" id="contents-task-2-5">5-ое задание</div></a><a href="#lab-3">
-        <div class="element">3-ая лабораторная</div></a><a href="#task-3-1">
-        <div class="element sub" id="contents-task-3-1">1-ое задание</div></a><a href="#task-3-2">
-        <div class="element sub" id="contents-task-3-2">2-ое задание</div></a><a href="#task-3-3">
-        <div class="element sub" id="contents-task-3-3">3-ое задание</div></a><a href="#task-3-4">
-        <div class="element sub" id="contents-task-3-4">4-ое задание</div></a><a href="#task-3-5">
-        <div class="element sub" id="contents-task-3-5">5-ое задание</div></a><a href="#lab-4">
-        <div class="element">4-ая лабораторная</div></a><a href="#task-4-1">
-        <div class="element sub" id="contents-task-4-1">1-ое задание</div></a><a href="#task-4-2">
-        <div class="element sub" id="contents-task-4-2">2-ое задание</div></a><a href="#task-4-3">
-        <div class="element sub" id="contents-task-4-3">3-ое задание</div></a>
+    <nav id="menu"><a class="element" id="menu-switch">
+        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"/></div>
+        <div class="text-part"></div></a><a class="element" href="../index.html">
+        <div class="icon-part"><img class="icon" src="../img/icons/home.png"/></div>
+        <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="icon-part"><img class="icon" src="../img/icons/github.png"/></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#lab-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-1-1" href="#task-1-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-1-2" href="#task-1-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-2-1" href="#task-2-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-2-2" href="#task-2-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-2-3" href="#task-2-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-2-4" href="#task-2-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-2-5" href="#task-2-5">
+        <div class="icon-part">5.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-3-1" href="#task-3-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-3-2" href="#task-3-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-3-3" href="#task-3-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-3-4" href="#task-3-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-3-5" href="#task-3-5">
+        <div class="icon-part">5.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-4-1" href="#task-4-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-4-2" href="#task-4-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-4-3" href="#task-4-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a>
     </nav>
-    <div class="main">
+    <div id="main">
       <div class="labs">
         <div class="header">
           <h1>Первый Блок</h1>
@@ -502,7 +524,7 @@ FROM Departments;</code></pre>
         </div>
       </div>
     </div>
-    <script src="../dependencies/prism/prism.js"></script>
+    <script src="../js/prism.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/main.js"></script>
   </body>

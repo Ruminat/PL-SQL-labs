@@ -1,8 +1,13 @@
 // highlight the code blocks
 Prism.highlightAll();
 
+// content element
+const $main = $.id('main');
 // task elements
 const $tasks = $.cls('task');
+// menu element
+const $menu = $.id('menu');
+const $menuSwitch = $.id('menu-switch');
 
 for (let $task of $tasks) {
 	let id = $task.id + '-marked';
@@ -24,3 +29,8 @@ for (let $task of $tasks) {
     else localStorage.setItem(id, 'on');
   });
 }
+
+$menuSwitch.on('click', function() {
+  console.log($menu.classList.toggle('closed'));
+  console.log($main.classList.toggle('full'));
+});
