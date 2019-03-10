@@ -1,0 +1,43 @@
+- var lab_n = 10;
+- var title = "Практическое занятие 10. Создание функций";
+
++lab
+  ul
+    li Создание функций.
+    li Уровень чистоты.
+
+  +task("1", "Создайте функцию <code>GET_JOB</code>, которая возвращает <code>job_title</code>.")
+    ul
+      li Создайте функцию <code>GET_JOB</code>, которая возвращает <code>JOB_TITLE</code>, соответствующий переданному на вход <code>JOB_ID</code>.
+      li Для тестирования работы функции создайте анонимный блок, объявите хост-переменную <code>b_title</code> типа <code>VARCHAR2</code>, сохраните в нее результат работы функции и выведите результат работы функции для значения входного параметра <code>SA_REP</code>.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-1.sql
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
+
+  +task("2", "Создайте функцию <code>GET_ANNUAL_COMP</code> для формирования фактической зарплаты сотрудника по заданной формуле.")
+    ul
+      li Формула: <code>(salary * 12) + (commission_pct * salary * 12)</code>. Функция должна принимать на вход месячную зарплату сотрудника и комиссию, и даже в случае если оба значения будут <code>NULL</code> возвращать не <code>NULL</code>.
+      li Протестируйте работу функции с помощью оператора <code>SELECT</code> для сотрудников из <code>30</code> отдела.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-2.sql
+    //- +output.
+    //-   Deleting department 40........
+    //-   Cannot delete this department. There are employees in this department
+
+  +task("3", "Создайте процедуру <code>ADD_EMPLOYEE</code> для добавления нового сотрудника в табличку <code>EMPLOYEES</code>. Перед добавлением сотрудника процедура должна проверять с помощью функции <code>VALID_DEPTID</code>, что указанный для него номер отдела присутствует в таблице <code>DEPARTMENTS</code>.")
+    ul
+      li Создайте функцию <code>VALID_DEPTID</code>, которая принимает на вход номер отдела и возвращает <code>TRUE</code> или <code>FALSE</code>, в зависимости от того есть или нет такой отдел в таблице <code>DEPARTMENTS</code>.
+      li Создайте процедуру <code>ADD_EMPLOYEE</code>, которая добавляет запись в таблицу <code>EMPLOYEES</code> только в том случае, если функция <code>VALID_DEPTID</code> вернула <code>TRUE</code>, иначе выдает соответствующее сообщение об ошибке. Процедура принимает на вход следующие параметры и присваивает им указанные в скобках значения по умолчанию:
+        ol
+          li <code>first_name</code>,
+          li <code>last_name</code>,
+          li <code>e-mail</code>,
+          li <code>job (SA_REP)</code>,
+          li <code>mgr (145)</code>,
+          li <code>sal (1000)</code>,
+          li <code>comm (0)</code>,
+          li <code>deptid (30)</code>.
+        | Для генерации уникального идентификатора сотрудника воспользуйтесь последовательностью <code>EMPLOYEES_SEQ</code>. 
+        | Установите значение в столбце <code>hire_date</code> с помощью функции <code>TRUNC(SYSDATE)</code>.
+      li Протестируйте работу процедуры для сотрудника <code>Jane Harris</code> из <code>15</code> отдела с e-mail-ом <code>JAHARRIS</code> (остальные значения оставьте по умолчанию). Зафиксируйте и объясните результат.
+      li Протестируйте работу процедуры для сотрудника <code>Joe Harris</code> из <code>80</code> отдела с e-mail-ом <code>JHARRIS</code> (остальные значения оставьте по умолчанию). Зафиксируйте и объясните результат.

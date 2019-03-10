@@ -1,0 +1,252 @@
+<!DOCTYPE htmls>
+<html lang="ru">
+  <head>
+    <title>PL/SQL Лабы. Блок 3</title>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/prism.css"/>
+    <link rel="stylesheet" href="../css/main.css"/>
+  </head>
+  <body>
+    <nav id="menu"><a class="element" id="menu-switch">
+        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"/></div>
+        <div class="text-part"></div></a><a class="element" href="../index.html">
+        <div class="icon-part"><img class="icon" src="../img/icons/home.png"/></div>
+        <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="icon-part"><img class="icon" src="../img/icons/github.png"/></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#lab-9">
+        <div class="icon-part">9.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-9-1" href="#task-9-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-9-2" href="#task-9-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-9-3" href="#task-9-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-9-4" href="#task-9-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-10">
+        <div class="icon-part">10.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-10-1" href="#task-10-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-10-2" href="#task-10-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-10-3" href="#task-10-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-11">
+        <div class="icon-part">11.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-11-1" href="#task-11-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-2" href="#task-11-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-3" href="#task-11-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-4" href="#task-11-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-5" href="#task-11-5">
+        <div class="icon-part">5.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-6" href="#task-11-6">
+        <div class="icon-part">6.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-7" href="#task-11-7">
+        <div class="icon-part">7.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-8" href="#task-11-8">
+        <div class="icon-part">8.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-9" href="#task-11-9">
+        <div class="icon-part">9.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-10" href="#task-11-10">
+        <div class="icon-part">10.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-11" href="#task-11-11">
+        <div class="icon-part">11.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-12" href="#task-11-12">
+        <div class="icon-part">12.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-13" href="#task-11-13">
+        <div class="icon-part">13.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-14" href="#task-11-14">
+        <div class="icon-part">14.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-15" href="#task-11-15">
+        <div class="icon-part">15.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-11-16" href="#task-11-16">
+        <div class="icon-part">16.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-12">
+        <div class="icon-part">12.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-12-1" href="#task-12-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-12-2" href="#task-12-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a>
+    </nav>
+    <div id="main">
+      <div class="labs">
+        <div class="header">
+          <h1>Третий Блок</h1>
+        </div>
+        <div class="lab" id="lab-9"><a name="#lab-9">
+            <h2>Практическое занятие 9. Создание процедур</h2></a>
+          <ul>
+            <li>Создание процедур. </li>
+            <li>Режимы параметров.</li>
+          </ul>
+          <div class="task" id="task-9-1">
+            <p class="task-text" name="task-9-1"><b>Задание 1.</b> Создайте процедуру <code>ADD_JOB</code> для добавления записей в таблицу <code>JOBS</code>.</p>
+            <ul>
+              <li>Процедура должна принимать на вход 2 параметра — <code>ID</code> и <code>JOB_TITLE</code>.</li>
+              <li>Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>IT_DBA</code> и <code>Database Administrator</code>.</li>
+              <li>Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>ST_MAN</code> и <code>Stock Manager</code>.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-9-2">
+            <p class="task-text" name="task-9-2"><b>Задание 2.</b> Создайте процедуру <code>UPD_JOB</code> для изменения значения в таблице <code>JOBS</code>.</p>
+            <ul>
+              <li>Процедура должна принимать на вход параметр <code>ID</code> и новое значение для столбца <code>JOB_TITLE</code>. Процедура должна оповещать пользователей, в случае если никаких модификаций не было сделано. Для этого воспользуйтесь атрибутом <code>SQL%FOUND</code> и инструкцией <code>RAISE_APPLICATION_ERROR</code> или <code>DBMS_OUTPUT.PUT_LINE</code>.</li>
+              <li>Запустите процедуру на исполнение и поменяйте с ее помощью <code>job title</code> для записи <code>IT_DBA</code> на <code>Data Administrator</code>. Сделайте выборку из таблицы <code>JOBS</code>, чтобы убедиться в модификации данных.</li>
+              <li>Протестируйте работу процедуры в случае получения на вход не существующего <code>job_id</code> — к примеру, <code>IT_WEB</code>.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-9-3">
+            <p class="task-text" name="task-9-3"><b>Задание 3.</b> Создайте процедуру <code>DEL_JOB</code> для удаления записей из таблицы <code>JOBS</code>.</p>
+            <ul>
+              <li>Создайте процедуру с одним входным параметром — <code>ID</code>. Создайте в процедуре обработчик на случай, если ни одна запись не будет удалена.</li>
+              <li>Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь удалить существующую запись с <code>job_id</code> <code>IT_DBA</code>.</li>
+              <li>Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь с ее помощью удалить не существующую запись, к примеру с <code>job_id</code> <code>IT_WEB</code>. Зафиксируйте сообщение об ошибке.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-9-4">
+            <p class="task-text" name="task-9-4"><b>Задание 4.</b> Создайте процедуру <code>GET_EMPLOYEE</code> для выборки из таблицы <code>EMPLOYEES</code> значений <code>job_id</code> и <code>salary</code> указанного сотрудника. </p>
+            <ul>
+              <li>Процедура должна принимать на вход <code>EMPLOYEE_ID</code> и возвращать с помощью <code>OUT</code> параметров значения <code>JOB_ID</code> и <code>SALARY</code>.</li>
+              <li>Протестируйте работу процедуры передавая на вход локальные переменные блока вызова или хост-переменные. Просмотрите зарплату и должность для <code>120</code> сотрудника.</li>
+              <li>Просмотрите зарплату и должность для <code>300</code> сотрудника.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="lab" id="lab-10"><a name="#lab-10">
+            <h2>Практическое занятие 10. Создание функций</h2></a>
+          <ul>
+            <li>Создание функций.</li>
+            <li>Уровень чистоты.</li>
+          </ul>
+          <div class="task" id="task-10-1">
+            <p class="task-text" name="task-10-1"><b>Задание 1.</b> Создайте функцию <code>GET_JOB</code>, которая возвращает <code>job_title</code>.</p>
+            <ul>
+              <li>Создайте функцию <code>GET_JOB</code>, которая возвращает <code>JOB_TITLE</code>, соответствующий переданному на вход <code>JOB_ID</code>.</li>
+              <li>Для тестирования работы функции создайте анонимный блок, объявите хост-переменную <code>b_title</code> типа <code>VARCHAR2</code>, сохраните в нее результат работы функции и выведите результат работы функции для значения входного параметра <code>SA_REP</code>.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-10-2">
+            <p class="task-text" name="task-10-2"><b>Задание 2.</b> Создайте функцию <code>GET_ANNUAL_COMP</code> для формирования фактической зарплаты сотрудника по заданной формуле.</p>
+            <ul>
+              <li>Формула: <code>(salary * 12) + (commission_pct * salary * 12)</code>. Функция должна принимать на вход месячную зарплату сотрудника и комиссию, и даже в случае если оба значения будут <code>NULL</code> возвращать не <code>NULL</code>.</li>
+              <li>Протестируйте работу функции с помощью оператора <code>SELECT</code> для сотрудников из <code>30</code> отдела.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-10-3">
+            <p class="task-text" name="task-10-3"><b>Задание 3.</b> Создайте процедуру <code>ADD_EMPLOYEE</code> для добавления нового сотрудника в табличку <code>EMPLOYEES</code>. Перед добавлением сотрудника процедура должна проверять с помощью функции <code>VALID_DEPTID</code>, что указанный для него номер отдела присутствует в таблице <code>DEPARTMENTS</code>.</p>
+            <ul>
+              <li>Создайте функцию <code>VALID_DEPTID</code>, которая принимает на вход номер отдела и возвращает <code>TRUE</code> или <code>FALSE</code>, в зависимости от того есть или нет такой отдел в таблице <code>DEPARTMENTS</code>.</li>
+              <li>Создайте процедуру <code>ADD_EMPLOYEE</code>, которая добавляет запись в таблицу <code>EMPLOYEES</code> только в том случае, если функция <code>VALID_DEPTID</code> вернула <code>TRUE</code>, иначе выдает соответствующее сообщение об ошибке. Процедура принимает на вход следующие параметры и присваивает им указанные в скобках значения по умолчанию:
+                <ol>
+                  <li><code>first_name</code>,</li>
+                  <li><code>last_name</code>,</li>
+                  <li><code>e-mail</code>,</li>
+                  <li><code>job (SA_REP)</code>,</li>
+                  <li><code>mgr (145)</code>,</li>
+                  <li><code>sal (1000)</code>,</li>
+                  <li><code>comm (0)</code>,</li>
+                  <li><code>deptid (30)</code>.</li>
+                </ol>Для генерации уникального идентификатора сотрудника воспользуйтесь последовательностью <code>EMPLOYEES_SEQ</code>. 
+                Установите значение в столбце <code>hire_date</code> с помощью функции <code>TRUNC(SYSDATE)</code>.
+              </li>
+              <li>Протестируйте работу процедуры для сотрудника <code>Jane Harris</code> из <code>15</code> отдела с e-mail-ом <code>JAHARRIS</code> (остальные значения оставьте по умолчанию). Зафиксируйте и объясните результат.</li>
+              <li>Протестируйте работу процедуры для сотрудника <code>Joe Harris</code> из <code>80</code> отдела с e-mail-ом <code>JHARRIS</code> (остальные значения оставьте по умолчанию). Зафиксируйте и объясните результат.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="lab" id="lab-11"><a name="#lab-11">
+            <h2>Практическое занятие 11. Введение в SQL DEVELOPER DEBUGGER</h2></a>
+          <div class="task" id="task-11-1">
+            <p class="task-text" name="task-11-1"><b>Задание 1.</b> Установите <code>SERVEROUTPUT</code>.</p>
+          </div>
+          <div class="task" id="task-11-2">
+            <p class="task-text" name="task-11-2"><b>Задание 2.</b> Запустите скрипт <code>Task2</code> для создания процедуры <code>emp_list</code>. Проанализируйте код процедуры и скомпилируйте ее. Почему Вы получили сообщение об ошибке?</p>
+          </div>
+          <div class="task" id="task-11-3">
+            <p class="task-text" name="task-11-3"><b>Задание 3.</b> Запустите скрипт <code>Task3</code> для создания функции <code>get_location</code>. Проанализируйте код функции, скомпилируйте функцию и исправьте ошибки, если они есть.</p>
+          </div>
+          <div class="task" id="task-11-4">
+            <p class="task-text" name="task-11-4"><b>Задание 4.</b> Перекомпилируйте процедуру <code>emp_list</code>. Процедура должна успешно скомпилироваться.</p>
+          </div>
+          <div class="task" id="task-11-5">
+            <p class="task-text" name="task-11-5"><b>Задание 5.</b> Отредактируйте процедуру <code>emp_list</code> и функцию <code>get_location</code>. (Нажмите на правую кнопку на имени процедуры в <code>Object Navigator</code> и выберите <code>EDIT</code>.</p>
+          </div>
+          <div class="task" id="task-11-6">
+            <p class="task-text" name="task-11-6"><b>Задание 6.</b> Добавьте четыре точки остановки в процедуре <code>emp_listyf</code> на следующих линиях кода:</p>
+            <pre class="line-numbers undefined"><code class="language-plsql">
+                OPEN cur_emp;
+                WHILE (cur_emp%FOUND) AND (I <= p_maxrows)  LOOP;
+                v_city := get_location (rec_emp.department.name);
+                CLOSE cur_emp;</code></pre>
+          </div>
+          <div class="task" id="task-11-7">
+            <p class="task-text" name="task-11-7"><b>Задание 7.</b> Скомпилируйте процедуру <code>emp_list</code> в режиме <code>COMPILE FOR DEBUGGING</code>.</p>
+          </div>
+          <div class="task" id="task-11-8">
+            <p class="task-text" name="task-11-8"><b>Задание 8.</b> Проведите отладку процедуры.</p>
+          </div>
+          <div class="task" id="task-11-9">
+            <p class="task-text" name="task-11-9"><b>Задание 9.</b> Введите значение <code>100</code> для параметра <code>p_maxrows</code>.</p>
+          </div>
+          <div class="task" id="task-11-10">
+            <p class="task-text" name="task-11-10"><b>Задание 10.</b> Проанализируйте значения переменных на закладке Data. Какие значения у <code>REC_EMP</code> и <code>EMP_TAB</code>? Почему?</p>
+          </div>
+          <div class="task" id="task-11-11">
+            <p class="task-text" name="task-11-11"><b>Задание 11.</b> Используйте опцию отладчика <code>Step Into</code> для прохода по каждой линии кода <code>emp_list</code> (Кнопка <kbd>F7</kbd>). Пройдите цикл <code>While</code> только один раз.</p>
+          </div>
+          <div class="task" id="task-11-12">
+            <p class="task-text" name="task-11-12"><b>Задание 12.</b> Проанализируйте значения переменных на закладке <code>Data</code>. Какие значения у <code>REC_EMP</code> И <code>EMP_TAB</code>?</p>
+          </div>
+          <div class="task" id="task-11-13">
+            <p class="task-text" name="task-11-13"><b>Задание 13.</b> Продолжайте нажимать на <kbd>F7</kbd> до тех пор, пока линия <code>emp_tab(i):=rec_emp;</code> не будет выполнена. Проанализируйте значения переменных на закладке <code>Data</code>. Какие значения у <code>EMP_TAB</code>?</p>
+          </div>
+          <div class="task" id="task-11-14">
+            <p class="task-text" name="task-11-14"><b>Задание 14.</b> Используйте закладку Data для изменения счетчика <code>i</code> на <code>98</code>. (На закладке <code>Data</code> правой кнопкой нажмите на <code>I</code> выберите команду <code>Modify Value</code> на выпадающем меню. Измените значение <code>1</code> на <code>98</code>).</p>
+          </div>
+          <div class="task" id="task-11-15">
+            <p class="task-text" name="task-11-15"><b>Задание 15.</b> Продолжайте нажимать на <kbd>F7</kbd> до тех пор, пока Вы не увидите отображения списка сотрудников на закладке <code>Debugging-Log</code>. Сколько сотрудников отобразилось?</p>
+          </div>
+          <div class="task" id="task-11-16">
+            <p class="task-text" name="task-11-16"><b>Задание 16.</b> Если Вы будете использовать опцию отладчика для прохода по коду, Вы будете проходить по коду функции <code>get_function</code>? Почему?</p>
+          </div>
+        </div>
+        <div class="lab" id="lab-12"><a name="#lab-12">
+            <h2>Практическое занятие 12. Создание пакетов</h2></a>
+          <ul>
+            <li>Создание пакетов. </li>
+            <li>Элементы пакета.</li>
+            <li><code>Private</code> и <code>Public</code> конструкции пакета.</li>
+          </ul>
+          <div class="task" id="task-12-1">
+            <p class="task-text" name="task-12-1"><b>Задание 1.</b> Создайте спецификацию и тело пакета <code>JOB_PKG</code>, и сохраните в нем созданные ранее процедуры и функции <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>. Сохраните код создания спецификации и тела пакета в разных файлах <code>*.sql</code>. Для упрощения отладки включите инструкцию <code>SHOW ERRORS</code> в каждый скрипт.</p>
+            <ul>
+              <li>Создайте спецификацию пакета. Объявите публичные элементы.</li>
+              <li>Создайте тело пакета. Включите в него реализацию процедур и функций.</li>
+              <li>Удалите ранее созданные (независимые) процедуры и функции: <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>.</li>
+              <li>Протестируйте работу пакета. Запустите на исполнение процедуру <code>JOB_PKG.ADD_JOB</code> передав в качестве значений параметров <code>IT_SYSAN</code>, <code>SYSTEMS ANALYST</code>.</li>
+              <li>Сделайте выборку из таблицы <code>JOBS</code>, чтобы просмотреть результат работы процедуры.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-12-2">
+            <p class="task-text" name="task-12-2"><b>Задание 2.</b> Создайте пакет, состоящий из <code>public</code> и <code>private</code> конструкций.</p>
+            <ul>
+              <li>Создайте спецификацию и тело пакета <code>EMP_PKG</code>, в котором есть <code>public</code> процедуры <code>ADD_EMPLOYEE</code> и <code>GET_EMPLOYEE</code>, и <code>private</code> функция <code>VALID_DEPTID</code>.</li>
+              <li>Протестируйте работу процедуры <code>EMP_PKG.ADD_EMPLOYEE</code>. Добавьте в таблицу информацию о сотруднике <code>Jane Harris</code> из <code>15</code> отдела, с e-mail-ом <code>JAHARRIS</code>. Вы должны получить сообщение об ошибке, потому что 15 отдела не существует.</li>
+              <li>Запустите процедуру еще раз и добавьте информацию о <code>David Smith</code> из <code>80</code> отдела, с e-mail-ом <code>DASMITH</code>.</li>
+              <li>Сделайте выборку из таблицы <code>EMPLOYEES</code>, чтобы убедиться в корректном добавлении новых сотрудников.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/prism.js"></script>
+    <script src="../js/setup.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>

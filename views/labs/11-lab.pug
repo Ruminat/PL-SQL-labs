@@ -1,0 +1,25 @@
+- var lab_n = 11;
+- var title = "Практическое занятие 11. Введение в SQL DEVELOPER DEBUGGER";
+
++lab
+  +task("1", "Установите <code>SERVEROUTPUT</code>.")
+  +task("2", "Запустите скрипт <code>Task2</code> для создания процедуры <code>emp_list</code>. Проанализируйте код процедуры и скомпилируйте ее. Почему Вы получили сообщение об ошибке?")
+  +task("3", "Запустите скрипт <code>Task3</code> для создания функции <code>get_location</code>. Проанализируйте код функции, скомпилируйте функцию и исправьте ошибки, если они есть.")
+  +task("4", "Перекомпилируйте процедуру <code>emp_list</code>. Процедура должна успешно скомпилироваться.")
+  +task("5", "Отредактируйте процедуру <code>emp_list</code> и функцию <code>get_location</code>. (Нажмите на правую кнопку на имени процедуры в <code>Object Navigator</code> и выберите <code>EDIT</code>.")
+  +task("6", "Добавьте четыре точки остановки в процедуре <code>emp_listyf</code> на следующих линиях кода:")
+    +plsql.
+      OPEN cur_emp;
+      WHILE (cur_emp%FOUND) AND (I <= p_maxrows)  LOOP;
+      v_city := get_location (rec_emp.department.name);
+      CLOSE cur_emp;
+  +task("7", "Скомпилируйте процедуру <code>emp_list</code> в режиме <code>COMPILE FOR DEBUGGING</code>.")
+  +task("8", "Проведите отладку процедуры.")
+  +task("9", "Введите значение <code>100</code> для параметра <code>p_maxrows</code>.")
+  +task("10", "Проанализируйте значения переменных на закладке Data. Какие значения у <code>REC_EMP</code> и <code>EMP_TAB</code>? Почему?")
+  +task("11", "Используйте опцию отладчика <code>Step Into</code> для прохода по каждой линии кода <code>emp_list</code> (Кнопка <kbd>F7</kbd>). Пройдите цикл <code>While</code> только один раз.")
+  +task("12", "Проанализируйте значения переменных на закладке <code>Data</code>. Какие значения у <code>REC_EMP</code> И <code>EMP_TAB</code>?")
+  +task("13", "Продолжайте нажимать на <kbd>F7</kbd> до тех пор, пока линия <code>emp_tab(i):=rec_emp;</code> не будет выполнена. Проанализируйте значения переменных на закладке <code>Data</code>. Какие значения у <code>EMP_TAB</code>?")
+  +task("14", "Используйте закладку Data для изменения счетчика <code>i</code> на <code>98</code>. (На закладке <code>Data</code> правой кнопкой нажмите на <code>I</code> выберите команду <code>Modify Value</code> на выпадающем меню. Измените значение <code>1</code> на <code>98</code>).")
+  +task("15", "Продолжайте нажимать на <kbd>F7</kbd> до тех пор, пока Вы не увидите отображения списка сотрудников на закладке <code>Debugging-Log</code>. Сколько сотрудников отобразилось?")
+  +task("16", "Если Вы будете использовать опцию отладчика для прохода по коду, Вы будете проходить по коду функции <code>get_function</code>? Почему?")

@@ -1,0 +1,39 @@
+- var lab_n = 9;
+- var title = "Практическое занятие 9. Создание процедур";
+
++lab
+  ul
+    li Создание процедур. 
+    li Режимы параметров.
+
+  +task("1", "Создайте процедуру <code>ADD_JOB</code> для добавления записей в таблицу <code>JOBS</code>.")
+    ul
+      li Процедура должна принимать на вход 2 параметра — <code>ID</code> и <code>JOB_TITLE</code>.
+      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>IT_DBA</code> и <code>Database Administrator</code>.
+      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>ST_MAN</code> и <code>Stock Manager</code>.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-1.sql
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
+
+  +task("2", "Создайте процедуру <code>UPD_JOB</code> для изменения значения в таблице <code>JOBS</code>.")
+    ul
+      li Процедура должна принимать на вход параметр <code>ID</code> и новое значение для столбца <code>JOB_TITLE</code>. Процедура должна оповещать пользователей, в случае если никаких модификаций не было сделано. Для этого воспользуйтесь атрибутом <code>SQL%FOUND</code> и инструкцией <code>RAISE_APPLICATION_ERROR</code> или <code>DBMS_OUTPUT.PUT_LINE</code>.
+      li Запустите процедуру на исполнение и поменяйте с ее помощью <code>job title</code> для записи <code>IT_DBA</code> на <code>Data Administrator</code>. Сделайте выборку из таблицы <code>JOBS</code>, чтобы убедиться в модификации данных.
+      li Протестируйте работу процедуры в случае получения на вход не существующего <code>job_id</code> — к примеру, <code>IT_WEB</code>.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-2.sql
+    //- +output.
+    //-   Deleting department 40........
+    //-   Cannot delete this department. There are employees in this department
+
+  +task("3", "Создайте процедуру <code>DEL_JOB</code> для удаления записей из таблицы <code>JOBS</code>.")
+    ul
+      li Создайте процедуру с одним входным параметром — <code>ID</code>. Создайте в процедуре обработчик на случай, если ни одна запись не будет удалена.
+      li Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь удалить существующую запись с <code>job_id</code> <code>IT_DBA</code>.
+      li Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь с ее помощью удалить не существующую запись, к примеру с <code>job_id</code> <code>IT_WEB</code>. Зафиксируйте сообщение об ошибке.
+
+  +task("4", "Создайте процедуру <code>GET_EMPLOYEE</code> для выборки из таблицы <code>EMPLOYEES</code> значений <code>job_id</code> и <code>salary</code> указанного сотрудника. ")
+    ul
+      li Процедура должна принимать на вход <code>EMPLOYEE_ID</code> и возвращать с помощью <code>OUT</code> параметров значения <code>JOB_ID</code> и <code>SALARY</code>.
+      li Протестируйте работу процедуры передавая на вход локальные переменные блока вызова или хост-переменные. Просмотрите зарплату и должность для <code>120</code> сотрудника.
+      li Просмотрите зарплату и должность для <code>300</code> сотрудника.

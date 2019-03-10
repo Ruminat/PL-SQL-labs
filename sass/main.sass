@@ -4,6 +4,9 @@
   font-family: "Fira Code Regular"
   src: url(FiraCode-Regular.ttf)
 
+*
+  box-sizing: border-box
+
 html, body
   width: 100vw
   min-height: 100vh
@@ -23,8 +26,12 @@ h1, h2, h3, h4, h5, h6, p, li, footer, .menu *
   font-family: "Droid Serif", "Lora", Bookman, Georgia
   font-weight: normal
 
-pre, code, .table-SQL
+pre, code, .table-SQL, kbd
   font-family: "Fira Code Regular", "Fira Code", monospace, Consolas
+
+kbd
+  padding: 0.1rem
+  font-size: 0.8rem
 
 h1, h2
   text-align: center
@@ -59,8 +66,8 @@ em.wrong
   color: #d9534f
 
 code
-  color: black
-  background-color: RGBA(255, 25, 32, 0.02)
+  color: #0077aa
+  // background-color: RGBA(255, 25, 32, 0.02)
 
 .lab h2
   text-align: left
@@ -70,7 +77,7 @@ code
 
 .task-text
   border-left: 0.1rem solid black
-  padding-left: 1rem
+  padding-left: 0.5rem
 
 // .page-footer
 //   background: #f8f8f8

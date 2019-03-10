@@ -1,0 +1,34 @@
+- var lab_n = 12;
+- var title = "Практическое занятие 12. Создание пакетов";
+
++lab
+  ul
+    li Создание пакетов. 
+    li Элементы пакета.
+    li <code>Private</code> и <code>Public</code> конструкции пакета.
+
+  +task("1", "Создайте спецификацию и тело пакета <code>JOB_PKG</code>, и сохраните в нем созданные ранее процедуры и функции <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>. Сохраните код создания спецификации и тела пакета в разных файлах <code>*.sql</code>. Для упрощения отладки включите инструкцию <code>SHOW ERRORS</code> в каждый скрипт.")
+    ul
+      li Создайте спецификацию пакета. Объявите публичные элементы.
+      li Создайте тело пакета. Включите в него реализацию процедур и функций.
+      li Удалите ранее созданные (независимые) процедуры и функции: <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>.
+      li Протестируйте работу пакета. Запустите на исполнение процедуру <code>JOB_PKG.ADD_JOB</code> передав в качестве значений параметров <code>IT_SYSAN</code>, <code>SYSTEMS ANALYST</code>.
+      li Сделайте выборку из таблицы <code>JOBS</code>, чтобы просмотреть результат работы процедуры.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-1.sql
+    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
+
+      
+
+
+  +task("2", "Создайте пакет, состоящий из <code>public</code> и <code>private</code> конструкций.")
+    ul
+      li Создайте спецификацию и тело пакета <code>EMP_PKG</code>, в котором есть <code>public</code> процедуры <code>ADD_EMPLOYEE</code> и <code>GET_EMPLOYEE</code>, и <code>private</code> функция <code>VALID_DEPTID</code>.
+      li Протестируйте работу процедуры <code>EMP_PKG.ADD_EMPLOYEE</code>. Добавьте в таблицу информацию о сотруднике <code>Jane Harris</code> из <code>15</code> отдела, с e-mail-ом <code>JAHARRIS</code>. Вы должны получить сообщение об ошибке, потому что 15 отдела не существует.
+      li Запустите процедуру еще раз и добавьте информацию о <code>David Smith</code> из <code>80</code> отдела, с e-mail-ом <code>DASMITH</code>.
+      li Сделайте выборку из таблицы <code>EMPLOYEES</code>, чтобы убедиться в корректном добавлении новых сотрудников.
+    //- +plsql
+    //-   include ../../labs/8 lab/8-2.sql
+    //- +output.
+    //-   Deleting department 40........
+    //-   Cannot delete this department. There are employees in this department
