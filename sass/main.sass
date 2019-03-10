@@ -1,0 +1,77 @@
+@import _menu
+
+@font-face
+  font-family: "Fira Code Regular"
+  src: url(FiraCode-Regular.ttf)
+
+html, body
+  width: 100vw
+  min-height: 100vh
+  overflow-x: hidden
+
+#main
+  width: 80vw
+  // padding: 0rem 2rem 2rem 2rem
+  padding: 0.5rem
+  margin-left: 20vw
+  box-sizing: border-box
+
+#main.full
+  width: 100vw
+  margin: 0
+
+h1, h2, h3, h4, h5, h6, p, li, footer, .menu *
+  font-family: "Droid Serif", "Lora", Bookman, Georgia
+  font-weight: normal
+
+pre, code
+  font-family: "Fira Code Regular", monospace, Consolas
+
+h1, h2
+  text-align: center
+
+.aligment-center
+  display: flex
+  align-items: center
+  flex-direction: column
+
+.table-SQL
+  font-family: Fira Code
+  font-size: 0.8rem
+  width: auto
+
+.correct
+  border: 0.1rem solid #5cb85c
+
+.wrong
+  border: 0.1rem solid #d9534f
+
+.comment
+  color: rgba(0, 0, 0, 0.5)
+  font-style: italic
+
+em.correct, em.wrong
+  border: none
+  font-style: normal
+
+em.correct
+  color: #5cb85c
+
+em.wrong
+  color: #d9534f
+
+code
+  color: black
+  background-color: RGBA(255, 25, 32, 0.02)
+
+.lab h2
+  text-align: left
+
+.marked
+  background-color: #f0ad4e
+
+.page-footer
+  background: #f8f8f8
+  padding: 1em
+  margin-top: 1em
+  box-sizing: border-box
