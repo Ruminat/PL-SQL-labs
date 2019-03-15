@@ -101,10 +101,14 @@ DECLARE
 BEGIN
   empno := &empno;
 
-  SELECT Salary, TRIM(LPAD(' ', 1 + FLOOR(Salary / 1000), '*'))
-  INTO   sal,    asteriks
+  SELECT Salary
+  INTO   sal
   FROM Emp
   WHERE Employee_ID = empno;
+
+  FOR i IN 1..NVL(FLOOR(sal / 1000), 0) LOOP
+    asteriks := asteriks || '*';
+  END LOOP;
 
   UPDATE Emp SET Stars = asteriks WHERE Employee_ID = empno;
 END;
