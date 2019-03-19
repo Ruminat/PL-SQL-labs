@@ -9,6 +9,10 @@ const $tasks = $.cls('task');
 const $menu = $.id('menu');
 const $menuSwitch = $.id('menu-switch');
 
+if (localStorage.getItem('menu-state') === 'closed') closeMenu();
+else openMenu();
+
+// tasks events ([un]mark by clicking on tasks)
 for (let $task of $tasks) {
 	let id = $task.id + '-marked';
   let $contentsTask = $.id('contents-' + $task.id);
@@ -30,7 +34,21 @@ for (let $task of $tasks) {
   });
 }
 
-$menuSwitch.on('click', function() {
-  console.log($menu.classList.toggle('closed'));
-  console.log($main.classList.toggle('full'));
-});
+$menuSwitch.on('click', toggleMenu);
+
+function openMenu() {
+  $menu.classList.add('closed');
+  $main.classList.add('full');
+  localStorage.setItem('menu-state', 'opened');
+}
+
+function closeMenu() {
+  $menu.classList.remove('closed');
+  $main.classList.remove('full');
+  localStorage.setItem('menu-state', 'closed');
+}
+
+function toggleMenu() {
+  if (localStorage.getItem('menu-state') === 'closed') openMenu();
+  else closeMenu();
+}

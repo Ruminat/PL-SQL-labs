@@ -1,0 +1,27 @@
+extends templates/extra.pug
+
+block head
+  title Доп. задание 2.26
+
+block content
+  .labs
+    .header
+      h1 Дополнительное задание 2.26
+
+  h2 Постановка задачи
+
+  p.task-text В таблице имеется столбец с символьными строками. Для каждой символьной строки определить подстроки, встречающиеся в символьной строке ровно два раза и содержащие наибольшее количество символов. Вывести символьные строки и номера позиций начала  подстрок.  Выделенные подстроки не должны пересекаться. Например, для символьных строк:
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th></tr></thead><tbody><tr><td>Сabjrehwklhgfjrehwkyupolkoraclenmoraclepp<code>microsoft</code>m<code>microsoft</code>u<code>microsoft</code></td></tr><tr><td>yyyyyyyy</td></tr><tr><td>create</td></tr></tbody></table></row>
+
+  p результат должен быть:
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row>
+
+  h2 Решение
+
+  +plsql
+    include extras/2-26.sql
+  +output.
+    Строка                                                                | Подстрока | Номер позиции начала 1 | Номер позиции начала 2
+    ----------------------------------------------------------------------|-----------|------------------------|-----------------------
+
+  //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row>
