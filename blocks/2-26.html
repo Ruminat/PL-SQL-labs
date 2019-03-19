@@ -27,44 +27,163 @@
         <p>результат должен быть:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row>
         <h2>Решение</h2>
         <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
-  str       VARCHAR2(32767) := '(a + b)^2 = a^2 + 2ab + b^2';
-  -- str       VARCHAR2(32767) := '123412314231243121342132413214321';
-  -- str       VARCHAR2(32767); -- текущая строка
-  substring VARCHAR2(16384); -- текущая подстрока
+  TYPE outputRow IS TABLE OF VARCHAR2(2048);
+  TYPE outputRowLengths IS TABLE OF NUMBER
+      INDEX BY PLS_INTEGER;
+    header outputRow := outputRow('Строка', 'Подстрока', 'Номер позиции начала 1', 'Номер позиции начала 2');
+    lengths outputRowLengths;
+  TYPE outputTable IS TABLE OF outputRow
+    INDEX BY PLS_INTEGER;
+
+  -- таблица строк на вывод (результат алгоритма)
+  result outputTable;
+
+  TYPE substring IS RECORD (
+    value Dop_2_26.Строка%TYPE,
+    startPos1 NUMBER,
+    startPos2 NUMBER
+  );
+  TYPE substringsTable IS TABLE OF substring
+    INDEX BY PLS_INTEGER;
+  TYPE stringsTable IS TABLE OF substringsTable
+    INDEX BY Dop_2_26.Строка%TYPE;
+  
+  -- словарь из заданных строк к списку их подстрок
+  substrings stringsTable;
+
+  str Dop_2_26.Строка%TYPE; -- текущая строка
+  sub Dop_2_26.Строка%TYPE; -- текущая подстрока
   len         NUMBER; -- длина строки
-  maxLength   NUMBER; -- максимально возможная длина подстроки
-  maxStartPos NUMBER; -- максимальная стартовая позиция подстроки
   occurrings  NUMBER; -- количество вхождений подстроки в строку
+  foundLength NUMBER; -- максимально найденная длина подстроки
+  startPos2   NUMBER; -- начальная позиция 2-ой подстроки
+  newSub      NUMBER; -- индекс текущей подстроки
 BEGIN
-  -- можно ли найти в строке необходимые подстроки
-  IF (str IS NULL OR LENGTH(str) < 2) THEN
-    DBMS_OUTPUT.PUT_LINE('-');
-  ELSE
-    len := LENGTH(str);
-    maxLength := FLOOR(len / 2);
-    FOR currentLength IN REVERSE 1..maxLength LOOP
-      -- EXIT WHEN currentLength < foundLegth;
-      maxStartPos := len - currentLength + 1;
-      FOR startPos IN 1..maxStartPos LOOP
-        substring := SUBSTR(str, startPos, currentLength);
-        occurrings := ( -- кол-во вхождений = (длина - длина_без_подстроки) / длина_подстроки
-            len - LENGTH(REPLACE(LOWER(str), LOWER(substring)))
-          ) / LENGTH(substring);
-        CONTINUE WHEN occurrings != 2;
-        DBMS_OUTPUT.PUT_LINE(
-             'substring = ''' || substring
-          || '''; startPos = ' || startPos
-          || '; length = ' || currentLength
-        );
+  FOR i IN 1..header.LAST LOOP
+    lengths(i) := LENGTH(header(i));
+  END LOOP;
+
+  FOR row IN (SELECT Строка FROM Dop_2_26) LOOP
+    str := row.Строка;
+    substrings(str) := substringsTable();
+    -- если в строке нельзя найти необходимые подстроки
+    IF str IS NULL OR LENGTH(str) < 2 THEN
+      result(NVL(result.LAST + 1, 1)) := outputRow(str, '-', '-', '-');
+      CONTINUE;
+    ELSE
+      foundLength := NULL;
+      len := LENGTH(str);
+      FOR currentLength IN REVERSE 1..(FLOOR(len / 2)) LOOP
+        EXIT WHEN currentLength < foundLength;
+        -- <<posLoop>> FOR startPos IN 1..(len - currentLength + 1) LOOP
+        &lt&ltposLoop&gt&gt FOR startPos IN 1..(len - currentLength + 1) LOOP
+          sub := SUBSTR(str, startPos, currentLength);
+          occurrings := ( -- кол-во вхождений = (длина - длина_без_подстроки) / длина_подстроки
+              len - LENGTH(REPLACE(LOWER(str), LOWER(sub)))
+            ) / LENGTH(sub);
+          startPos2 := INSTR(str, sub, startPos + currentLength);
+          -- если вхождений не 2 или 2-ое вхождение расположено не после конца 1-го
+          CONTINUE WHEN occurrings != 2 OR startPos2 = 0;
+          -- проверяем, пересекаются ли 2 текущие подстроки с уже найденными
+          FOR i IN 1..NVL(substrings(str).LAST, 0) LOOP
+            CONTINUE posLoop WHEN
+                 startPos  BETWEEN
+                       substrings(str)(i).startPos1
+                   AND substrings(str)(i).startPos1 + currentLength - 1
+              OR startPos  BETWEEN
+                       substrings(str)(i).startPos2
+                   AND substrings(str)(i).startPos2 + currentLength - 1
+              OR startPos2 BETWEEN
+                       substrings(str)(i).startPos1
+                   AND substrings(str)(i).startPos1 + currentLength - 1
+              OR startPos2 BETWEEN
+                       substrings(str)(i).startPos2
+                   AND substrings(str)(i).startPos2 + currentLength - 1;
+          END LOOP;
+          newSub := NVL(substrings(str).LAST + 1, 1);
+          -- добавляем подстроку к списку
+          substrings(str)(newSub) := substring(sub, startPos, startPos2);
+          -- добавляем новую строку в вывод
+          IF newSub = 1 THEN
+            result(NVL(result.LAST + 1, 1)) := outputRow(str, sub, startPos, startPos2);
+          ELSE
+            result(NVL(result.LAST + 1, 1)) := outputRow(' ', sub, startPos, startPos2);
+          END IF;
+          foundLength := currentLength;
+        END LOOP posLoop;
+      END LOOP;
+      IF substrings(str).COUNT = 0 THEN
+        result(NVL(result.LAST + 1, 1)) := outputRow(str, '-', '-', '-');
+      ELSE NULL;
+      END IF;
+    END IF;
+  END LOOP;
+
+
+  DECLARE
+    rowOutput VARCHAR2(4096);
+    horizontalRule VARCHAR2(4096);
+  BEGIN
+    FOR row IN 1..result.LAST LOOP
+      FOR col IN 1..result(row).LAST LOOP
+        IF LENGTH(result(row)(col)) > lengths(col) THEN
+          lengths(col) := LENGTH(result(row)(col));
+        ELSE NULL;
+        END IF;
       END LOOP;
     END LOOP;
-  END IF;
+
+    FOR i IN 1..(header.LAST - 1) LOOP
+      rowOutput := rowOutput || RPAD(header(i), lengths(i), ' ') || ' | ';
+    END LOOP;
+    rowOutput := rowOutput || header(header.LAST);
+    DBMS_OUTPUT.PUT_LINE(rowOutput);
+
+    FOR i IN 1..(header.LAST - 1) LOOP
+      horizontalRule := horizontalRule || RPAD('-', lengths(i), '-') || '-|-';
+    END LOOP;
+    horizontalRule := horizontalRule || RPAD('-', lengths(lengths.LAST), '-');
+
+    FOR row IN 1..result.LAST LOOP
+      DBMS_OUTPUT.PUT_LINE(horizontalRule);
+      rowOutput := '';
+      FOR col IN 1..(result(row).LAST - 1) LOOP
+        rowOutput := rowOutput || RPAD(result(row)(col), lengths(col), ' ') || ' | ';
+      END LOOP;
+      rowOutput := rowOutput || result(row)(result(row).LAST);
+      DBMS_OUTPUT.PUT_LINE(rowOutput);
+    END LOOP;
+  END;
 END;
 /</code></pre>
         <pre><code class="language-output">
-            Строка                                                                | Подстрока | Номер позиции начала 1 | Номер позиции начала 2
-            ----------------------------------------------------------------------|-----------|------------------------|-----------------------
-            </code></pre>
+            Строка                                                                 | Подстрока | Номер позиции начала 1 | Номер позиции начала 2
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            Сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosoft | jrehwk    | 4                      | 14
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+                                                                                   | oracle    | 26                     | 34
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            yyyyyyyy                                                               | yyyy      | 1                      | 5
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            create                                                                 | e         | 3                      | 6
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            grant                                                                  | -         | -                      | -
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            (a + b)^2 = a^2 + 2ab + b^2                                            |  + b      | 3                      | 22
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            Superpermutations                                                      | per       | 3                      | 6
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            1                                                                      | -         | -                      | -
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            121                                                                    | 1         | 1                      | 3
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            123121321                                                              | 12        | 1                      | 4
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+            123412314231243121342132413214321                                      | 123       | 1                      | 5
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+                                                                                   | 312       | 11                     | 15
+            -----------------------------------------------------------------------|-----------|------------------------|-----------------------
+                                                                                   | 132       | 22                     | 26</code></pre>
       </div>
     </div>
     <script src="../js/prism.js"></script>
