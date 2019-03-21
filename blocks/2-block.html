@@ -385,25 +385,43 @@ FROM Top_Salaries;</code></pre>
 
 DECLARE
   deptno NUMBER := &p_deptno;
+  depOut   VARCHAR2(10);
+  raiseOut VARCHAR2(10);
   CURSOR emp_cursor IS
     SELECT Last_Name, Salary, Manager_ID
     FROM Employees
     WHERE Department_ID = deptno;
 BEGIN
   FOR emp IN emp_cursor LOOP
-    IF emp.Salary < 5000 AND emp.Manager_ID IN (101, 124) THEN
-      DBMS_OUTPUT.PUT_LINE(emp.Last_Name || ' Due for a raise');
-    ELSE
-      DBMS_OUTPUT.PUT_LINE(emp.Last_Name || ' Not due for a raise');
-    END IF;
+    depOut :=
+      CASE
+        WHEN emp_cursor%ROWCOUNT = 1
+        THEN RPAD(deptno, LENGTH(deptno) + 3, ' ')
+        ELSE RPAD(' ',    LENGTH(deptno) + 3, ' ')
+      END;
+    raiseOut :=
+      CASE
+        WHEN emp.Salary < 5000 AND emp.Manager_ID IN (101, 124)
+        THEN ' Due'
+        ELSE ' Not due'
+      END;
+    DBMS_OUTPUT.PUT_LINE(depOut || emp.Last_Name || raiseOut || ' for a raise');
   END LOOP;
 END;</code></pre>
             <p class="comment">Результат для отдела <code>10</code>:</p>
-            <pre><code class="language-output">Whalen Due for a raise</code></pre>
+            <pre><code class="language-output">10   Whalen Due for a raise</code></pre>
             <p class="comment">Результат для отдела <code>20</code>:</p>
             <pre><code class="language-output">
-                Hartstein Not due for a raise
-                Fay Not due for a raise
+                20   Hartstein Not due for a raise
+                     Fay Not due for a raise</code></pre>
+            <p class="comment">Результат для отдела <code>30</code>:</p>
+            <pre><code class="language-output">
+                30   Raphaely Not due for a raise
+                     Khoo Not due for a raise
+                     Baida Not due for a raise
+                     Tubias Not due for a raise
+                     Himuro Not due for a raise
+                     Colmenares Not due for a raise
                 </code></pre>
           </div>
           <div class="task" id="task-7-3">

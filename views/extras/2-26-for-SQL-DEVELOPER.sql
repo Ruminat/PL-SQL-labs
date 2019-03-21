@@ -54,7 +54,7 @@ BEGIN
     len := LENGTH(str);
     FOR currentLength IN REVERSE 1..(FLOOR(len / 2)) LOOP
       EXIT WHEN currentLength < foundLength;
-      &lt&ltposLoop&gt&gt FOR startPos IN 1..(len - currentLength + 1)
+      <<posLoop>> FOR startPos IN 1..(len - currentLength + 1)
       LOOP
         sub := SUBSTR(str, startPos, currentLength);
         occurrings := ( -- кол-во вхождений = (длина - длина_без_подстроки) / длина_подстроки
