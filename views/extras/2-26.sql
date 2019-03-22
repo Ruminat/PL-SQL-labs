@@ -47,7 +47,6 @@ BEGIN
     IF str IS NULL OR LENGTH(str) < 2 THEN
       result(NVL(result.LAST + 1, 1)) := outputRow(NVL(str, '(null)'), '-', '-', '-');
       CONTINUE;
-    ELSE NULL;
     END IF;
     substrings(str) := substringsTable();
     foundLength := NULL;
@@ -95,7 +94,6 @@ BEGIN
     -- если не нашли ни одной подходящей подстроки
     IF substrings(str).COUNT = 0 THEN
       result(NVL(result.LAST + 1, 1)) := outputRow(str, '-', '-', '-');
-    ELSE NULL;
     END IF;
   END LOOP;
 
@@ -109,7 +107,6 @@ BEGIN
       FOR col IN 1..result(row).LAST LOOP
         IF LENGTH(result(row)(col)) > lengths(col) THEN
           lengths(col) := LENGTH(result(row)(col));
-        ELSE NULL;
         END IF;
       END LOOP;
     END LOOP;
