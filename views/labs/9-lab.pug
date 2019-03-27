@@ -6,34 +6,102 @@
     li Создание процедур. 
     li Режимы параметров.
 
-  +task("1", "Создайте процедуру <code>ADD_JOB</code> для добавления записей в таблицу <code>JOBS</code>.")
+  +task("1", "Создайте процедуру <code>add_job</code> для добавления записей в таблицу <code>Jobs</code>.")
     ul
-      li Процедура должна принимать на вход 2 параметра — <code>ID</code> и <code>JOB_TITLE</code>.
-      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>IT_DBA</code> и <code>Database Administrator</code>.
-      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат: <code>ST_MAN</code> и <code>Stock Manager</code>.
-    //- +plsql
-    //-   include ../../labs/8 lab/8-1.sql
-    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
+      li Процедура должна принимать на вход 2 параметра — <code>id</code> и <code>job_title</code>.
+      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат:
+      ul
+        li <code>IT_DBA</code> и <code>Database Administrator</code>.
+      li Запустите процедуру на исполнение с помощью анонимного блока или инструкции <code>EXECUTE</code>. Протестируйте работу на примере следующих значений, зафиксируйте и объясните результат:
+      ul
+        li <code>ST_MAN</code> и <code>Stock Manager</code>.
+    +plsql
+      include ../../labs/9 lab/9-1.sql
+    +output.
+      Procedure ADD_JOB compiled
+    
+    +plsql.
+      EXECUTE add_job('IT_DBA', 'Database Administrator')
+    +output.
+      PL/SQL procedure successfully completed.
+    p Всё прошло успешно, так как в таблице <code>Jobs</code> нет записи с ключом <code>IT_DBA</code>.
 
-  +task("2", "Создайте процедуру <code>UPD_JOB</code> для изменения значения в таблице <code>JOBS</code>.")
-    ul
-      li Процедура должна принимать на вход параметр <code>ID</code> и новое значение для столбца <code>JOB_TITLE</code>. Процедура должна оповещать пользователей, в случае если никаких модификаций не было сделано. Для этого воспользуйтесь атрибутом <code>SQL%FOUND</code> и инструкцией <code>RAISE_APPLICATION_ERROR</code> или <code>DBMS_OUTPUT.PUT_LINE</code>.
-      li Запустите процедуру на исполнение и поменяйте с ее помощью <code>job title</code> для записи <code>IT_DBA</code> на <code>Data Administrator</code>. Сделайте выборку из таблицы <code>JOBS</code>, чтобы убедиться в модификации данных.
-      li Протестируйте работу процедуры в случае получения на вход не существующего <code>job_id</code> — к примеру, <code>IT_WEB</code>.
-    //- +plsql
-    //-   include ../../labs/8 lab/8-2.sql
-    //- +output.
-    //-   Deleting department 40........
-    //-   Cannot delete this department. There are employees in this department
+    +plsql.
+      EXECUTE add_job('ST_MAN', 'Stock Manager')
+    +output.
+      Error starting at line : 1 in command -
+      BEGIN add_job('ST_MAN', 'Stock Manager'); END;
+      Error report -
+      ORA-00001: нарушено ограничение уникальности (RUMINAT.JOB_ID_PK)
+      ORA-06512: на  "RUMINAT.ADD_JOB", line 4
+      ORA-06512: на  line 1
+      00001. 00000 -  "unique constraint (%s.%s) violated"
+      *Cause:    An UPDATE or INSERT statement attempted to insert a duplicate key.
+                 For Trusted Oracle configured in DBMS MAC mode, you may see
+                 this message if a duplicate entry exists at a different level.
+      *Action:   Either remove the unique restriction or do not insert the key.
+    p Мы получили ошибку, так как в таблице <code>Jobs</code> уже есть запись с ключом <code>ST_MAN</code>.
 
-  +task("3", "Создайте процедуру <code>DEL_JOB</code> для удаления записей из таблицы <code>JOBS</code>.")
-    ul
-      li Создайте процедуру с одним входным параметром — <code>ID</code>. Создайте в процедуре обработчик на случай, если ни одна запись не будет удалена.
-      li Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь удалить существующую запись с <code>job_id</code> <code>IT_DBA</code>.
-      li Протестируйте работу процедуры: вызовите ее на исполнение и попытайтесь с ее помощью удалить не существующую запись, к примеру с <code>job_id</code> <code>IT_WEB</code>. Зафиксируйте сообщение об ошибке.
 
-  +task("4", "Создайте процедуру <code>GET_EMPLOYEE</code> для выборки из таблицы <code>EMPLOYEES</code> значений <code>job_id</code> и <code>salary</code> указанного сотрудника. ")
+  +task("2", "Создайте процедуру <code>upd_job</code> для изменения значения в таблице <code>Jobs</code>.")
     ul
-      li Процедура должна принимать на вход <code>EMPLOYEE_ID</code> и возвращать с помощью <code>OUT</code> параметров значения <code>JOB_ID</code> и <code>SALARY</code>.
+      li Процедура должна принимать на вход параметр <code>id</code> и новое значение для столбца <code>Job_Title</code>. Процедура должна оповещать пользователей, в случае если никаких модификаций не было сделано. Для этого воспользуйтесь атрибутом <code>SQL%FOUND</code> и инструкцией <code>RAISE_APPLICATION_ERROR</code> или <code>DBMS_OUTPUT.PUT_LINE</code>.
+      li Запустите процедуру на исполнение и поменяйте с ее помощью <code>Job_Title</code> для записи <code>IT_DBA</code> на <code>Data Administrator</code>. Сделайте выборку из таблицы <code>Jobs</code>, чтобы убедиться в модификации данных.
+      li Протестируйте работу процедуры в случае получения на вход несуществующего <code>Job_ID</code> — к примеру, <code>IT_WEB</code>.
+    +plsql
+      include ../../labs/9 lab/9-2.sql
+    +output.
+      Procedure UPD_JOB compiled
+
+    +plsql.
+      EXECUTE upd_job ('IT_DBA', 'Data Administrator')
+      SELECT * FROM Jobs WHERE Job_ID = 'IT_DBA';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_DBA</td><td>Data Administrator</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
+
+    +plsql.
+      EXECUTE upd_job ('IT_WEB', 'Web developer')
+    +output.
+      upd_job error:
+        there were no modifications applied for upd_job('IT_WEB', 'Web developer').
+        There is no job with ID 'IT_WEB'.
+
+
+  +task("3", "Создайте процедуру <code>del_job</code> для удаления записей из таблицы <code>Jobs</code>.")
+    ul
+      li Создайте процедуру с одним входным параметром — <code>id</code>. Создайте в процедуре обработчик на случай, если ни одна запись не будет удалена.
+      li Протестируйте работу процедуры: вызовите её на исполнение и попытайтесь удалить существующую запись с <code>Job_ID = IT_DBA</code>.
+      li Протестируйте работу процедуры: вызовите её на исполнение и попытайтесь с ее помощью удалить несуществующую запись, к примеру с <code>Job_ID = IT_WEB</code>. Зафиксируйте сообщение об ошибке.
+    +plsql
+      include ../../labs/9 lab/9-3.sql
+    +output.
+      Procedure DEL_JOB compiled
+
+    +plsql.
+      EXECUTE del_job ('IT_DBA')
+      SELECT * FROM Jobs WHERE Job_ID = 'IT_DBA';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody></tbody></table></row>
+
+    +plsql.
+      EXECUTE del_job ('IT_WEB')
+    +output.
+      del_job error:
+        there were no records deleted by del_job('IT_WEB').
+        There is no job with ID 'IT_WEB'.
+
+  +task("4", "Создайте процедуру <code>get_employee</code> для выборки из таблицы <code>Employees</code> значений <code>Job_ID</code> и <code>Salary</code> указанного сотрудника.")
+    ul
+      li Процедура должна принимать на вход <code>Employee_ID</code> и возвращать с помощью <code>OUT</code> параметров значения <code>Job_ID</code> и <code>Salary</code>.
       li Протестируйте работу процедуры передавая на вход локальные переменные блока вызова или хост-переменные. Просмотрите зарплату и должность для <code>120</code> сотрудника.
       li Просмотрите зарплату и должность для <code>300</code> сотрудника.
+    +plsql
+      include ../../labs/9 lab/9-4.sql
+    +output.
+      Procedure GET_EMPLOYEE compiled
+    +plsql
+      include ../../labs/9 lab/9-4-lookup.sql
+    +output.
+      Employee #120: Job_ID = ST_MAN, Salary = 8000.
+      get_employee error:
+        could not get Employee information from get_employee(300, jobID, empSalary).
+        There is no employee with ID 300.
+      Employee #300: Job_ID = (null), Salary = (null).

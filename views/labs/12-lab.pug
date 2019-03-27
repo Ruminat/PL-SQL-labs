@@ -5,30 +5,69 @@
   ul
     li Создание пакетов. 
     li Элементы пакета.
-    li <code>Private</code> и <code>Public</code> конструкции пакета.
+    li <code>private</code> и <code>public</code> конструкции пакета.
 
-  +task("1", "Создайте спецификацию и тело пакета <code>JOB_PKG</code>, и сохраните в нем созданные ранее процедуры и функции <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>. Сохраните код создания спецификации и тела пакета в разных файлах <code>*.sql</code>. Для упрощения отладки включите инструкцию <code>SHOW ERRORS</code> в каждый скрипт.")
+  +task("1", "Создайте спецификацию и тело пакета <code>job_pkg</code>, и сохраните в нем созданные ранее процедуры и функции <code>add_job</code>, <code>upd_job</code>, <code>del_job</code>, <code>get_job</code>. Сохраните код создания спецификации и тела пакета в разных файлах <code>*.sql</code>. Для упрощения отладки включите инструкцию <code>show errors</code> в каждый скрипт.")
     ul
       li Создайте спецификацию пакета. Объявите публичные элементы.
       li Создайте тело пакета. Включите в него реализацию процедур и функций.
-      li Удалите ранее созданные (независимые) процедуры и функции: <code>ADD_JOB</code>, <code>UPD_JOB</code>, <code>DEL_JOB</code>, <code>GET_JOB</code>.
-      li Протестируйте работу пакета. Запустите на исполнение процедуру <code>JOB_PKG.ADD_JOB</code> передав в качестве значений параметров <code>IT_SYSAN</code>, <code>SYSTEMS ANALYST</code>.
-      li Сделайте выборку из таблицы <code>JOBS</code>, чтобы просмотреть результат работы процедуры.
-    //- +plsql
-    //-   include ../../labs/8 lab/8-1.sql
-    //- <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>RESULTS</th></tr></thead><tbody><tr><td>More than one employee with a salary of 6000</td></tr></tbody></table></row>
+      li Удалите ранее созданные (независимые) процедуры и функции: <code>add_job</code>, <code>upd_job</code>, <code>del_job</code>, <code>get_job</code>.
+      li Протестируйте работу пакета. Запустите на исполнение процедуру <code>job_pkg.add_job</code> передав в качестве значений параметров:
+      ul
+        li <code>IT_SYSAN</code>, <code>Systems analyst</code>.
+      li Сделайте выборку из таблицы <code>Jobs</code>, чтобы просмотреть результат работы процедуры.
+    +plsql
+      include ../../labs/12 lab/12-1-package.sql
+    +output.
+      Package JOB_PKG compiled
+    +plsql
+      include ../../labs/12 lab/12-1-body.sql
+    +output.
+      Package Body JOB_PKG compiled
 
-      
+    +plsql.
+      DROP PROCEDURE add_job;
+      DROP PROCEDURE upd_job;
+      DROP PROCEDURE del_job;
+      DROP FUNCTION  get_job;
+    +output.
+      Procedure ADD_JOB dropped.
+      Procedure UPD_JOB dropped.
+      Procedure DEL_JOB dropped.
+      Function GET_JOB dropped.
+
+    +plsql.
+      EXECUTE job_pkg.add_job('IT_SYSAN', 'Systems analyst')
+      SELECT * FROM Jobs WHERE Job_ID = 'IT_SYSAN'
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_SYSAN</td><td>Systems analyst</td><td>(null)</td><td>(null)</td></tr></tbody></table></row>
 
 
   +task("2", "Создайте пакет, состоящий из <code>public</code> и <code>private</code> конструкций.")
     ul
-      li Создайте спецификацию и тело пакета <code>EMP_PKG</code>, в котором есть <code>public</code> процедуры <code>ADD_EMPLOYEE</code> и <code>GET_EMPLOYEE</code>, и <code>private</code> функция <code>VALID_DEPTID</code>.
-      li Протестируйте работу процедуры <code>EMP_PKG.ADD_EMPLOYEE</code>. Добавьте в таблицу информацию о сотруднике <code>Jane Harris</code> из <code>15</code> отдела, с e-mail-ом <code>JAHARRIS</code>. Вы должны получить сообщение об ошибке, потому что 15 отдела не существует.
+      li Создайте спецификацию и тело пакета <code>emp_pkg</code>, в котором есть <code>public</code> процедуры <code>add_employee</code> и <code>get_employee</code>, и <code>private</code> функция <code>valid_deptid</code>.
+      li Протестируйте работу процедуры <code>emp_pkg.add_employee</code>. Добавьте в таблицу информацию о сотруднике <code>Jane Harris</code> из <code>15</code> отдела, с e-mail-ом <code>JAHARRIS</code>. Вы должны получить сообщение об ошибке, потому что 15 отдела не существует.
       li Запустите процедуру еще раз и добавьте информацию о <code>David Smith</code> из <code>80</code> отдела, с e-mail-ом <code>DASMITH</code>.
-      li Сделайте выборку из таблицы <code>EMPLOYEES</code>, чтобы убедиться в корректном добавлении новых сотрудников.
-    //- +plsql
-    //-   include ../../labs/8 lab/8-2.sql
-    //- +output.
-    //-   Deleting department 40........
-    //-   Cannot delete this department. There are employees in this department
+      li Сделайте выборку из таблицы <code>Employees</code>, чтобы убедиться в корректном добавлении новых сотрудников.
+    +plsql
+      include ../../labs/12 lab/12-2-package.sql
+    +output.
+      Package EMP_PKG compiled
+    +plsql
+      include ../../labs/12 lab/12-2-body.sql
+    +output.
+      Package Body EMP_PKG compiled
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Jane', 'Harris', 'JAHARRIS', depID => 15)
+    +output.
+      Error: cannot add an employee to a nonexistent department #15.
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('David', 'Smith', 'DASMITH', depID => 80)
+      SELECT * FROM Employees WHERE Last_Name = 'Smith'
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL</th><th>PHONE_NUMBER</th><th>HIRE_DATE</th><th>JOB_ID</th><th>SALARY</th><th>COMMISSION_PCT</th><th>MANAGER_ID</th><th>DEPARTMENT_ID</th></tr></thead><tbody>
+    <tr><td>210</td><td>David</td><td>Smith</td><td>DASMITH</td><td>(null)</td><td>27.03.19</td><td>SA_REP</td><td>1000</td><td>0</td><td>145</td><td>80</td></tr>
+    <tr><td>159</td><td>Lindsey</td><td>Smith</td><td>LSMITH</td><td>011.44.1345.729268</td><td>10.03.05</td><td>SA_REP</td><td>8000</td><td>0.3</td><td>146</td><td>80</td></tr>
+    <tr><td>171</td><td>William</td><td>Smith</td><td>WSMITH</td><td>011.44.1343.629268</td><td>23.02.07</td><td>SA_REP</td><td>7400</td><td>0.15</td><td>148</td><td>80</td></tr>
+    </tbody></table></row>
