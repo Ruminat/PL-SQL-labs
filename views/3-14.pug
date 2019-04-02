@@ -1,0 +1,36 @@
+extends templates/extra.pug
+
+block head
+  title Доп. задание 3.14
+
+block content
+  .labs
+    .header
+      h1 Дополнительное задание 3.14
+
+  h2 Постановка задачи
+
+  p.task-text Создать процедуру, которая находит все пути между двумя городами. Имена городов — параметры процедуры. Расстояния между городами заданы в таблице <code>Paths</code>. Имена городов уникальны. Скрипт на создание таблицы <code>paths.sql</code> находится в папке курса на <code>Public2</code>.
+
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>AID</th><th>ACITY</th><th>BID</th><th>BCITY</th><th>DIST</th></tr></thead><tbody><tr><td>1</td><td>Moscow</td><td>2</td><td>Kazan</td><td>2</td></tr><tr><td>1</td><td>Moscow</td><td>3</td><td>Tula</td><td>4</td></tr><tr><td>1</td><td>Moscow</td><td>4</td><td>Sochi</td><td>7</td></tr><tr><td>1</td><td>Moscow</td><td>6</td><td>Omsk</td><td>5</td></tr><tr><td>2</td><td>Kazan</td><td>4</td><td>Sochi</td><td>6</td></tr><tr><td>2</td><td>Kazan</td><td>7</td><td>Vologda</td><td>8</td></tr><tr><td>2</td><td>Kazan</td><td>5</td><td>Pskov</td><td>3</td></tr><tr><td>3</td><td>Tula</td><td>6</td><td>Omsk</td><td>6</td></tr><tr><td>4</td><td>Sochi</td><td>6</td><td>Omsk</td><td>1</td></tr><tr><td>4</td><td>Sochi</td><td>7</td><td>Vologda</td><td>6</td></tr><tr><td>5</td><td>Pskov</td><td>7</td><td>Vologda</td><td>7</td></tr><tr><td>6</td><td>Omsk</td><td>7</td><td>Vologda</td><td>6</td></tr></tbody></table></row>
+
+  p Программа должна предусматривать обработку исключений.
+  p Пример представления результата:
+  +output.
+    Маршруты Pskov — Vologda 
+      Pskov Kazan Moscow Omsk Sochi Vologda       Длина маршрута — 17
+      Pskov Kazan Moscow Omsk Vologda             ...................
+      Pskov Kazan Moscow Sochi Omsk Vologda 
+      Pskov Kazan Moscow Sochi Vologda 
+      Pskov Kazan Moscow Tula Omsk Sochi Vologda 
+      Pskov Kazan Moscow Tula Omsk Vologda 
+      Pskov Kazan Sochi Moscow Omsk Vologda 
+      Pskov Kazan Sochi Moscow Tula Omsk Vologda 
+      Pskov Kazan Sochi Vologda                   ...................
+      Pskov Kazan Vologda                         Длина маршрута — 11
+    Всего 10 вариантов маршрута
+
+  h2 Решение
+
+  +plsql
+    include extras/3-14.sql

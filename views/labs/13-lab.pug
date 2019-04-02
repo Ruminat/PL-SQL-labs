@@ -1,0 +1,182 @@
+- var lab_n = 13;
+- var title = "Практическое занятие 13. Работа с пакетами";
+
++lab
+  ul
+    li Обслуживание пакетов.
+    li Устойчивое состояние пакета. 
+    li <code>PRAGMA SERIALLY_REUSABLE</code>.
+
+
+  +task("1", "Измените пакет <code>emp_pkg</code>, созданный в практическом занятии 12. Необходимо перегрузить процедуру <code>add_employee</code>. Для этого:")
+    ul
+      li В спецификацию пакета добавьте описание еще одной процедуры <code>add_employee</code>, принимающей на вход 3 параметра:
+        ul
+          li <code>first_name</code>, <code>last_name</code> и <code>department_id</code>. 
+      li Сохраните и скомпилируйте внесенные изменения.
+      li Создайте реализацию новой процедуры в теле пакета. 
+        ul
+          li Процедура должна формировать e-mail адрес из первой буквы имени и семи первых букв фамилий сотрудника — в верхнем регистре. 
+          li После формирования e-mail, новая версия процедуры <code>add_employee</code> должна вызывать на исполнение старую версию этой процедуры из этого же пакета, для добавления записи в таблицу. Сформированный e-mail передается при вызове в качестве входного параметра.
+          li Сохраните и скомпилируйте тело пакета.
+      li Запустите процедуру на исполнение передав значения параметров:
+        ul
+          li <code>Samuel Joplin</code> и <code>30</code> отдел.
+    +plsql
+      include ../../labs/13 lab/13-1-package.sql
+    +output.
+      Package EMP_PKG compiled
+    +plsql
+      include ../../labs/13 lab/13-1-body.sql
+    +output.
+      Package Body EMP_PKG compiled
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Samuel', 'Joplin', 30)
+      SELECT * FROM Employees WHERE Last_Name = 'Joplin'
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL</th><th>PHONE_NUMBER</th><th>HIRE_DATE</th><th>JOB_ID</th><th>SALARY</th><th>COMMISSION_PCT</th><th>MANAGER_ID</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>211</td><td>Samuel</td><td>Joplin</td><td>SJOPLIN</td><td>(null)</td><td>02.04.19</td><td>SA_REP</td><td>1000</td><td>0</td><td>145</td><td>30</td></tr></tbody></table></row>
+
+
+  +task("2", "В пакете <code>emp_pkg</code> создайте 2 функции <code>get_employee</code>.")
+    ul
+      li В спецификацию пакета добавьте объявление функций:
+        ul
+          li <code>get_employee</code>, которая принимает на вход параметр <code>p_emp_id</code> типа <code>Employees.Employee_ID%TYPE</code> Функция должна возвращать значение типа <code>Employees%ROWTYPE</code> (запись, соответствующую структуре таблицы <code>Employees</code>).
+          li <code>get_employee</code>, которая принимает на вход параметр <code>p_family_name</code> типа <code>Employees.Last_Name%TYPE</code>. Функция должна возвращать значение типа <code>Employees%ROWTYPE</code> (запись, соответствующую структуре таблицы <code>Employees</code>).
+      li Скомпилируйте спецификацию пакета.
+      li В тело пакета добавьте реализацию функций.
+        ul
+          li Первая <code>get_employee</code> должна содержать выборку, возвращающую запись о сотруднике с переданным на вход значением <code>Employee_ID</code>, 
+          li Вторая <code>get_employee</code> должна отбирать записи о сотрудниках с переданной на вход фамилией <code>p_family_name</code>.
+      li Скомпилируйте тело пакета.
+      li Добавьте в пакет процедуру <code>print_employee</code>.
+        ul
+          li Процедура принимает на вход параметр типа <code>Employees%ROWTYPE</code>. 
+          li С помощью <code>DBMS_OUTPUT.PUT_LINE</code> выводит значение из полей <code>Department_ID</code>, <code>Employee_ID</code>, <code>First_Name</code>, <code>Last_Name</code>, <code>Job_ID</code>, <code>Salary</code>.
+      li Скомпилируйте пакет.
+      li С помощью анонимного блока протестируйте работу пакета. Для этого запустите на исполнение процедуру <code>emp_pkg.get_employee</code>, передав ей на вход <code>employee_id = 100</code>, <code>family_name = 'Joplin'</code>. А потом с помощью процедуры <code>emp_pkg.print_employee</code> распечатайте результат.
+    +plsql
+      include ../../labs/13 lab/13-2-package.sql
+    +output.
+      Package EMP_PKG compiled
+    +plsql
+      include ../../labs/13 lab/13-2-body.sql
+    +output.
+      Package Body EMP_PKG compiled
+
+    +plsql.
+      BEGIN
+        emp_pkg.print_employee(emp_pkg.get_employee(100));
+        emp_pkg.print_employee(emp_pkg.get_employee('Joplin'));
+      END;
+    +output.
+      Emp#100: Steven King, depID is 90, job is AD_PRES, salary is 24000.
+      Emp#211: Samuel Joplin, depID is 30, job is SA_REP, salary is 1000.
+
+
+  +task("3", "Структура отделов организации меняется не часто, поэтому для улучшения производительности пакета <code>emp_pkg</code> добавьте в него public процедуру <code>init_departments</code> и <code>private</code> индексную таблицу <code>valid_departments</code>. Процедура будет один раз, в начале работы с пакетом, заполнять индексную таблицу номерами существующих отделов, для повышения производительности использования функции <code>valid_deptid</code>, которая теперь будет анализировать не актуальную таблицу <code>Departments</code>, а индексную таблицу в теле пакета. Для этого:")
+    ul
+      li Добавьте в спецификацию пакета объявление процедуры <code>init_departments</code>, не принимающей на вход никаких параметров.
+      li Добавьте в тело пакета декларирование типа индексной таблицы, саму таблицу <code>valid_departments</code> и описание процедуры <code>init_departments</code>.
+        ul
+          li Таблица хранит значения типа <code>BOOLEAN</code> и использует значения из столбца <code>Departments.Department_ID</code> в качестве индекса:
+          +plsql.
+            TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
+            valid_departments boolean_tab_type;
+          li Добавьте описание процедуры <code>init_departments</code> в конец тела пакета. Процедура должна заполнить индексную таблицу значениями: используйте значение столбца <code>Department_ID</code> в качестве индекса записи в <code>valid_departments</code>, а в качестве соответствующего значения записи используйте <code>TRUE</code>.
+      li В теле пакета создайте инициализационный блок, в котором вызывается на исполнение процедура <code>init_departments</code>.
+      li Сохраните изменения и скомпилируйте пакет заново.
+
+
+  +task("4", "Измените реализацию функции <code>valid_deptid</code>, таким образом, чтобы она анализировала содержимое индексированной таблицы.")
+    ul
+      li Поменяйте реализацию функции. Сохраните и скомпилируйте изменения.
+      li Протестируйте работу пакета. Вызовите на исполнение процедуру <code>add_employee</code> с параметрами
+        ul
+          li <code>name = 'James Bond'</code> и <code>department_id = 15</code>.
+        | Что произойдет?
+      li Добавьте в таблицу <code>Departments</code> новый отдел с номером <code>15</code> и названием <code>Security</code>. Подтвердите модификацию с помощью инструкции <code>COMMIT</code>.
+      li Ещё раз вызовите на исполнение процедуру <code>add_employee</code> с параметрами:
+        ul
+          li <code>name = 'James Bond'</code> и <code>department_id = 15</code>.
+        | Что произойдет теперь? Почему?
+      li Запустите на исполнение процедуру <code>emp_pkg.init_departments</code>. Зачем это надо сделать? На что это повлияет?
+      li Ещё раз вызовите на исполнение процедуру <code>add_employee</code> с параметрами
+        ul
+          li <code>name = 'James Bond'</code> и <code>department_id = 15</code>.
+        | Что произойдет теперь? Почему?
+      li Удалите запись о <code>James Bond</code> и <code>15</code> отделе из соответствующих таблиц и ещё раз обновите таблицу <code>valid_departments</code>.
+    +plsql
+      include ../../labs/13 lab/13-4-package.sql
+    +output.
+      Package EMP_PKG compiled
+    +plsql
+      include ../../labs/13 lab/13-4-body.sql
+    +output.
+      Package Body EMP_PKG compiled
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('James', 'Bond', 15)
+    +output.
+      Error: cannot add an employee to a nonexistent department #15.
+    p Ошибка — у нас нет 15-го отдела.
+
+    +plsql.
+      INSERT INTO Departments (Department_ID, Department_Name)
+      VALUES                  (15,            'Security');
+      COMMIT;
+    +output.
+      1 row inserted.
+      Commit complete.
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('James', 'Bond', 15)
+    +output.
+      Error: cannot add an employee to a nonexistent department #15.
+    p Всё равно ошибка — мы не обновили таблицу <code>valid_departments</code>.
+
+    +plsql.
+      EXECUTE emp_pkg.init_departments()
+    p Мы обновили таблицу, 15-ый отдел теперь виден функции <code>valid_deptid</code>.
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('James', 'Bond', 15)
+      SELECT * FROM Employees WHERE Last_Name = 'Bond'
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>EMAIL</th><th>PHONE_NUMBER</th><th>HIRE_DATE</th><th>JOB_ID</th><th>SALARY</th><th>COMMISSION_PCT</th><th>MANAGER_ID</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>214</td><td>James</td><td>Bond</td><td>JBOND</td><td>(null)</td><td>02.04.19</td><td>SA_REP</td><td>1000</td><td>0</td><td>145</td><td>15</td></tr></tbody></table></row>
+
+    +plsql.
+      DELETE FROM Employees WHERE Last_Name = 'Bond';
+      COMMIT;
+    +output.
+      1 row deleted.
+      Commit complete.
+    +plsql.
+      DELETE FROM Departments WHERE Department_ID = 15;
+      COMMIT;
+    +output.
+      1 row deleted.
+      Commit complete.
+
+    +plsql.
+      EXECUTE emp_pkg.init_departments()
+
+
+  +task("5", "Поменяйте местами описание процедур и функций в пакете так, чтобы их имена шли в алфавитном порядке.")
+    ul
+      li Перепишите спецификацию пакета так, чтобы все элементы были перечислены в алфавитном порядке. Сохраните и скомпилируйте спецификацию пакета.
+      li Перепишите тело  пакета так, чтобы все элементы были перечислены в алфавитном порядке. Сохраните и скомпилируйте тело пакета. Зафиксируйте результат.
+      li Сделайте все необходимое, чтобы исправить ошибки компиляции. С чем они связаны? Выполните необходимые действия (подсказка: <code>forward declaration</code>).
+    +plsql
+        include ../../labs/13 lab/13-5-package.sql
+    +output.
+      Package EMP_PKG compiled
+    +plsql
+      include ../../labs/13 lab/13-5-body.sql
+    +output.
+      Package Body EMP_PKG compiled
+
+    p Если мы закомментируем строчку (с <code>forward declaration</code>):
+    +plsql.
+      FUNCTION valid_deptid (depID Departments.Department_ID%TYPE) RETURN BOOLEAN;
+    p то получим следующую ошибку:
+    img(src="../img/13-5-error.png" width="80%")
