@@ -125,7 +125,7 @@ BEGIN
 
 
   DECLARE
-    path pathRecord := pathRecord(citiesList(), 0);
+    path pathRecord := pathRecord(citiesList());
     TYPE pathsTable IS TABLE OF VARCHAR2(8192);
     paths pathsTable := pathsTable(); 
     maxLength SIMPLE_INTEGER := LENGTH('Маршруты ' || fromCity || ' — ' || toCity);

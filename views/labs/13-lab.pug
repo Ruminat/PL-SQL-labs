@@ -22,12 +22,40 @@
       li Запустите процедуру на исполнение передав значения параметров:
         ul
           li <code>Samuel Joplin</code> и <code>30</code> отдел.
-    +plsql
-      include ../../labs/13 lab/13-1-package.sql
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg IS
+        
+        -- .....................
+
+        PROCEDURE add_employee (
+          firstName Employees.First_Name%TYPE
+        ,  lastName Employees.Last_Name%TYPE
+        ,     depID Employees.Department_ID%TYPE
+        );
+
+        -- .....................
+
+      END emp_pkg;
     +output.
       Package EMP_PKG compiled
-    +plsql
-      include ../../labs/13 lab/13-1-body.sql
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+        -- .....................
+
+        PROCEDURE add_employee (
+            firstName Employees.First_Name%TYPE
+          ,  lastName Employees.Last_Name%TYPE
+          ,     depID Employees.Department_ID%TYPE
+          ) IS
+          email Employees.Email%TYPE := UPPER(SUBSTR(firstName, 1, 1)) || UPPER(SUBSTR(lastName, 1, 7));
+        BEGIN
+          add_employee(firstName, lastName, mail => email, depID => depID);
+        END add_employee;
+
+        -- .....................
+
+      END emp_pkg;
     +output.
       Package Body EMP_PKG compiled
 
@@ -55,12 +83,61 @@
           li С помощью <code>DBMS_OUTPUT.PUT_LINE</code> выводит значение из полей <code>Department_ID</code>, <code>Employee_ID</code>, <code>First_Name</code>, <code>Last_Name</code>, <code>Job_ID</code>, <code>Salary</code>.
       li Скомпилируйте пакет.
       li С помощью анонимного блока протестируйте работу пакета. Для этого запустите на исполнение процедуру <code>emp_pkg.get_employee</code>, передав ей на вход <code>employee_id = 100</code>, <code>family_name = 'Joplin'</code>. А потом с помощью процедуры <code>emp_pkg.print_employee</code> распечатайте результат.
-    +plsql
-      include ../../labs/13 lab/13-2-package.sql
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg IS
+        
+        -- .....................
+
+        FUNCTION get_employee (p_emp_id Employees.Employee_ID%TYPE)
+        RETURN Employees%ROWTYPE;
+
+        FUNCTION get_employee (p_family_name Employees.Last_Name%TYPE)
+        RETURN Employees%ROWTYPE;
+
+        PROCEDURE print_employee (emp Employees%ROWTYPE);
+      END emp_pkg;
     +output.
       Package EMP_PKG compiled
-    +plsql
-      include ../../labs/13 lab/13-2-body.sql
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+        -- .....................
+
+        FUNCTION get_employee (p_emp_id Employees.Employee_ID%TYPE)
+        RETURN Employees%ROWTYPE IS
+          emp Employees%ROWTYPE;
+        BEGIN
+          SELECT *
+          INTO   emp
+          FROM Employees
+          WHERE Employee_ID = p_emp_id;
+
+          RETURN emp;
+        END;
+
+        FUNCTION get_employee (p_family_name Employees.Last_Name%TYPE)
+        RETURN Employees%ROWTYPE IS
+          emp Employees%ROWTYPE;
+        BEGIN
+          SELECT *
+          INTO   emp
+          FROM Employees
+          WHERE Last_Name = p_family_name;
+
+          RETURN emp;
+        END;
+
+        PROCEDURE print_employee (emp Employees%ROWTYPE) IS BEGIN
+          DBMS_OUTPUT.PUT_LINE(
+               'Emp#' || emp.Employee_ID || ': '
+            || emp.First_Name || ' ' || emp.Last_Name
+            || ', depID is '  || emp.Department_ID
+            || ', job is '    || emp.Job_ID
+            || ', salary is ' || emp.Salary || '.'
+          );
+        END;
+
+      END emp_pkg;
     +output.
       Package Body EMP_PKG compiled
 
@@ -86,6 +163,36 @@
           li Добавьте описание процедуры <code>init_departments</code> в конец тела пакета. Процедура должна заполнить индексную таблицу значениями: используйте значение столбца <code>Department_ID</code> в качестве индекса записи в <code>valid_departments</code>, а в качестве соответствующего значения записи используйте <code>TRUE</code>.
       li В теле пакета создайте инициализационный блок, в котором вызывается на исполнение процедура <code>init_departments</code>.
       li Сохраните изменения и скомпилируйте пакет заново.
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg IS
+        PROCEDURE init_departments;
+
+        -- .....................
+
+      END emp_pkg;
+    +output.
+      Package EMP_PKG compiled
+    
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+        TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
+        valid_departments boolean_tab_type;
+
+        -- .....................
+
+        PROCEDURE init_departments IS BEGIN
+          FOR row IN (SELECT Department_ID FROM Departments) LOOP
+            valid_departments(row.Department_ID) := TRUE;
+          END LOOP;
+        END;
+
+      BEGIN
+        init_departments();
+      END emp_pkg;
+      /
+    +output.
+      Package Body EMP_PKG compiled
 
 
   +task("4", "Измените реализацию функции <code>valid_deptid</code>, таким образом, чтобы она анализировала содержимое индексированной таблицы.")
@@ -106,12 +213,43 @@
           li <code>name = 'James Bond'</code> и <code>department_id = 15</code>.
         | Что произойдет теперь? Почему?
       li Удалите запись о <code>James Bond</code> и <code>15</code> отделе из соответствующих таблиц и ещё раз обновите таблицу <code>valid_departments</code>.
-    +plsql
-      include ../../labs/13 lab/13-4-package.sql
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg IS
+        PROCEDURE init_departments;
+
+        -- .....................
+
+      END emp_pkg;
     +output.
       Package EMP_PKG compiled
-    +plsql
-      include ../../labs/13 lab/13-4-body.sql
+    
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+        TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
+        valid_departments boolean_tab_type;
+
+        FUNCTION valid_deptid (depID Departments.Department_ID%TYPE)
+        RETURN BOOLEAN IS
+        BEGIN
+          IF valid_departments(depID) THEN RETURN TRUE;
+          ELSE RETURN FALSE; END IF;
+        EXCEPTION
+          WHEN OTHERS THEN RETURN FALSE;
+        END valid_deptid;
+
+        -- .....................
+
+        PROCEDURE init_departments IS BEGIN
+          FOR row IN (SELECT Department_ID FROM Departments) LOOP
+            valid_departments(row.Department_ID) := TRUE;
+          END LOOP;
+        END;
+
+      BEGIN
+        init_departments();
+      END emp_pkg;
+      /
     +output.
       Package Body EMP_PKG compiled
 
