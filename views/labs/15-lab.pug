@@ -1,0 +1,56 @@
+- var lab_n = 15;
+- var title = "Практическое занятие 15. Использование динамического SQL";
+
+
++lab
+  +task("1", "Создайте пакет <code>table_pkg</code>, с помощью которого можно создавать и удалять таблицы, модифицировать, добавлять и удалять записи из таблиц с помощью <code>Native Dynamic SQL</code>.")
+    ul
+      li Создайте спецификацию пакета со следующими процедурами:
+        ul
+          li процедура для создания таблиц. Входные параметры — имя таблицы и спецификация столбцов:
+            +plsql.
+              PROCEDURE make(table_name VARCHAR2, col_specs VARCHAR2);
+          li процедура для вставки записей в таблицу принимает на вход имя таблицы, список столбцов, значения:
+            +plsql.
+              PROCEDURE add_row(table_name VARCHAR2, col_values VARCHAR2, cols VARCHAR2 := NULL);
+          li процедура для изменения записей в таблице принимает на вход название таблицы, условие отбора изменяемых записей, инструкции модификации:
+            +plsql.
+              PROCEDURE upd_row(table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL);
+          li процедура для удаления записей из таблицы:
+            +plsql.
+              PROCEDURE del_row(table_name VARCHAR2, conditions VARCHAR2 := NULL);
+          li процедура для удаления (<code>DROP</code>) таблицы:
+            +plsql.
+              PROCEDURE remove(table_name VARCHAR2);
+        li Создайте тело пакета, в котором все перечисленные процедуры, кроме <code>remove</code> должны быть реализованы с использованием <code>Native Dynamic SQL</code>. Для реализации процедуры <code>remove</code> используйте <code>DBMS_SQL</code>.
+        li Протестируйте работу пакета. Выполните процедуру 
+          +plsql.
+            TABLE_PKG.MAKE('my_contacts', 'id number(4), name varchar2(40)');
+        li Воспользуйтесь оператором <code>DESCRIBE</code> для просмотра структуры созданной таблицы. Убедитесь, что все создано правильно.
+        li Выполните процедуру <code>add_row</code> 4 раза, чтобы добавить в новую таблицу 4 записи (указанные значения необходимо передавать в столбцы id и name соответственно):
+          <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy</td></tr><tr><td>3</td><td>Sunitha Patel</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row>
+        li С помощью оператора <code>SELECT</code> убедитесь, что записи добавлены в таблицу.
+        li С помощью процедуры <code>del_row</code> удалите запись со значением <code>ID = 3</code>.
+        li С помощью процедуры <code>upd_row</code> измените значение столбца name на <code>'Nancy Greenderg'</code> для записи с <code>ID = 2</code>. Проверьте с помощью <code>SELECT</code>, что все выполняется правильно.
+        li С помощью процедуры <code>table_pkg.remove</code> удалите таблицу <code>My_Contacts</code>.
+
+
+  +task("2", "Создайте пакет <code>compile_pkg</code>, для перекомпиляции именованных блоков кода в вашей схеме.")
+    ul
+      li В спецификации пакета опишите процедуру <code>make</code>, которая принимает на вход имя программной единицы, которую необходимо скомпилировать.
+        li В теле пакета:
+          ul
+            li Опишите <code>private</code> функцию <code>get_type</code>, которая по имени блока извлечет из системных словарей его тип. 
+              ul
+                li Если имя объекта не будет найдено в системных словарях, функция должна вернуть <code>NULL</code>. 
+                li Учтите, что для пакетов в системных словарях фиксируется по одному имени 2 объекта: <code>package</code> и <code>package body</code>. Функция должна возвращать только <code>package</code>.
+
+            li Создайте тело процедуры <code>make</code> следующим образом:
+              ul
+                li Один входной параметр <code>name</code> для передачи имени программного модуля.
+                li С помощью функции <code>get_type</code> узнайте тип программного модуля и воспользуйтесь им для формирования инструкции перекомпиляции. Если объект не найден в системных словарях в процессе работы функции <code>get_type</code> — выдайте пользовательское сообщение об ошибке.
+        li Протестируйте работу процедуры <code>compile_pkg.make</code> на примере:
+          ul
+            li процедуры <code>web_employee_report</code>,
+            li пакета <code>emp_pkg</code>,
+            li несуществующего объекта <code>emp_details</code> (зафиксируйте сообщение об ошибке).

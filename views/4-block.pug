@@ -1,0 +1,16 @@
+extends templates/block.pug
+
+block head
+  title PL/SQL Лабы. Блок 4
+
+block content
+  .header
+    h2 Четвёртый Блок
+
+  include labs/14-lab.pug
+  include labs/15-lab.pug
+  include labs/16-lab.pug
+  include labs/17-lab.pug
+
+block contents
+  +contents([[14, 3], [15, 2], [16, 3], [17, 4]])

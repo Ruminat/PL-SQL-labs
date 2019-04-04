@@ -1,0 +1,272 @@
+<!DOCTYPE htmls>
+<html lang="ru">
+  <head>
+    <title>PL/SQL Лабы. Блок 4</title>
+    <meta charset="UTF-8"/>
+    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/main.css"/>
+  </head>
+  <body>
+    <nav id="menu"><a class="element" id="menu-switch">
+        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"/></div>
+        <div class="text-part"></div></a><a class="element" href="../index.html">
+        <div class="icon-part"><img class="icon" src="../img/icons/home.png"/></div>
+        <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="icon-part"><img class="icon" src="../img/icons/github.png"/></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#lab-14">
+        <div class="icon-part">14.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-14-1" href="#task-14-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-14-2" href="#task-14-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-14-3" href="#task-14-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-15">
+        <div class="icon-part">15.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-15-1" href="#task-15-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-15-2" href="#task-15-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-16">
+        <div class="icon-part">16.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-16-1" href="#task-16-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-16-2" href="#task-16-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-16-3" href="#task-16-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element" href="#lab-17">
+        <div class="icon-part">17.</div>
+        <div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-17-1" href="#task-17-1">
+        <div class="icon-part">1.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-2" href="#task-17-2">
+        <div class="icon-part">2.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-3" href="#task-17-3">
+        <div class="icon-part">3.</div>
+        <div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-4" href="#task-17-4">
+        <div class="icon-part">4.</div>
+        <div class="text-part">задание</div></a>
+    </nav>
+    <div id="main">
+      <div class="labs">
+        <div class="header">
+          <h2>Четвёртый Блок</h2>
+        </div>
+        <div class="lab" id="lab-14"><a name="#lab-14">
+            <h4>Практическое занятие 14. Встроенные пакеты Oracle</h4></a>
+          <div class="task" id="task-14-1">
+            <p class="task-text" name="task-14-1"><b>Задание 1.</b> Создайте процедуру <code>employee_report</code> для генерации сводной выборки из таблицы employees и сохранения ее в текстовом файле операционной системы с помощью стандартного пакета <code>UTL_FILE</code>. Отчет должен содержать информацию о сотрудниках, чья ежемесячная зарплата превышает среднюю зарплату по его отделу.</p>
+            <ul>
+              <li>Процедура должна принимать на вход 2 параметра. Первый параметр — <code>dir</code> — используется для передачи имени директории, в которую будет сохраняться файл с отчетом. Второй параметр передает имя файла, который будет создан в указанной директории. <br>
+                <p>В качестве имени директории используйте <code>STUD_PLSQL</code>. <br></p>
+                <p><b>Примечание</b>: физическое расположение директории <code>\\Westfold\Student\PLSQL</code> — у вас есть права на просмотр файлов в этой директории по сети.</p>
+              </li>
+              <li>Создайте процедуру (в пакете <code>emp_pkg</code> или отдельно), в которую добавьте секцию для обработки ошибок.</li>
+              <li>В шапке отчета добавьте свою фамилию, номер группы и системное дату и время формирования отчета.</li>
+              <li>Запустите программу на исполнение, сформируйте второй параметр таким образом, чтобы имя Вашего отчета в директории было уникальным. Шаблон для формирования имени: <code>sal_rpt_XXXX_YYYY.txt</code>, где <code>XXXX</code> — это ваша учетная запись, а <code>YYYY</code> — текущее системное дата и время с точностью до секунды.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-14-2">
+            <p class="task-text" name="task-14-2"><b>Задание 2.</b> Создайте новую процедуру <code>web_employee_report</code>.</p>
+            <ul>
+              <li>Процедура ничего не принимает на вход и, с помощью стандартного пакета <code>HTP</code>, генерирует отчет, подобный отчету из предыдущей процедуры, в формате HTML.</li>
+              <li>Для тестирования работы процедуры сначала выполните инструкции <code>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.</li>
+              <li>Вручную создайте файл <code>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из <code>SQL Developer</code> и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code>WORKDATA</code>.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-14-3">
+            <p class="task-text" name="task-14-3"><b>Задание 3.</b> С помощью пакета <code>DBMS_SCHEDULER</code> создайте задание, для регулярной генерации отчетов в формате текстовых файлов, которое по указанному расписанию запускает на исполнение процедуру <code>employee_report</code>.</p>
+            <ul>
+              <li>Создайте хранимую процедуру <code>schedule_report</code>, которая принимает на вход частоту повторений запуска задания (интервал) и длительность выполнения задания в минутах (по умолчанию — 10).</li>
+              <li>В теле процедуры создайте задание с именем <code>empsal_report</code>, которое должно представлять собой анонимный блок, запускающийся на исполнение сразу же после вызова процедуры <code>schedule_report</code>.
+                <p>Задание должно вызывать процедуру <code>employee_report</code> (имя файла для сохранения отчёта должно генерироваться по указанным в задании 5.2 правилам, в качестве имени директории используйте <code>STUD_PLSQL</code>). Для хранения текста анонимного блока (тела задания) используйте локальную переменную <code>plsql_block</code> типа <code>VARCHAR2(200)</code>.</p>
+                <p>Сформируйте параметр <code>end_date</code> следующим образом: длительность выполнения задания в минутах разделите на количество минут в сутках и прибавьте получившееся значение к текущему значению даты и времени.</p>
+              </li>
+              <li>Протестируйте работу процедуры <code>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.</li>
+              <li>После запуска процедуры просмотрите содержимое системной таблички <code>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="lab" id="lab-15"><a name="#lab-15">
+            <h4>Практическое занятие 15. Использование динамического SQL</h4></a>
+          <div class="task" id="task-15-1">
+            <p class="task-text" name="task-15-1"><b>Задание 1.</b> Создайте пакет <code>table_pkg</code>, с помощью которого можно создавать и удалять таблицы, модифицировать, добавлять и удалять записи из таблиц с помощью <code>Native Dynamic SQL</code>.</p>
+            <ul>
+              <li>Создайте спецификацию пакета со следующими процедурами:
+                <ul>
+                  <li>процедура для создания таблиц. Входные параметры — имя таблицы и спецификация столбцов:
+                    <pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE make(table_name VARCHAR2, col_specs VARCHAR2);</code></pre>
+                  </li>
+                  <li>процедура для вставки записей в таблицу принимает на вход имя таблицы, список столбцов, значения:
+                    <pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE add_row(table_name VARCHAR2, col_values VARCHAR2, cols VARCHAR2 := NULL);</code></pre>
+                  </li>
+                  <li>процедура для изменения записей в таблице принимает на вход название таблицы, условие отбора изменяемых записей, инструкции модификации:
+                    <pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE upd_row(table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL);</code></pre>
+                  </li>
+                  <li>процедура для удаления записей из таблицы:
+                    <pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE del_row(table_name VARCHAR2, conditions VARCHAR2 := NULL);</code></pre>
+                  </li>
+                  <li>процедура для удаления (<code>DROP</code>) таблицы:
+                    <pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE remove(table_name VARCHAR2);</code></pre>
+                  </li>
+                </ul>
+                <li>Создайте тело пакета, в котором все перечисленные процедуры, кроме <code>remove</code> должны быть реализованы с использованием <code>Native Dynamic SQL</code>. Для реализации процедуры <code>remove</code> используйте <code>DBMS_SQL</code>.</li>
+                <li>Протестируйте работу пакета. Выполните процедуру 
+                  <pre class="line-numbers undefined"><code class="language-plsql">TABLE_PKG.MAKE('my_contacts', 'id number(4), name varchar2(40)');</code></pre>
+                </li>
+                <li>Воспользуйтесь оператором <code>DESCRIBE</code> для просмотра структуры созданной таблицы. Убедитесь, что все создано правильно.</li>
+                <li>
+                  Выполните процедуру <code>add_row</code> 4 раза, чтобы добавить в новую таблицу 4 записи (указанные значения необходимо передавать в столбцы id и name соответственно):<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy</td></tr><tr><td>3</td><td>Sunitha Patel</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row></li>
+                <li>С помощью оператора <code>SELECT</code> убедитесь, что записи добавлены в таблицу.</li>
+                <li>С помощью процедуры <code>del_row</code> удалите запись со значением <code>ID = 3</code>.</li>
+                <li>С помощью процедуры <code>upd_row</code> измените значение столбца name на <code>'Nancy Greenderg'</code> для записи с <code>ID = 2</code>. Проверьте с помощью <code>SELECT</code>, что все выполняется правильно.</li>
+                <li>С помощью процедуры <code>table_pkg.remove</code> удалите таблицу <code>My_Contacts</code>.</li>
+              </li>
+            </ul>
+          </div>
+          <div class="task" id="task-15-2">
+            <p class="task-text" name="task-15-2"><b>Задание 2.</b> Создайте пакет <code>compile_pkg</code>, для перекомпиляции именованных блоков кода в вашей схеме.</p>
+            <ul>
+              <li>В спецификации пакета опишите процедуру <code>make</code>, которая принимает на вход имя программной единицы, которую необходимо скомпилировать.
+                <li>В теле пакета:
+                  <ul>
+                    <li>Опишите <code>private</code> функцию <code>get_type</code>, которая по имени блока извлечет из системных словарей его тип. 
+                      <ul>
+                        <li>Если имя объекта не будет найдено в системных словарях, функция должна вернуть <code>NULL</code>. </li>
+                        <li>Учтите, что для пакетов в системных словарях фиксируется по одному имени 2 объекта: <code>package</code> и <code>package body</code>. Функция должна возвращать только <code>package</code>.</li>
+                      </ul>
+                    </li>
+                    <li>Создайте тело процедуры <code>make</code> следующим образом:
+                      <ul>
+                        <li>Один входной параметр <code>name</code> для передачи имени программного модуля.</li>
+                        <li>С помощью функции <code>get_type</code> узнайте тип программного модуля и воспользуйтесь им для формирования инструкции перекомпиляции. Если объект не найден в системных словарях в процессе работы функции <code>get_type</code> — выдайте пользовательское сообщение об ошибке.</li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li>Протестируйте работу процедуры <code>compile_pkg.make</code> на примере:
+                  <ul>
+                    <li>процедуры <code>web_employee_report</code>,</li>
+                    <li>пакета <code>emp_pkg</code>,</li>
+                    <li>несуществующего объекта <code>emp_details</code> (зафиксируйте сообщение об ошибке).</li>
+                  </ul>
+                </li>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="lab" id="lab-16"><a name="#lab-16">
+            <h4>Практическое занятие 16. Конструирование PL/SQL кода</h4></a>
+          <div class="task" id="task-16-1">
+            <p class="task-text" name="task-16-1"><b>Задание 1.</b> Дополните пакет <code>emp_pkg</code> новой процедурой, которая выбирает сотрудников указанного отдела и сохраняет выбранные записи в локальную для пакета <code>PL/SQL</code> таблицу:</p>
+            <ul>
+              <li>В спецификации пакета:
+                <ul>
+                  <li>Добавьте объявление процедуры <code>get_employees</code>. Процедура принимает на вход один параметр <code>dept_id</code>, типа <code>Employees.Department_ID%TYPE</code>.</li>
+                  <li>Объявите <code>emp_tabletype</code> типа <code>TABLE OF Employees%ROWTYPE</code>.</li>
+                </ul>
+              </li>
+              <li>В теле пакета:
+                <ul>
+                  <li>Объявите локальную переменную <code>emp_table</code> типа <code>emp_tabletype</code>.</li>
+                  <li>Напишите реализацию процедуры <code>get_employees</code>. Процедура должна заполнять локальную таблицу <code>emp_table</code> с помощью операций массовой закачки данных (<code>bulk fetch</code>).</li>
+                </ul>
+              </li>
+              <li>Создайте новую <code>public</code> процедуру <code>show_employees</code> в спецификации и теле пакета, которая не принимает на вход аргументов. Процедура отображает содержимое <code>private</code> таблицы <code>emp_table</code>. Данная процедура должна использовать процедуру <code>print_employee</code>.</li>
+              <li>Запустите на исполнение процедуру <code>emp_pkg.get_employees</code> для выборки сотрудников из <code>30</code> отдела и отобразите выборку с помощью <code>emp_pkg.show_employees</code>. Повторите это для обработки сотрудников <code>60</code> отдела.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-16-2">
+            <p class="task-text" name="task-16-2"><b>Задание 2.</b> Необходимо обеспечить аудит добавления новых сотрудников в таблицу <code>Employees</code> с помощью процедуры <code>emp_pkg.add_employee</code>. Для этого:</p>
+            <ul>
+              <li>Запустите на исполнение скрипт <code>lab_07_02_a.sql</code> (путь к файлу: <code>\\feanor\public2\КИТвП\Курс 4\Семестр 8\Проектирование Web-приложений\Oracle Разработка программных единиц PLSQL\Oracle Database 10g - Develop PL-SQL Program Units\labs</code>). Этот скрипт создаст в вашей схеме таблицу <code>Log_NewEmp</code> и последовательность <code>log_newemp_seq</code>.</li>
+              <li>В теле пакета <code>emp_pkg</code> измените реализацию той версии процедуры <code>add_employees</code>, которая на самом деле выполняет оператор <code>INSERT</code> в таблицу <code>Employees</code>. Добавьте в реализацию локальную процедуру <code>audit_newEmp</code>.
+                <ul>
+                  <li>Процедура <code>audit_newEmp</code> должна быть объявлена как автономная транзакция и выполнять оператор <code>INSERT</code> в таблицу <code>log_newEmp</code>.</li>
+                  <li>Процедура должна добавлять значения <code>USER</code> (имя текущего пользователя, который выполняет модификацию), текущего времени, и имени нового, добавляемого сотрудника. </li>
+                  <li>Используйте <code>Log_NewEmp_Seq</code> для заполнения столбца <code>Entry_ID</code>.</li>
+                </ul>
+              </li>
+              <li>В теле процедуры <code>add_employees</code> вызовите на исполнение локальную процедуру <code>audit_newEmp</code> перед тем, как добавить запись о новом сотруднике в таблице <code>Employees</code>.</li>
+              <li>Протестируйте работу новой версии процедуры, добавив с помощью нее информацию о сотрудниках <code>Max Smart</code> из <code>20</code> отдела и <code>Clark Kent</code> из <code>10</code> отдела. </li>
+              <li>Просмотрите содержимое таблиц <code>Employees</code> и <code>Log_NewEmp</code>. Сколько записей добавлено в ту и другую таблицу?</li>
+              <li>Выполните <code>ROLLBACK</code> оператор для отката добавления данных о сотрудниках.
+                <ul>
+                  <li>Просмотрите содержимое таблицы <code>Employees</code>. </li>
+                  <li>Просмотрите содержимое таблицы <code>Log_NewEmp</code>.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="task" id="task-16-3">
+            <p class="task-text" name="task-16-3"><b>Задание 3.</b> Необходимо обеспечить работу пакета <code>emp_pkg</code> под правами вызывающего.</p>
+            <ul>
+              <li>С помощью оператора <code>GRANT</code> выдайте другому студенту права на исполнение (<code>EXECUTE</code>) вашего пакета <code>emp_pkg</code>.</li>
+              <li>Попросите коллегу выполнить процедуру <code>XXX.emp_pkg.add_employee</code>, где <code>XXX</code> — имя вашей схемы. По умолчанию, вызов происходит с правами владельца. Проверьте, в какой таблице <code>Employees</code> появилась новая запись.</li>
+              <li>Измените спецификацию своего пакета, добавив в нее инструкцию <code>AUTHID CURRENT_USER</code>. Перекомпилируйте пакет.</li>
+              <li>Попросите коллегу еще раз вызвать на исполнение вашу процедуру <code>add_employee</code> из пакета <code>emp_pkg</code>.</li>
+              <li>В какой схеме появиться запись о новом сотруднике?</li>
+            </ul>
+          </div>
+        </div>
+        <div class="lab" id="lab-17"><a name="#lab-17">
+            <h4>Практическое занятие 17. Создание триггеров</h4></a>
+          <div class="task" id="task-17-1">
+            <p class="task-text" name="task-17-1"><b>Задание 1.</b> В таблице <code>Jobs</code> хранятся значения максимально и минимально допустимой зарплаты для данной должности. Необходимо создать триггер, связанный с операциями <code>INSERT</code> и <code>UPDATE</code> таблицы <code>Employees</code>, который не позволит устанавливать некорректную зарплату для сотрудников. Для этого:</p>
+            <ul>
+              <li>Создайте процедуру <code>check_salary</code>:
+                <ul>
+                  <li>Процедура принимает на вход 2 параметра — идентификатор должности сотрудника и величину его зарплаты. </li>
+                  <li>Процедура использует <code>Job ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code>Jobs</code>). </li>
+                  <li>Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение «<code>Invalid salary {sal} for this job. Salaries must be between {min} and {max}</code>». Заменяйте именованные зоны соответствующими значениями.</li>
+                </ul>
+              </li>
+              <li>Создайте триггер <code>check_salary_trg</code> на таблицу <code>Employees</code>, который срабатывает для каждой строки перед операциями <code>INSERT</code> и <code>UPDATE</code>. 
+                <ul>
+                  <li>Триггер должен вызывать на исполнение процедуру <code>check_salary</code>.</li>
+                  <li>Триггер должен передавать процедуре значения <code>Job ID</code> и зарплаты.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="task" id="task-17-2">
+            <p class="task-text" name="task-17-2"><b>Задание 2.</b> Протестируйте работу триггера.</p>
+            <ul>
+              <li>Добавьте нового сотрудника с помощью процедуры <code>emp_pkg.add_employee</code> c именем <code>Eleanor Beh</code> и номером отдела <code>30</code>. Что произойдет и почему? Какая зарплата присваивается сотруднику при добавлении?</li>
+              <li>Измените зарплату сотруднику <code>115</code> на <code>$2000</code>. С помощью отдельной операции измените его должность на <code>HR_REP</code>. Что произойдет и почему?</li>
+              <li>Измените зарплату <code>115</code> сотрудника на <code>$2800</code>. Что произойдет?</li>
+            </ul>
+          </div>
+          <div class="task" id="task-17-3">
+            <p class="task-text" name="task-17-3"><b>Задание 3.</b> Внесите изменения в триггер таким образом, чтобы он срабатывал только при фактическом изменении зарплаты или должности сотрудника. Проверять допустимость зарплаты нужно в 2 случаях — собственно при изменении зарплаты, и при изменении должности сотрудника. Почему?</p>
+            <ul>
+              <li>Добавьте в описание триггера <code>WHEN</code>-конструкцию, проверяющую, что значение в столбцах <code>Salary</code> или <code>Job_ID</code> изменилось. Убедитесь, что Вы предусмотрели ситуацию, когда прежним (<code>OLD</code>) значением было <code>NULL</code> (в каком случае это происходит?).</li>
+              <li>Протестируйте работу триггера с помощью процедуры <code>emp_pkg.add_employee</code> и следующим набором параметров:
+                <ul>
+                  <li><code>p_first_name = 'Eleanor'</code>,</li>
+                  <li><code>p_last_name = 'Beh'</code>,</li>
+                  <li><code>p_Email = 'EBEH'</code>,</li>
+                  <li><code>p_Job = 'IT_PROG'</code>,</li>
+                  <li><code>p_sal = 5000</code>.</li>
+                </ul>
+              </li>
+              <li>Обновите зарплату сотрудников в должности <code>IT_PROG</code> — повысьте зарплату на <code>$2000</code>. Зафиксируйте результат.</li>
+              <li>Присвойте <code>Eleanor Beh</code> зарплату равную <code>$9000</code>.</li>
+              <li>Измените должность <code>Eleanor Beh</code> на <code>ST_MAN</code>. Зафиксируйте результат.</li>
+            </ul>
+          </div>
+          <div class="task" id="task-17-4">
+            <p class="task-text" name="task-17-4"><b>Задание 4.</b> Напишите триггер, запрещающий удаление сотрудников в рабочие часы.</p>
+            <ul>
+              <li>Создайте <code>statement</code> триггер с именем <code>delete_emp_trg</code> на таблицу <code>Employees</code>. Запретите удаление в период с 09:00 до 18:00. (или другой период актуальный на момент тестирования).</li>
+              <li>Попробуйте удалить сотрудника в должности <code>SA_REP</code>, который не приписан ни к какому отделу.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/prism.js"></script>
+    <script src="../js/setup.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>

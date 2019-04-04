@@ -1,0 +1,42 @@
+- var lab_n = 16;
+- var title = "Практическое занятие 16. Конструирование PL/SQL кода";
+
++lab
+  +task("1", "Дополните пакет <code>emp_pkg</code> новой процедурой, которая выбирает сотрудников указанного отдела и сохраняет выбранные записи в локальную для пакета <code>PL/SQL</code> таблицу:")
+    ul
+      li В спецификации пакета:
+        ul
+          li Добавьте объявление процедуры <code>get_employees</code>. Процедура принимает на вход один параметр <code>dept_id</code>, типа <code>Employees.Department_ID%TYPE</code>.
+          li Объявите <code>emp_tabletype</code> типа <code>TABLE OF Employees%ROWTYPE</code>.
+      li В теле пакета:
+        ul
+          li Объявите локальную переменную <code>emp_table</code> типа <code>emp_tabletype</code>.
+          li Напишите реализацию процедуры <code>get_employees</code>. Процедура должна заполнять локальную таблицу <code>emp_table</code> с помощью операций массовой закачки данных (<code>bulk fetch</code>).
+      li Создайте новую <code>public</code> процедуру <code>show_employees</code> в спецификации и теле пакета, которая не принимает на вход аргументов. Процедура отображает содержимое <code>private</code> таблицы <code>emp_table</code>. Данная процедура должна использовать процедуру <code>print_employee</code>.
+      li Запустите на исполнение процедуру <code>emp_pkg.get_employees</code> для выборки сотрудников из <code>30</code> отдела и отобразите выборку с помощью <code>emp_pkg.show_employees</code>. Повторите это для обработки сотрудников <code>60</code> отдела.
+
+
+  +task("2", "Необходимо обеспечить аудит добавления новых сотрудников в таблицу <code>Employees</code> с помощью процедуры <code>emp_pkg.add_employee</code>. Для этого:")
+    ul
+      li Запустите на исполнение скрипт <code>lab_07_02_a.sql</code> (путь к файлу: <code>\\feanor\public2\КИТвП\Курс 4\Семестр 8\Проектирование Web-приложений\Oracle Разработка программных единиц PLSQL\Oracle Database 10g - Develop PL-SQL Program Units\labs</code>). Этот скрипт создаст в вашей схеме таблицу <code>Log_NewEmp</code> и последовательность <code>log_newemp_seq</code>.
+      li В теле пакета <code>emp_pkg</code> измените реализацию той версии процедуры <code>add_employees</code>, которая на самом деле выполняет оператор <code>INSERT</code> в таблицу <code>Employees</code>. Добавьте в реализацию локальную процедуру <code>audit_newEmp</code>.
+        ul
+          li Процедура <code>audit_newEmp</code> должна быть объявлена как автономная транзакция и выполнять оператор <code>INSERT</code> в таблицу <code>log_newEmp</code>.
+          li Процедура должна добавлять значения <code>USER</code> (имя текущего пользователя, который выполняет модификацию), текущего времени, и имени нового, добавляемого сотрудника. 
+          li Используйте <code>Log_NewEmp_Seq</code> для заполнения столбца <code>Entry_ID</code>.
+      li В теле процедуры <code>add_employees</code> вызовите на исполнение локальную процедуру <code>audit_newEmp</code> перед тем, как добавить запись о новом сотруднике в таблице <code>Employees</code>.
+      li Протестируйте работу новой версии процедуры, добавив с помощью нее информацию о сотрудниках <code>Max Smart</code> из <code>20</code> отдела и <code>Clark Kent</code> из <code>10</code> отдела. 
+      li Просмотрите содержимое таблиц <code>Employees</code> и <code>Log_NewEmp</code>. Сколько записей добавлено в ту и другую таблицу?
+      li Выполните <code>ROLLBACK</code> оператор для отката добавления данных о сотрудниках.
+        ul
+          li Просмотрите содержимое таблицы <code>Employees</code>. 
+          li Просмотрите содержимое таблицы <code>Log_NewEmp</code>.
+
+
+  +task("3", "Необходимо обеспечить работу пакета <code>emp_pkg</code> под правами вызывающего.")
+    ul
+      li С помощью оператора <code>GRANT</code> выдайте другому студенту права на исполнение (<code>EXECUTE</code>) вашего пакета <code>emp_pkg</code>.
+      li Попросите коллегу выполнить процедуру <code>XXX.emp_pkg.add_employee</code>, где <code>XXX</code> — имя вашей схемы. По умолчанию, вызов происходит с правами владельца. Проверьте, в какой таблице <code>Employees</code> появилась новая запись.
+      li Измените спецификацию своего пакета, добавив в нее инструкцию <code>AUTHID CURRENT_USER</code>. Перекомпилируйте пакет.
+      li Попросите коллегу еще раз вызвать на исполнение вашу процедуру <code>add_employee</code> из пакета <code>emp_pkg</code>.
+      li В какой схеме появиться запись о новом сотруднике?
