@@ -75,33 +75,33 @@ CREATE OR REPLACE PROCEDURE
   END;
   -- Объехать города.
   PROCEDURE traverse (
-      ID   SIMPLE_INTEGER
+        ID SIMPLE_INTEGER
   , pathIN pathRecord
   , dist   SIMPLE_INTEGER
   ) IS
-    currentDest PLS_INTEGER := cities(ID).FIRST;
-    path pathRecord := pathIN;
+    currentDest PLS_INTEGER := cities(ID).FIRST; -- следующий город, в который поедем.
+    path pathRecord := pathIN; -- текущий путь (который, возможно, будет добавлен в allPaths).
   BEGIN
-    IF ID = toID THEN
-      path.dist := path.dist + dist;
-      path.cities.EXTEND;
-      path.cities(path.cities.LAST) := ID;
-      allPaths.EXTEND;
-      allPaths(allPaths.LAST) := path;
-    RETURN; END IF;
-
+    -- если мы уже проехали этот город, то дальше не едем.
     IF passed.EXISTS(ID) AND passed(ID) = TRUE THEN RETURN; END IF;
-    
-    passed(ID) := TRUE;
+
+    -- добавляем город к путю.
     path.dist := path.dist + dist;
     path.cities.EXTEND;
     path.cities(path.cities.LAST) := ID;
 
+    -- если мы доехали до пункта назначения, то добавляем путь к allPaths.
+    IF ID = toID THEN
+      allPaths.EXTEND;
+      allPaths(allPaths.LAST) := path;
+    RETURN; END IF;
+    
+    -- рекурсивно объезжаем всевозможные доступные города.
+    passed(ID) := TRUE;
     WHILE currentDest IS NOT NULL LOOP
       traverse(currentDest, path, cities(ID)(currentDest));
       currentDest := cities(ID).NEXT(currentDest);
     END LOOP;
-    
     passed(ID) := FALSE;
   END;
 BEGIN
@@ -209,10 +209,10 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Всего ' || allPaths.LAST || ' вариантов маршрута.');
   END;
 
-  -- Если возникли какие-то другие ошибки.
-  EXCEPTION
-    WHEN OTHERS THEN
-      error('something went wrong...');
+-- Если возникли какие-то другие ошибки.
+EXCEPTION
+  WHEN OTHERS THEN
+    error('something went wrong...');
 END dop_3_14;
 /
 
