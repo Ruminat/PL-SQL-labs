@@ -1,4 +1,9 @@
 CREATE OR REPLACE PACKAGE emp_pkg IS
+  PRAGMA SERIALLY_REUSABLE;
+
+  someVar NUMBER(10) := 20;
+
+
   PROCEDURE add_employee (
     firstName Employees.First_Name%TYPE
   ,  lastName Employees.Last_Name%TYPE

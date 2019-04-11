@@ -3,8 +3,10 @@
   <head>
     <title>Доп. задание 3.14</title>
     <meta charset="UTF-8"/>
-    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="icon" href="./../img/icons/database.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="./../css/main.css"/>
   </head>
   <body>
     <nav id="menu"><a class="element" id="menu-switch">
@@ -19,10 +21,10 @@
       <div class="labs">
         <div class="labs">
           <div class="header">
-            <h1>Дополнительное задание 3.14</h1>
+            <h2>Дополнительное задание 3.14</h2>
           </div>
         </div>
-        <h2>Постановка задачи</h2>
+        <h4>Постановка задачи</h4>
         <p class="task-text">Создать процедуру, которая находит все пути между двумя городами. Имена городов — параметры процедуры. Расстояния между городами заданы в таблице <code>Paths</code>. Имена городов уникальны. Скрипт на создание таблицы <code>paths.sql</code> находится в папке курса на <code>Public2</code>.</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>AID</th><th>ACITY</th><th>BID</th><th>BCITY</th><th>DIST</th></tr></thead><tbody><tr><td>1</td><td>Moscow</td><td>2</td><td>Kazan</td><td>2</td></tr><tr><td>1</td><td>Moscow</td><td>3</td><td>Tula</td><td>4</td></tr><tr><td>1</td><td>Moscow</td><td>4</td><td>Sochi</td><td>7</td></tr><tr><td>1</td><td>Moscow</td><td>6</td><td>Omsk</td><td>5</td></tr><tr><td>2</td><td>Kazan</td><td>4</td><td>Sochi</td><td>6</td></tr><tr><td>2</td><td>Kazan</td><td>7</td><td>Vologda</td><td>8</td></tr><tr><td>2</td><td>Kazan</td><td>5</td><td>Pskov</td><td>3</td></tr><tr><td>3</td><td>Tula</td><td>6</td><td>Omsk</td><td>6</td></tr><tr><td>4</td><td>Sochi</td><td>6</td><td>Omsk</td><td>1</td></tr><tr><td>4</td><td>Sochi</td><td>7</td><td>Vologda</td><td>6</td></tr><tr><td>5</td><td>Pskov</td><td>7</td><td>Vologda</td><td>7</td></tr><tr><td>6</td><td>Omsk</td><td>7</td><td>Vologda</td><td>6</td></tr></tbody></table></row>
         <p>Программа должна предусматривать обработку исключений.</p>
         <p>Пример представления результата:</p>
@@ -40,7 +42,7 @@
               Pskov Kazan Vologda                         Длина маршрута — 11
             Всего 10 вариантов маршрута
             </code></pre>
-        <h2>Решение</h2>
+        <h4>Решение</h4>
         <pre class="line-numbers undefined"><code class="language-plsql">-- Создание процедуры.
 CREATE OR REPLACE PROCEDURE
   dop_3_14 (fromCity Paths.Acity%TYPE, toCity Paths.Bcity%TYPE) IS
@@ -238,8 +240,8 @@ END;</code></pre>
             Всего 12 вариантов маршрута.</code></pre>
       </div>
     </div>
-    <script src="../js/prism.js"></script>
-    <script src="../js/setup.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="./../js/prism.js"></script>
+    <script src="./../js/setup.js"></script>
+    <script src="./../js/main.js"></script>
   </body>
 </html>

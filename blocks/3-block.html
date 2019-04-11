@@ -3,8 +3,10 @@
   <head>
     <title>PL/SQL Лабы. Блок 3</title>
     <meta charset="UTF-8"/>
-    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="icon" href="./../img/icons/database.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="./../css/main.css"/>
   </head>
   <body>
     <nav id="menu"><a class="element" id="menu-switch">
@@ -943,6 +945,11 @@ END emp_pkg;</code></pre>
               <li>Сделайте все необходимое, чтобы исправить ошибки компиляции. С чем они связаны? Выполните необходимые действия (подсказка: <code>forward declaration</code>).</li>
             </ul>
             <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg IS
+  PRAGMA SERIALLY_REUSABLE;
+
+  someVar NUMBER(10) := 20;
+
+
   PROCEDURE add_employee (
     firstName Employees.First_Name%TYPE
   ,  lastName Employees.Last_Name%TYPE
@@ -978,6 +985,7 @@ END emp_pkg;</code></pre>
 END emp_pkg;</code></pre>
             <pre><code class="language-output">Package EMP_PKG compiled</code></pre>
             <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+PRAGMA SERIALLY_REUSABLE;
 
   TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
   valid_departments boolean_tab_type;
@@ -1086,6 +1094,7 @@ END emp_pkg;</code></pre>
   END;
 
   PROCEDURE init_departments IS BEGIN
+    DBMS_OUTPUT.PUT_LINE(someVar || ' -- some var');
     FOR row IN (SELECT Department_ID FROM Departments) LOOP
       valid_departments(row.Department_ID) := TRUE;
     END LOOP;
@@ -1128,8 +1137,8 @@ END emp_pkg;
         </div>
       </div>
     </div>
-    <script src="../js/prism.js"></script>
-    <script src="../js/setup.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="./../js/prism.js"></script>
+    <script src="./../js/setup.js"></script>
+    <script src="./../js/main.js"></script>
   </body>
 </html>

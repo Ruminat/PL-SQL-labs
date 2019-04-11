@@ -1,4 +1,5 @@
 CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+PRAGMA SERIALLY_REUSABLE;
 
   TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
   valid_departments boolean_tab_type;
@@ -107,6 +108,7 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
   END;
 
   PROCEDURE init_departments IS BEGIN
+    DBMS_OUTPUT.PUT_LINE(someVar || ' -- some var');
     FOR row IN (SELECT Department_ID FROM Departments) LOOP
       valid_departments(row.Department_ID) := TRUE;
     END LOOP;

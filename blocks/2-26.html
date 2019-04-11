@@ -3,8 +3,10 @@
   <head>
     <title>Доп. задание 2.26</title>
     <meta charset="UTF-8"/>
-    <link rel="icon" href="../img/icons/database.png"/><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/main.css"/>
+    <link rel="icon" href="./../img/icons/database.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="./../css/main.css"/>
   </head>
   <body>
     <nav id="menu"><a class="element" id="menu-switch">
@@ -19,13 +21,13 @@
       <div class="labs">
         <div class="labs">
           <div class="header">
-            <h1>Дополнительное задание 2.26</h1>
+            <h2>Дополнительное задание 2.26</h2>
           </div>
         </div>
-        <h2>Постановка задачи</h2>
+        <h4>Постановка задачи</h4>
         <p class="task-text">В таблице имеется столбец с символьными строками. Для каждой символьной строки определить подстроки, встречающиеся в символьной строке ровно два раза и содержащие наибольшее количество символов. Вывести символьные строки и номера позиций начала  подстрок.  Выделенные подстроки не должны пересекаться. Например, для символьных строк:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th></tr></thead><tbody><tr><td>Сabjrehwklhgfjrehwkyupolkoraclenmoraclepp<code>microsoft</code>m<code>microsoft</code>u<code>microsoft</code></td></tr><tr><td>yyyyyyyy</td></tr><tr><td>create</td></tr></tbody></table></row>
         <p>результат должен быть:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row>
-        <h2>Решение</h2>
+        <h4>Решение</h4>
         <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
   -- типы данных для итогового вывода
   TYPE outputRow IS TABLE OF VARCHAR2(4096);
@@ -197,8 +199,8 @@ END;
                                                                                    | 132       | 22                     | 26</code></pre>
       </div>
     </div>
-    <script src="../js/prism.js"></script>
-    <script src="../js/setup.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="./../js/prism.js"></script>
+    <script src="./../js/setup.js"></script>
+    <script src="./../js/main.js"></script>
   </body>
 </html>
