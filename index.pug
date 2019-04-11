@@ -24,7 +24,7 @@ mixin labLink(blockN, labN, title)
 
 mixin extraLink(blockN, extraN, title)
   li: a(href='blocks/'+ blockN +'-'+ extraN +'.html')
-    <i class="fas fa-atom"></i> #{blockN}.#{extraN} #{title}
+    <i class="fas fa-file-code"></i> #{blockN}.#{extraN} #{title}
 
 doctype html
 html(lang='ru')
@@ -44,36 +44,38 @@ html(lang='ru')
       +blockLabs
         +extraLink('3', '14', 'Пути между городами')
         +extraLink('2', '26', 'Две подстроки')
-        +extraLink('1', '7', 'Информация об отделе')
+        +extraLink('1', '07', 'Информация об отделе')
 
       h3 Блоки
 
-      .card-columns
-        +blockCard
-          +blockLink('4')
-          +blockLabs
-            +labLink('4', '14', 'Встроенные пакеты Oracle')
-            +labLink('4', '15', 'Использование динамического SQL')
-            +labLink('4', '16', 'Конструирование PL/SQL кода')
-            +labLink('4', '17', 'Создание триггеров')
-        +blockCard
-          +blockLink('3')
-          +blockLabs
-            +labLink('3', '9',  'Создание процедур')
-            +labLink('3', '10', 'Создание функций')
-            +labLink('3', '12', 'Создание пакетов')
-            +labLink('3', '13', 'Работа с пакетами')
-        +blockCard
-          +blockLink('2')
-          +blockLabs
-            +labLink('2', '5', 'Управляющие конструкции')
-            +labLink('2', '6', 'Работа с составными типами данных')
-            +labLink('2', '7', 'Использование явных курсоров')
-            +labLink('2', '8', 'Обработка исключений')
-        +blockCard
-          +blockLink('1')
-          +blockLabs
-            +labLink('1', '1', 'Введение в PL/SQL')
-            +labLink('1', '2', 'Объявление переменных PL/SQL')
-            +labLink('1', '3', 'Команды исполняемой секции')
-            +labLink('1', '4', 'Взаимодействие с сервером Oracle')
+      .row
+        .col-md-6
+          +blockCard
+            +blockLink('3')
+            +blockLabs
+              +labLink('3', '09',  'Создание процедур')
+              +labLink('3', '10', 'Создание функций')
+              +labLink('3', '12', 'Создание пакетов')
+              +labLink('3', '13', 'Работа с пакетами')
+          +blockCard
+            +blockLink('1')
+            +blockLabs
+              +labLink('1', '1', 'Введение в PL/SQL')
+              +labLink('1', '2', 'Объявление переменных PL/SQL')
+              +labLink('1', '3', 'Команды исполняемой секции')
+              +labLink('1', '4', 'Взаимодействие с сервером Oracle')
+        .col-md-6
+          +blockCard
+            +blockLink('4')
+            +blockLabs
+              +labLink('4', '14', 'Встроенные пакеты Oracle')
+              +labLink('4', '15', 'Использование динамического SQL')
+              +labLink('4', '16', 'Конструирование PL/SQL кода')
+              +labLink('4', '17', 'Создание триггеров')
+          +blockCard
+            +blockLink('2')
+            +blockLabs
+              +labLink('2', '5', 'Управляющие конструкции')
+              +labLink('2', '6', 'Работа с составными типами данных')
+              +labLink('2', '7', 'Использование явных курсоров')
+              +labLink('2', '8', 'Обработка исключений')
