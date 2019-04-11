@@ -35,47 +35,64 @@ html(lang='ru')
     .container
       h2 Администрирование баз данных. PL/SQL
 
-      h3 Конспект
+      .row
+        .col-md-6
+          h3 Конспект
 
-      p.comment В процессе создания.
+          p.comment В процессе создания.
 
-      h3 Дополнительные задания
+        .col-md-6
+          h3 Дополнительные задания
 
-      +blockLabs
-        +extraLink('3', '14', 'Пути между городами')
-        +extraLink('2', '26', 'Две подстроки')
-        +extraLink('1', '07', 'Информация об отделе')
+          +blockLabs
+            +extraLink('3', '14', 'Пути между городами')
+            +extraLink('2', '26', 'Две подстроки')
+            +extraLink('1', '7', 'Информация об отделе')
+
 
       h3 Блоки
 
+      -
+        var blocks = [
+          {number: 4, labs: [
+            {number: 17, title: 'Создание процедур'},
+            {number: 16, title: 'Создание функций'},
+            {number: 15, title: 'Создание пакетов'},
+            {number: 14, title: 'Работа с пакетами'},
+          ]},
+          {number: 3, labs: [
+            {number: 13, title: 'Введение в PL/SQL'},
+            {number: 12, title: 'Объявление переменных PL/SQL'},
+            {number: 10, title: 'Команды исполняемой секции'},
+            {number: 9,  title: 'Взаимодействие с сервером Oracle'},
+          ]},
+          {number: 2, labs: [
+            {number: 5, title: 'Встроенные пакеты Oracle'},
+            {number: 6, title: 'Использование динамического SQL'},
+            {number: 7, title: 'Конструирование PL/SQL кода'},
+            {number: 8, title: 'Создание триггеров'},
+          ]},
+          {number: 1, labs: [
+            {number: 1, title: 'Управляющие конструкции'},
+            {number: 2, title: 'Работа с составными типами данных'},
+            {number: 3, title: 'Использование явных курсоров'},
+            {number: 4, title: 'Обработка исключений'},
+          ]},
+        ];
+
       .row
         .col-md-6
-          +blockCard
-            +blockLink('3')
-            +blockLabs
-              +labLink('3', '09',  'Создание процедур')
-              +labLink('3', '10', 'Создание функций')
-              +labLink('3', '12', 'Создание пакетов')
-              +labLink('3', '13', 'Работа с пакетами')
-          +blockCard
-            +blockLink('1')
-            +blockLabs
-              +labLink('1', '1', 'Введение в PL/SQL')
-              +labLink('1', '2', 'Объявление переменных PL/SQL')
-              +labLink('1', '3', 'Команды исполняемой секции')
-              +labLink('1', '4', 'Взаимодействие с сервером Oracle')
+          - for (var b = 0; b < blocks.length; b += 2)
+            +blockCard
+              +blockLink(blocks[b].number)
+              +blockLabs
+                each lab in blocks[b].labs
+                  +labLink(blocks[b].number, lab.number, lab.title)
         .col-md-6
-          +blockCard
-            +blockLink('4')
-            +blockLabs
-              +labLink('4', '14', 'Встроенные пакеты Oracle')
-              +labLink('4', '15', 'Использование динамического SQL')
-              +labLink('4', '16', 'Конструирование PL/SQL кода')
-              +labLink('4', '17', 'Создание триггеров')
-          +blockCard
-            +blockLink('2')
-            +blockLabs
-              +labLink('2', '5', 'Управляющие конструкции')
-              +labLink('2', '6', 'Работа с составными типами данных')
-              +labLink('2', '7', 'Использование явных курсоров')
-              +labLink('2', '8', 'Обработка исключений')
+          - for (var b = 1; b < blocks.length; b += 2)
+            +blockCard
+              +blockLink(blocks[b].number)
+              +blockLabs
+                each lab in blocks[b].labs
+                  +labLink(blocks[b].number, lab.number, lab.title)
+          
