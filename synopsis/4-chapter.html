@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>4. Функции, процедуры, пакеты</title>
+    <meta charset="UTF-8">
+    <link rel="icon" href="./../img/icons/database.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="./../css/main.css">
+  </head>
+  <body>
+    <nav id="menu"><a class="element" id="menu-switch">
+        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"></div>
+        <div class="text-part"></div></a><a class="element" href="../index.html">
+        <div class="icon-part"><img class="icon" src="../img/icons/home.png"></div>
+        <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
+        <div class="icon-part"><img class="icon" src="../img/icons/github.png"></div>
+        <div class="text-part">GitHub</div></a>
+    </nav>
+    <div id="main">
+      <div class="header">
+        <h2>4. Функции, процедуры, пакеты</h2>
+      </div>
+      <div class="section" id="secion-1">
+        <!-- - sections.push({number: section, title: title});--><a name="#section-1">
+          <h4>1. Процедуры</h4></a>
+      </div>
+      <p>Синтаксис:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          CREATE [OR REPLACE] PROCEDURE
+            procedureName [(
+              argName1 [IN | OUT | IN OUT] type1 [:= defaultValue],
+              argName2 [IN | OUT | IN OUT] type2 [:= defaultValue],
+              -- аргументы
+            )] IS | AS
+            -- локальные переменные и процедуры/функции
+            -- процедуры и функции должны быть написаны в самом низу
+          BEGIN
+            -- код подпрограммы
+          END [procedureName];
+          </code></pre>
+      <p class="comment">Вместо <code class="language-plsql">:=</code> можно использовать и <code class="language-plsql">DEFAULT</code>.</p>
+      <p>Режимы <code class="language-plsql">IN | OUT | IN OUT</code>:</p>
+      <ul>
+        <li><code class="language-plsql">IN</code> (по умолчанию): передаёт значение в подпрограмму. В подпрограмме ведёт себя как константа.</li>
+        <li><code class="language-plsql">OUT</code>: возвращает значение в вызывающую среду. В подпрограмме ведёт себя как переменная с <code class="language-plsql">NULL</code>-овым значением.</li>
+        <li><code class="language-plsql">IN OUT</code>: предоставляет входное значение, которое может быть возвращено (выведено) как изменённое значение. В подпрограмме ведёт себя как переменная.</li>
+      </ul>
+      <p>Пример:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          CREATE TABLE dept AS SELECT * FROM departments;
+          
+          CREATE PROCEDURE addDept IS
+            deptID   dept.department_id%TYPE;
+            deptName dept.department_name%TYPE;
+          BEGIN
+            deptID   := 280;
+            deptName := 'ST-Curriculum';
+            INSERT INTO Dept(Department_ID, Department_Name)
+            VALUES          (deptID,        deptName);
+          
+            DBMS_OUTPUT.PUT_LINE('Inserted '|| SQL%ROWCOUNT ||' row(s).');
+          END;
+          </code></pre>
+      <p>Подпрограмма может быть вызвана внутри <code class="language-plsql">BEGIN...END;</code>, с помощью операторов <code class="language-plsql">EXECUTE</code> и <code class="language-plsql">CALL</code> (<code class="language-plsql">CALL</code> круче — он может так же вызывать процедуры/функции, написанные на <code>C/C++</code>).</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          -- вне блока BEGIN..END:
+          EXECUTE someProcedure(arg1, arg2, ...) -- «;» не нужна
+          CALL someOtherProcedure(arg1, arg2, ...) -- «;» не нужна
+          
+          -- внутри блока BEGIN..END:
+          BEGIN
+            anotherProcedure(arg1, arg2, ...); -- тут уже нужна «;»
+          END;
+          </code></pre>
+      <p>Информация о процедурах/функциях/пакетах/триггерах может быть найдена в словаре <code class="language-plsql">USER_SOURCE</code>.</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          DESCRIBE USER_SOURCE
+          
+          Name          Null? Type           
+          ------------- ----- -------------- 
+          NAME                VARCHAR2(128)  
+          TYPE                VARCHAR2(12)   
+          LINE                NUMBER         
+          TEXT                VARCHAR2(4000) 
+          ORIGIN_CON_ID       NUMBER   
+          </code></pre>
+      <div class="section" id="secion-2">
+        <!-- - sections.push({number: section, title: title});--><a name="#section-2">
+          <h4>2. Функции</h4></a>
+      </div>
+      <p>Синтаксис:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          CREATE [OR REPLACE] FUNCTION
+            functionName [(
+              argName1 [IN | OUT | IN OUT] type1 [:= defaultValue],
+              argName2 [IN | OUT | IN OUT] type2 [:= defaultValue],
+              -- аргументы
+            )] RETURN typeName IS | AS
+            -- локальные переменные и процедуры/функции
+            -- процедуры и функции должны быть написаны в самом низу
+          BEGIN
+            -- код функции
+          END [functionName];
+          </code></pre>
+      <p>Передавать параметры в функцию/процедуру можно по очереди, а можно указать имя параметра через <code class="language-plsql">=></code>:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          BEGIN
+            var := someFunction(42,  arg9 => 31);
+            --                  arg1 arg9
+          END;
+          </code></pre>
+      <p>Функции так же можно использовать:</p>
+      <ul>
+        <li>В списке команды <code class="language-plsql">SELECT</code> в запросе.</li>
+        <li>В условных выражениях в <code class="language-plsql">WHERE</code> и <code class="language-plsql">HAVING</code>.</li>
+        <li>В разделах запроса <code class="language-plsql">CONNECT BY</code>, <code class="language-plsql">START WITH</code>, <code class="language-plsql">ORDER BY</code> и <code class="language-plsql">GROUP BY</code>.</li>
+        <li>В разделе <code class="language-plsql">VALUES</code> команды <code class="language-plsql">INSERT</code>.</li>
+        <li>В разделе <code class="language-plsql">SET</code> команды <code class="language-plsql">UPDATE</code>.</li>
+      </ul>
+      <p><b>Ограничения вызова функций из SQL-выражений</b>:</p>
+      <ul>
+        <li>Пользовательские функции, которые могут быть вызваны из SQL выражений, должны:</li>
+        <ul>
+          <li>Храниться в базе данных.</li>
+          <li>Получать только <code class="language-plsql">IN</code>-параметры с допустимыми в SQL типами данных, а не специфическими типами PL/SQL.</li>
+          <li>Возвращать допустимые в SQL типы данных, а не специфические типы PL/SQL.</li>
+        </ul>
+        <li>При вызове функции из SQL оператора вы должны быть владельцем функции или иметь привилегию <code class="language-plsql">EXECUTE</code>.</li>
+      </ul>
+      <p><b>Контролирование сторонних эффектов при вызове функций из SQL выражений</b>. Функции, вызываемые из:</p>
+      <ul>
+        <li>Команды <code class="language-plsql">SELECT</code>, не могут содержать DML-команд.</li>
+        <li>Команд <code class="language-plsql">UPDATE</code> и <code class="language-plsql">DELETE</code> для таблицы <code class="language-plsql">T</code>, не могут содержать запросы и DML команд к той же таблице <code class="language-plsql">T</code>.</li>
+        <li>SQL операторов, не могут завершать транзакцию (то есть, не могут содержать команды <code class="language-plsql">COMMIT</code> и <code class="language-plsql">ROLLBACK</code>).</li>
+      </ul>
+      <p class="comment">Вызовы подпрограмм, нарушающих данные ограничения, так же не допустимы в этих функциях.</p>
+      <div class="section" id="secion-3">
+        <!-- - sections.push({number: section, title: title});--><a name="#section-3">
+          <h4>3. Пакеты</h4></a>
+      </div>
+      <p><b>Пакет</b> — это объект схемы, который объединяет логически родственные PL/SQL типы данных, переменные и подпрограммы.</p>
+      <p>Синтаксис создания спецификации пакета:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          CREATE [OR REPLACE] PACKAGE packageName IS | AS
+            -- объявление public типов данных и переменных
+            -- спецификация подпрограмм
+          END [packageName];
+          </code></pre>
+      <p class="comment">Все конструкции, объявленные в спецификации пакета, видны пользователям, которые имеют привилегии на пакет.</p>
+      <p>Синтаксис создания тела пакета:</p>
+      <pre class="line-numbers undefined"><code class="language-plsql">
+          CREATE [OR REPLACE] PACKAGE BODY packageName IS | AS
+            -- объявление private типов данных и переменных
+            -- тела подпрограмм
+          [BEGIN операторы инициализации]
+          END [packageName];
+          </code></pre>
+      <p class="comment">Пакеты можно создавать и без тела, чтоб, к примеру, хранить там переменные и константы.</p>
+      <p><b>Forward declaration</b> (прямое объявление) — это <code>private</code> спецификация подпрограмм, разделённых точкой с запятой (нужна для того, чтобы можно было использовать подпрограммы до их описания в пакете).</p>
+      <p><b>Уровень чистоты</b> – это степень, в которой функция свободна от сторонних эффектов, которые относятся к доступу к таблицам базы данных, переменным пакета и т.д. для чтения или записи.</p>
+      <p>Контролировать сторонние эффекты очень важно, потому что они могут:</p>
+      <ul>
+        <li>Препятствовать правильному распараллеливанию запроса.</li>
+        <li>Приводить к результатам, зависящим от порядка следования и, как следствие, неопределённым.</li>
+        <li>Требовать недопустимых действий, таких как поддержание состояния пакета между сессиями пользователя.</li>
+      </ul>
+      <p>Чтобы быть вызываемой из SQL операторов, хранимая функция должна подчиняться следующим правилам чистоты для управления сторонними эффектами:</p>
+      <ul>
+        <li>При вызове из команды <code class="language-plsql">SELECT</code> или распараллеленных DML-команд функция не может изменять таблицы базы данных.</li>
+        <li>При вызове из DML-команды функция не может выполнять запросы или изменять таблицы базы данных, которые уже изменяются данной командой.</li>
+        <li>При вызове из команды <code class="language-plsql">SELECT</code> или DML-команд функция не может выполнять команды контроля SQL транзакций, контроля сессии или контроля системы.</li>
+      </ul>
+      <p><b>Устойчивое состояние пакета</b>. Набор пакетных переменных и значений определяет состояние пакета. Состояние пакета:</p>
+      <ul>
+        <li>Инициализируется при первом обращении к компоненте пакета (его загрузке в память).</li>
+        <li>Устойчиво (по умолчанию) в течении сессии:
+          <ul>
+            <li>Хранится в <code>User Global Area</code> (<code>UGA</code>) (в ОЗУ).</li>
+            <li>Уникально для каждой сессии.</li>
+            <li>Может изменяться при вызове подпрограмм пакета или изменении <code>public</code> переменных.</li>
+          </ul>
+        </li>
+        <li>При использовании директивы <code class="language-plsql">PRAGMA SERIALLY_REUSABLE</code> в спецификации пакета становится неустойчивым в течении сессии, но устойчивым в течении выполнения вызова подпрограммы.</li>
+      </ul>
+    </div>
+    <script src="./../js/prism.js"></script>
+    <script src="./../js/setup.js"></script>
+    <script src="./../js/main.js"></script>
+  </body>
+</html>

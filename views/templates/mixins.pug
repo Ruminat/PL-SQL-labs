@@ -3,6 +3,9 @@ mixin lab
 		a(name="#lab-" + lab_n): h4= title
 		block
 
+mixin PL(theCode)
+	<code class="language-plsql">#{theCode}</code>
+
 mixin task(task_n, text)
 	div(class="task" id="task-" + lab_n + "-" + task_n)
 		p(name="task-" + lab_n + "-" + task_n class="task-text") <b>Задание #{task_n}.</b> !{text}

@@ -36,19 +36,29 @@ html(lang='ru')
     .container
       h2 Администрирование баз данных. PL/SQL
 
+
+      include synopsis/_contents.pug
+
       .row
         .col-md-6
           h3 Конспект
 
-          p.comment В процессе создания.
+          .card
+            .card-body
+              ul.list-unstyled
+                each chapter in chapters
+                  li: a(href='synopsis/'+ chapter.number +'-chapter.html')
+                    <i class="fas fa-book-open"></i> #{chapter.number} #{chapter.title}
 
         .col-md-6
           h3 Дополнительные задания
 
-          +blockLabs
-            +extraLink('3', '14', 'Пути между городами')
-            +extraLink('2', '26', 'Две подстроки')
-            +extraLink('1', '7', 'Информация об отделе')
+          .card
+            .card-body
+              +blockLabs
+                +extraLink('3', '14', 'Пути между городами')
+                +extraLink('2', '26', 'Две подстроки')
+                +extraLink('1', '7', 'Информация об отделе')
 
 
       h3 Блоки

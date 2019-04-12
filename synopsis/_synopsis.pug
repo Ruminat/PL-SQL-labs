@@ -1,0 +1,32 @@
+include ../views/templates/mixins.pug
+//- include ../views/templates/contents.pug
+
+mixin section(title)
+  div(class="section" id="secion-"+ section)
+    // - sections.push({number: section, title: title});
+    a(name="#section-" + section): h4 #{section}. #{title}
+    - section++;
+    block
+
+- var css = './../css/';
+- var img = './../img/';
+- var js  = './../js/';
+
+doctype html
+html(lang='ru')
+  include _contents.pug
+  - var section = 1;
+  - var sections = [];
+  
+  head
+    block head
+    include ../views/templates/head.pug
+  body
+    include ../views/templates/menu.pug
+
+    #main
+      block content
+
+      //- p #{section}
+
+    include ../views/templates/scripts.pug
