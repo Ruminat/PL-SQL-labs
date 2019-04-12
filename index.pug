@@ -36,12 +36,31 @@ html(lang='ru')
     .container
       h2 Администрирование баз данных. PL/SQL
 
+      h3.text-center Исходные файлы
+
+      .card.text-center
+        .card-body
+          a(href="https://drive.google.com/drive/folders/11Pkvhpps8qC6pYZpUa2KYZDe29vv7rAs?usp=sharing")
+            button.btn.btn-light(type="button")
+              <i class="fab fa-google-drive"></i> Лабы (блоки)
+
+          a(href="https://drive.google.com/drive/folders/1qb1I2gdK-2zMGHG8lz-dOdbwGiS2CZfQ?usp=sharing")
+            button.btn.btn-light(type="button")
+              <i class="fab fa-google-drive"></i> Доп. задачи
+
+          a(href="https://drive.google.com/drive/folders/1NB1oDjWn4shu41gh9m9Tj3IeuQVCW0Z1?usp=sharing")
+            button.btn.btn-light(type="button")
+              <i class="fab fa-google-drive"></i> Литература
 
       include synopsis/_contents.pug
 
       .row
         .col-md-6
           h3 Конспект
+
+          a(href="https://drive.google.com/drive/folders/1rT-5jYUKVV2ZqQmbgwDK59jFQtNzAsDH?usp=sharing")
+            button.btn.btn-light(type="button")
+              <i class="fab fa-google-drive"></i> Лекции PL/SQL
 
           .card
             .card-body
@@ -53,6 +72,10 @@ html(lang='ru')
         .col-md-6
           h3 Дополнительные задания
 
+          a(href="./files/Доп. задачи.doc")
+            button.btn.btn-light(type="button")
+              <i class="fas fa-file-word"></i> Условия доп. заданий
+
           .card
             .card-body
               +blockLabs
@@ -62,6 +85,13 @@ html(lang='ru')
 
 
       h3 Блоки
+      
+      a(href="./files/Блоки. Часть 1.docx")
+        button.btn.btn-light(type="button")
+          <i class="fas fa-file-word"></i> Блоки. Часть 1
+      a(href="./files/Блоки. Часть 2.doc")
+        button.btn.btn-light(type="button")
+          <i class="fas fa-file-word"></i> Блоки. Часть 2
 
       -
         var blocks = [
@@ -106,4 +136,3 @@ html(lang='ru')
               +blockLabs
                 each lab in blocks[b].labs
                   +labLink(blocks[b].number, lab.number, lab.title)
-          
