@@ -7,3 +7,5 @@
 Автор — Влад Фурман.
 
 Все материалы находятся [здесь](https://ruminat.github.io/PL-SQL-labs/).
+
+![Сайт](img/site-preview.png)
