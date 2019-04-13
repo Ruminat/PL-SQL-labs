@@ -10,12 +10,18 @@
   </head>
   <body>
     <nav id="menu"><a class="element" id="menu-switch">
-        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"></div>
+        <div class="icon-part"><i class="fas fa-bars"></i></div>
         <div class="text-part"></div></a><a class="element" href="../index.html">
-        <div class="icon-part"><img class="icon" src="../img/icons/home.png"></div>
+        <div class="icon-part"><i class="fas fa-home"></i></div>
         <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
-        <div class="icon-part"><img class="icon" src="../img/icons/github.png"></div>
-        <div class="text-part">GitHub</div></a>
+        <div class="icon-part"><i class="fab fa-github"></i></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#task">
+        <div class="icon-part"><i class="fas fa-thumbtack"></i></div>
+        <div class="text-part">Задача</div></a><a class="element" href="#solution">
+        <div class="icon-part"><i class="fas fa-code"></i></div>
+        <div class="text-part">Решение</div></a><a class="element" href="#result">
+        <div class="icon-part"><i class="fas fa-poll-h"></i></div>
+        <div class="text-part">Результат</div></a>
     </nav>
     <div id="main">
       <div class="labs">
@@ -23,11 +29,11 @@
           <div class="header">
             <h2>Дополнительное задание 2.26</h2>
           </div>
-        </div>
-        <h4>Постановка задачи</h4>
+        </div><a name="task">
+          <h4>Постановка задачи</h4></a>
         <p class="task-text">В таблице имеется столбец с символьными строками. Для каждой символьной строки определить подстроки, встречающиеся в символьной строке ровно два раза и содержащие наибольшее количество символов. Вывести символьные строки и номера позиций начала  подстрок.  Выделенные подстроки не должны пересекаться. Например, для символьных строк:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th></tr></thead><tbody><tr><td>Сabjrehwklhgfjrehwkyupolkoraclenmoraclepp<code>microsoft</code>m<code>microsoft</code>u<code>microsoft</code></td></tr><tr><td>yyyyyyyy</td></tr><tr><td>create</td></tr></tbody></table></row>
-        <p>результат должен быть:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row>
-        <h4>Решение</h4>
+        <p>результат должен быть:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>Строка</th><th>Подстрока</th><th>Номер позиции начала 1</th><th>Номер позиции начала 2</th></tr></thead><tbody><tr><td>сabjrehwklhgfjrehwkyupolkoraclenmoracleppmicrosoftmmicrosoftumicrosof</td><td>jrehwk</td><td>4</td><td>15</td></tr><tr><td></td><td>oracle</td><td>26</td><td>34</td></tr><tr><td>yyyyyyyy</td><td>yyyy</td><td>1</td><td>5</td></tr><tr><td>grant</td><td>-</td><td>-</td><td>-</td></tr></tbody></table></row><a name="solution">
+          <h4>Решение</h4></a>
         <pre class="line-numbers undefined"><code class="language-plsql">DECLARE
   -- типы данных для итогового вывода
   TYPE outputRow IS TABLE OF VARCHAR2(4096);
@@ -166,7 +172,8 @@ BEGIN
     END LOOP;
   END;
 END;
-/</code></pre>
+/</code></pre><a name="result">
+          <h4>Результат</h4></a>
         <pre><code class="language-output">
             Строка                                                                 | Подстрока | Номер позиции начала 1 | Номер позиции начала 2
             -----------------------------------------------------------------------|-----------|------------------------|-----------------------
@@ -196,7 +203,8 @@ END;
             -----------------------------------------------------------------------|-----------|------------------------|-----------------------
                                                                                    | 312       | 11                     | 15
             -----------------------------------------------------------------------|-----------|------------------------|-----------------------
-                                                                                   | 132       | 22                     | 26</code></pre>
+                                                                                   | 132       | 22                     | 26
+            </code></pre>
       </div>
     </div>
     <script src="./../js/prism.js"></script>

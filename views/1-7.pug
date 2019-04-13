@@ -8,7 +8,7 @@ block content
     .header
       h2 Дополнительное задание 1.7
 
-  h4 Постановка задачи
+  a(name="task"): h4 Постановка задачи
 
   p.task-text Создайте программу, которая выводит сводную информацию об отделе (используются таблицы <code>Departments</code>, <code>Locations</code>, <code>Countries</code>). Номер отдела вводится с клавиатуры по приглашению <code>«Введите идентификатор отдела: </code>». Информация выводится в виде:
   +output.
@@ -16,10 +16,12 @@ block content
     Дом, улица: 127 ул. Пушкина                          
     Индекс, город, страна: 197343, Санкт-Петербург, Россия
 
-  h4 Решение
+  a(name="solution"): h4 Решение
 
   +plsql
     include extras/1-7.sql
+
+  a(name="result"): h4 Результат
 
   p.comment Результат для отдела <code>60</code>:
 
@@ -27,3 +29,6 @@ block content
     Номер отдела, название: Отдел № 60, «IT»
     Дом, улица: 2014 Jabberwocky Rd
     Индекс, город, страна: 26192, Southlake, United States of America
+
+block contents
+  +extraContents

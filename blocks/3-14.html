@@ -10,12 +10,18 @@
   </head>
   <body>
     <nav id="menu"><a class="element" id="menu-switch">
-        <div class="icon-part"><img class="icon" src="../img/icons/menu.png"></div>
+        <div class="icon-part"><i class="fas fa-bars"></i></div>
         <div class="text-part"></div></a><a class="element" href="../index.html">
-        <div class="icon-part"><img class="icon" src="../img/icons/home.png"></div>
+        <div class="icon-part"><i class="fas fa-home"></i></div>
         <div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs">
-        <div class="icon-part"><img class="icon" src="../img/icons/github.png"></div>
-        <div class="text-part">GitHub</div></a>
+        <div class="icon-part"><i class="fab fa-github"></i></div>
+        <div class="text-part">GitHub</div></a><a class="element" href="#task">
+        <div class="icon-part"><i class="fas fa-thumbtack"></i></div>
+        <div class="text-part">Задача</div></a><a class="element" href="#solution">
+        <div class="icon-part"><i class="fas fa-code"></i></div>
+        <div class="text-part">Решение</div></a><a class="element" href="#result">
+        <div class="icon-part"><i class="fas fa-poll-h"></i></div>
+        <div class="text-part">Результат</div></a>
     </nav>
     <div id="main">
       <div class="labs">
@@ -23,8 +29,8 @@
           <div class="header">
             <h2>Дополнительное задание 3.14</h2>
           </div>
-        </div>
-        <h4>Постановка задачи</h4>
+        </div><a name="task">
+          <h4>Постановка задачи</h4></a>
         <p class="task-text">Создать процедуру, которая находит все пути между двумя городами. Имена городов — параметры процедуры. Расстояния между городами заданы в таблице <code>Paths</code>. Имена городов уникальны. Скрипт на создание таблицы <code>paths.sql</code> находится в папке курса на <code>Public2</code>.</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>AID</th><th>ACITY</th><th>BID</th><th>BCITY</th><th>DIST</th></tr></thead><tbody><tr><td>1</td><td>Moscow</td><td>2</td><td>Kazan</td><td>2</td></tr><tr><td>1</td><td>Moscow</td><td>3</td><td>Tula</td><td>4</td></tr><tr><td>1</td><td>Moscow</td><td>4</td><td>Sochi</td><td>7</td></tr><tr><td>1</td><td>Moscow</td><td>6</td><td>Omsk</td><td>5</td></tr><tr><td>2</td><td>Kazan</td><td>4</td><td>Sochi</td><td>6</td></tr><tr><td>2</td><td>Kazan</td><td>7</td><td>Vologda</td><td>8</td></tr><tr><td>2</td><td>Kazan</td><td>5</td><td>Pskov</td><td>3</td></tr><tr><td>3</td><td>Tula</td><td>6</td><td>Omsk</td><td>6</td></tr><tr><td>4</td><td>Sochi</td><td>6</td><td>Omsk</td><td>1</td></tr><tr><td>4</td><td>Sochi</td><td>7</td><td>Vologda</td><td>6</td></tr><tr><td>5</td><td>Pskov</td><td>7</td><td>Vologda</td><td>7</td></tr><tr><td>6</td><td>Omsk</td><td>7</td><td>Vologda</td><td>6</td></tr></tbody></table></row>
         <p>Программа должна предусматривать обработку исключений.</p>
         <p>Пример представления результата:</p>
@@ -41,8 +47,8 @@
               Pskov Kazan Sochi Vologda                   ...................
               Pskov Kazan Vologda                         Длина маршрута — 11
             Всего 10 вариантов маршрута
-            </code></pre>
-        <h4>Решение</h4>
+            </code></pre><a name="solution">
+          <h4>Решение</h4></a>
         <pre class="line-numbers undefined"><code class="language-plsql">-- Создание процедуры.
 CREATE OR REPLACE PROCEDURE
   dop_3_14 (fromCity Paths.Acity%TYPE, toCity Paths.Bcity%TYPE) IS
@@ -61,7 +67,7 @@ CREATE OR REPLACE PROCEDURE
   );
   TYPE pathsTable IS TABLE OF pathRecord;
   -- Таблица всех путей от города fromCity к toCity,
-  -- в каждом из путей хранятся лишь промежуточные города.
+  -- В каждом из путей хранятся лишь промежуточные города.
   allPaths pathsTable := pathsTable();
 
   TYPE cityNamesTable IS TABLE OF Paths.Acity%TYPE INDEX BY SIMPLE_INTEGER;
@@ -81,24 +87,24 @@ CREATE OR REPLACE PROCEDURE
   , pathIN pathRecord
   , dist   SIMPLE_INTEGER
   ) IS
-    currentDest PLS_INTEGER := cities(ID).FIRST; -- следующий город, в который поедем.
-    path pathRecord := pathIN; -- текущий путь (который, возможно, будет добавлен в allPaths).
+    currentDest PLS_INTEGER := cities(ID).FIRST; -- Следующий город, в который поедем.
+    path pathRecord := pathIN; -- Текущий путь (который, возможно, будет добавлен в allPaths).
   BEGIN
-    -- если мы уже проехали этот город, то дальше не едем.
+    -- Если мы уже проехали этот город, то дальше не едем.
     IF passed.EXISTS(ID) AND passed(ID) = TRUE THEN RETURN; END IF;
 
-    -- добавляем город к путю.
+    -- Добавляем город к путю.
     path.dist := path.dist + dist;
     path.cities.EXTEND;
     path.cities(path.cities.LAST) := ID;
 
-    -- если мы доехали до пункта назначения, то добавляем путь к allPaths.
+    -- Если мы доехали до пункта назначения, то добавляем путь к allPaths.
     IF ID = toID THEN
       allPaths.EXTEND;
       allPaths(allPaths.LAST) := path;
     RETURN; END IF;
     
-    -- рекурсивно объезжаем всевозможные доступные города.
+    -- Рекурсивно объезжаем всевозможные доступные города.
     passed(ID) := TRUE;
     WHILE currentDest IS NOT NULL LOOP
       traverse(currentDest, path, cities(ID)(currentDest));
@@ -222,7 +228,8 @@ END dop_3_14;
 -- Вызов процедуры.
 BEGIN
   dop_3_14('Pskov', 'Vologda');
-END;</code></pre>
+END;</code></pre><a name="result">
+          <h4>Результат</h4></a>
         <pre><code class="language-output">
             Маршруты Pskov — Vologda                       Длина маршрута
               Pskov Kazan Moscow Tula Omsk Sochi Vologda   22
@@ -237,7 +244,8 @@ END;</code></pre>
               Pskov Kazan Sochi Vologda                    15
               Pskov Kazan Vologda                          11
               Pskov Vologda                                7
-            Всего 12 вариантов маршрута.</code></pre>
+            Всего 12 вариантов маршрута.
+            </code></pre>
       </div>
     </div>
     <script src="./../js/prism.js"></script>

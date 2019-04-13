@@ -10,3 +10,17 @@ mixin contents(tasks)
       )
         .icon-part #{i}.
         .text-part задание
+
+mixin extraContents
+  a.element(href="#task")
+    .icon-part
+      <i class="fas fa-thumbtack"></i>
+    .text-part Задача
+  a.element(href="#solution")
+    .icon-part
+      <i class="fas fa-code"></i>
+    .text-part Решение
+  a.element(href="#result")
+    .icon-part
+      <i class="fas fa-poll-h"></i>
+    .text-part Результат

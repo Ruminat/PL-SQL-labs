@@ -16,7 +16,7 @@ CREATE OR REPLACE PROCEDURE
   );
   TYPE pathsTable IS TABLE OF pathRecord;
   -- Таблица всех путей от города fromCity к toCity,
-  -- в каждом из путей хранятся лишь промежуточные города.
+  -- В каждом из путей хранятся лишь промежуточные города.
   allPaths pathsTable := pathsTable();
 
   TYPE cityNamesTable IS TABLE OF Paths.Acity%TYPE INDEX BY SIMPLE_INTEGER;
@@ -36,24 +36,24 @@ CREATE OR REPLACE PROCEDURE
   , pathIN pathRecord
   , dist   SIMPLE_INTEGER
   ) IS
-    currentDest PLS_INTEGER := cities(ID).FIRST; -- следующий город, в который поедем.
-    path pathRecord := pathIN; -- текущий путь (который, возможно, будет добавлен в allPaths).
+    currentDest PLS_INTEGER := cities(ID).FIRST; -- Следующий город, в который поедем.
+    path pathRecord := pathIN; -- Текущий путь (который, возможно, будет добавлен в allPaths).
   BEGIN
-    -- если мы уже проехали этот город, то дальше не едем.
+    -- Если мы уже проехали этот город, то дальше не едем.
     IF passed.EXISTS(ID) AND passed(ID) = TRUE THEN RETURN; END IF;
 
-    -- добавляем город к путю.
+    -- Добавляем город к путю.
     path.dist := path.dist + dist;
     path.cities.EXTEND;
     path.cities(path.cities.LAST) := ID;
 
-    -- если мы доехали до пункта назначения, то добавляем путь к allPaths.
+    -- Если мы доехали до пункта назначения, то добавляем путь к allPaths.
     IF ID = toID THEN
       allPaths.EXTEND;
       allPaths(allPaths.LAST) := path;
     RETURN; END IF;
     
-    -- рекурсивно объезжаем всевозможные доступные города.
+    -- Рекурсивно объезжаем всевозможные доступные города.
     passed(ID) := TRUE;
     WHILE currentDest IS NOT NULL LOOP
       traverse(currentDest, path, cities(ID)(currentDest));

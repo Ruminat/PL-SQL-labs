@@ -52,7 +52,7 @@ block content
       DBMS_OUTPUT.PUT_LINE('Inserted '|| SQL%ROWCOUNT ||' row(s).');
     END;
 
-  p Подпрограмма может быть вызвана внутри <code class="language-plsql">BEGIN...END;</code>, с помощью операторов <code class="language-plsql">EXECUTE</code> и <code class="language-plsql">CALL</code> (<code class="language-plsql">CALL</code> круче — он может так же вызывать процедуры/функции, написанные на <code>C/C++</code>).
+  p Подпрограмма может быть вызвана внутри <code class="language-plsql">BEGIN...END;</code>, с помощью операторов <code class="language-plsql">EXECUTE</code> и <code class="language-plsql">CALL</code> (<code class="language-plsql">CALL</code> круче — он может так же вызывать процедуры/функции, написанные на <code>C/Java</code>).
   +plsql.
     -- вне блока BEGIN..END:
     EXECUTE someProcedure(arg1, arg2, ...) -- «;» не нужна

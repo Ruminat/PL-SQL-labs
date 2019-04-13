@@ -8,7 +8,7 @@ block content
     .header
       h2 Дополнительное задание 3.14
 
-  h4 Постановка задачи
+  a(name="task"): h4 Постановка задачи
 
   p.task-text Создать процедуру, которая находит все пути между двумя городами. Имена городов — параметры процедуры. Расстояния между городами заданы в таблице <code>Paths</code>. Имена городов уникальны. Скрипт на создание таблицы <code>paths.sql</code> находится в папке курса на <code>Public2</code>.
 
@@ -30,10 +30,13 @@ block content
       Pskov Kazan Vologda                         Длина маршрута — 11
     Всего 10 вариантов маршрута
 
-  h4 Решение
+  a(name="solution"): h4 Решение
 
   +plsql
     include extras/3-14.sql
+
+  a(name="result"): h4 Результат
+
   +output.
     Маршруты Pskov — Vologda                       Длина маршрута
       Pskov Kazan Moscow Tula Omsk Sochi Vologda   22
@@ -49,3 +52,6 @@ block content
       Pskov Kazan Vologda                          11
       Pskov Vologda                                7
     Всего 12 вариантов маршрута.
+
+block contents
+  +extraContents
