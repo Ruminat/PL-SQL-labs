@@ -1,4 +1,5 @@
 CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+  emp_table emp_tableType;
 
   TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
   valid_departments boolean_tab_type;
@@ -106,8 +107,23 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
     RETURN emp;
   END;
 
+  PROCEDURE get_employees (dept_id Employees.Department_ID%TYPE) IS
+    CURSOR testCursor IS
+      SELECT * FROM Employees WHERE Department_ID = dept_id;
+  BEGIN
+    OPEN testCursor;
+    FETCH testCursor BULK COLLECT INTO emp_table;
+    CLOSE testCursor;
+  END;
+
+  PROCEDURE show_employees IS
+  BEGIN
+    FOR i IN 1..emp_table.LAST LOOP
+      print_employee(emp_table(i));
+    END LOOP;    
+  END;
+
   PROCEDURE init_departments IS BEGIN
-    DBMS_OUTPUT.PUT_LINE(someVar || ' -- some var');
     FOR row IN (SELECT Department_ID FROM Departments) LOOP
       valid_departments(row.Department_ID) := TRUE;
     END LOOP;
@@ -137,6 +153,6 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
   END valid_deptid;
 
 BEGIN
-  init_departments();
+  init_departments;
 END emp_pkg;
 /

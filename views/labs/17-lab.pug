@@ -3,40 +3,40 @@
 
 
 +lab
-  +task("1", "В таблице <code>Jobs</code> хранятся значения максимально и минимально допустимой зарплаты для данной должности. Необходимо создать триггер, связанный с операциями <code>INSERT</code> и <code>UPDATE</code> таблицы <code>Employees</code>, который не позволит устанавливать некорректную зарплату для сотрудников. Для этого:")
+  +task("1", "В таблице <code class='language-plsql'>Jobs</code> хранятся значения максимально и минимально допустимой зарплаты для данной должности. Необходимо создать триггер, связанный с операциями <code class='language-plsql'>INSERT</code> и <code class='language-plsql'>UPDATE</code> таблицы <code class='language-plsql'>Employees</code>, который не позволит устанавливать некорректную зарплату для сотрудников. Для этого:")
     ul
-      li Создайте процедуру <code>check_salary</code>:
+      li Создайте процедуру <code class='language-plsql'>check_salary</code>:
         ul
           li Процедура принимает на вход 2 параметра — идентификатор должности сотрудника и величину его зарплаты. 
-          li Процедура использует <code>Job ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code>Jobs</code>). 
-          li Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение «<code>Invalid salary {sal} for this job. Salaries must be between {min} and {max}</code>». Заменяйте именованные зоны соответствующими значениями.
-      li Создайте триггер <code>check_salary_trg</code> на таблицу <code>Employees</code>, который срабатывает для каждой строки перед операциями <code>INSERT</code> и <code>UPDATE</code>. 
+          li Процедура использует <code class='language-plsql'>Job ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code class='language-plsql'>Jobs</code>). 
+          li Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение «<code class='language-plsql'>Invalid salary {sal} for this job. Salaries must be between {min} and {max}</code>». Заменяйте именованные зоны соответствующими значениями.
+      li Создайте триггер <code class='language-plsql'>check_salary_trg</code> на таблицу <code class='language-plsql'>Employees</code>, который срабатывает для каждой строки перед операциями <code class='language-plsql'>INSERT</code> и <code class='language-plsql'>UPDATE</code>. 
         ul
-          li Триггер должен вызывать на исполнение процедуру <code>check_salary</code>.
-          li Триггер должен передавать процедуре значения <code>Job ID</code> и зарплаты.
+          li Триггер должен вызывать на исполнение процедуру <code class='language-plsql'>check_salary</code>.
+          li Триггер должен передавать процедуре значения <code class='language-plsql'>Job ID</code> и зарплаты.
 
 
   +task("2", "Протестируйте работу триггера.")
     ul
-      li Добавьте нового сотрудника с помощью процедуры <code>emp_pkg.add_employee</code> c именем <code>Eleanor Beh</code> и номером отдела <code>30</code>. Что произойдет и почему? Какая зарплата присваивается сотруднику при добавлении?
-      li Измените зарплату сотруднику <code>115</code> на <code>$2000</code>. С помощью отдельной операции измените его должность на <code>HR_REP</code>. Что произойдет и почему?
-      li Измените зарплату <code>115</code> сотрудника на <code>$2800</code>. Что произойдет?
+      li Добавьте нового сотрудника с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code> c именем <code class='language-plsql'>Eleanor Beh</code> и номером отдела <code class='language-plsql'>30</code>. Что произойдет и почему? Какая зарплата присваивается сотруднику при добавлении?
+      li Измените зарплату сотруднику <code class='language-plsql'>115</code> на <code class='language-plsql'>$2000</code>. С помощью отдельной операции измените его должность на <code class='language-plsql'>HR_REP</code>. Что произойдет и почему?
+      li Измените зарплату <code class='language-plsql'>115</code> сотрудника на <code class='language-plsql'>$2800</code>. Что произойдет?
 
   +task("3", "Внесите изменения в триггер таким образом, чтобы он срабатывал только при фактическом изменении зарплаты или должности сотрудника. Проверять допустимость зарплаты нужно в 2 случаях — собственно при изменении зарплаты, и при изменении должности сотрудника. Почему?")
     ul
-      li Добавьте в описание триггера <code>WHEN</code>-конструкцию, проверяющую, что значение в столбцах <code>Salary</code> или <code>Job_ID</code> изменилось. Убедитесь, что Вы предусмотрели ситуацию, когда прежним (<code>OLD</code>) значением было <code>NULL</code> (в каком случае это происходит?).
-      li Протестируйте работу триггера с помощью процедуры <code>emp_pkg.add_employee</code> и следующим набором параметров:
+      li Добавьте в описание триггера <code class='language-plsql'>WHEN</code>-конструкцию, проверяющую, что значение в столбцах <code class='language-plsql'>Salary</code> или <code class='language-plsql'>Job_ID</code> изменилось. Убедитесь, что Вы предусмотрели ситуацию, когда прежним (<code class='language-plsql'>OLD</code>) значением было <code class='language-plsql'>NULL</code> (в каком случае это происходит?).
+      li Протестируйте работу триггера с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code> и следующим набором параметров:
         ul
-          li <code>p_first_name = 'Eleanor'</code>,
-          li <code>p_last_name = 'Beh'</code>,
-          li <code>p_Email = 'EBEH'</code>,
-          li <code>p_Job = 'IT_PROG'</code>,
-          li <code>p_sal = 5000</code>.
-      li Обновите зарплату сотрудников в должности <code>IT_PROG</code> — повысьте зарплату на <code>$2000</code>. Зафиксируйте результат.
-      li Присвойте <code>Eleanor Beh</code> зарплату равную <code>$9000</code>.
-      li Измените должность <code>Eleanor Beh</code> на <code>ST_MAN</code>. Зафиксируйте результат.
+          li <code class='language-plsql'>p_first_name = 'Eleanor'</code>,
+          li <code class='language-plsql'>p_last_name = 'Beh'</code>,
+          li <code class='language-plsql'>p_Email = 'EBEH'</code>,
+          li <code class='language-plsql'>p_Job = 'IT_PROG'</code>,
+          li <code class='language-plsql'>p_sal = 5000</code>.
+      li Обновите зарплату сотрудников в должности <code class='language-plsql'>IT_PROG</code> — повысьте зарплату на <code class='language-plsql'>$2000</code>. Зафиксируйте результат.
+      li Присвойте <code class='language-plsql'>Eleanor Beh</code> зарплату равную <code class='language-plsql'>$9000</code>.
+      li Измените должность <code class='language-plsql'>Eleanor Beh</code> на <code class='language-plsql'>ST_MAN</code>. Зафиксируйте результат.
 
   +task("4", "Напишите триггер, запрещающий удаление сотрудников в рабочие часы.")
     ul
-      li Создайте <code>statement</code> триггер с именем <code>delete_emp_trg</code> на таблицу <code>Employees</code>. Запретите удаление в период с 09:00 до 18:00. (или другой период актуальный на момент тестирования).
-      li Попробуйте удалить сотрудника в должности <code>SA_REP</code>, который не приписан ни к какому отделу.
+      li Создайте <code class='language-plsql'>statement</code> триггер с именем <code class='language-plsql'>delete_emp_trg</code> на таблицу <code class='language-plsql'>Employees</code>. Запретите удаление в период с 09:00 до 18:00. (или другой период актуальный на момент тестирования).
+      li Попробуйте удалить сотрудника в должности <code class='language-plsql'>SA_REP</code>, который не приписан ни к какому отделу.

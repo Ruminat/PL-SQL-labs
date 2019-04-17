@@ -65,12 +65,12 @@
       <p>Подпрограмма может быть вызвана внутри <code class="language-plsql">BEGIN...END;</code>, с помощью операторов <code class="language-plsql">EXECUTE</code> и <code class="language-plsql">CALL</code> (<code class="language-plsql">CALL</code> круче — он может так же вызывать процедуры/функции, написанные на <code>C/Java</code>).</p>
       <pre class="line-numbers undefined"><code class="language-plsql">
           -- вне блока BEGIN..END:
-          EXECUTE someProcedure(arg1, arg2, ...) -- «;» не нужна
-          CALL someOtherProcedure(arg1, arg2, ...) -- «;» не нужна
+          EXECUTE someProcedure(arg1, arg2, ...)
+          CALL someOtherProcedure(arg1, arg2, ...)
           
           -- внутри блока BEGIN..END:
           BEGIN
-            anotherProcedure(arg1, arg2, ...); -- тут уже нужна «;»
+            anotherProcedure(arg1, arg2, ...);
           END;
           </code></pre>
       <p>Информация о процедурах/функциях/пакетах/триггерах может быть найдена в словаре <code class="language-plsql">USER_SOURCE</code>.</p>

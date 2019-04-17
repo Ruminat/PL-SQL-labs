@@ -1,4 +1,6 @@
-CREATE OR REPLACE PACKAGE emp_pkg IS
+CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+  TYPE emp_tableType IS TABLE OF Employees%ROWTYPE;
+
   PROCEDURE add_employee (
     firstName Employees.First_Name%TYPE
   ,  lastName Employees.Last_Name%TYPE
@@ -28,7 +30,11 @@ CREATE OR REPLACE PACKAGE emp_pkg IS
   FUNCTION get_employee (p_family_name Employees.Last_Name%TYPE)
   RETURN Employees%ROWTYPE;
 
+  PROCEDURE get_employees (dept_id Employees.Department_ID%TYPE);
+  PROCEDURE show_employees;
+
   PROCEDURE init_departments;
 
   PROCEDURE print_employee (emp Employees%ROWTYPE);
 END emp_pkg;
+/

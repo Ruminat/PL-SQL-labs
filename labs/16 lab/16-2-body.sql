@@ -1,4 +1,5 @@
 CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+  emp_table emp_tableType;
 
   TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
   valid_departments boolean_tab_type;
@@ -12,37 +13,37 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
       firstName Employees.First_Name%TYPE
     ,  lastName Employees.Last_Name%TYPE
     ,      mail Employees.Email%TYPE
-    ,       job Employees.Job_ID%TYPE          := 'SA_REP'
-    ,       mgr Employees.Manager_ID%TYPE      := 145
-    ,       sal Employees.Salary%TYPE          := 1000
-    ,      comm Employees.Commission_PCT%TYPE  := 0
-    ,     depID Employees.Department_ID%TYPE   := 30
+    ,       job Employees.Job_ID%TYPE         := 'SA_REP'
+    ,       mgr Employees.Manager_ID%TYPE     := 145
+    ,       sal Employees.Salary%TYPE         := 1000
+    ,      comm Employees.Commission_PCT%TYPE := 0
+    ,     depID Employees.Department_ID%TYPE  := 30
     ) IS
+    PROCEDURE audit_newEmp IS
+    PRAGMA AUTONOMOUS_TRANSACTION;
+    BEGIN
+      INSERT INTO Log_NewEmp (Entry_ID, User_ID, Log_Time, Name)
+      VALUES (
+        Log_NewEmp_Seq.NEXTVAL
+      , USER
+      , SYSDATE
+      , firstName ||' '|| lastName
+      );
+      COMMIT;
+    END;
   BEGIN
     IF valid_deptid(depID) THEN
+      audit_newEmp;
+
       INSERT INTO Employees (
-        Employee_ID
-      , First_Name
-      , Last_Name
-      , Email
-      , Hire_Date
-      , Job_ID
-      , Manager_ID
-      , Salary
-      , Commission_PCT
-      , Department_ID
+        Employee_ID          , First_Name   , Last_Name , Email ,
+        Hire_Date            , Job_ID       , Manager_ID, Salary,
+        Commission_PCT       , Department_ID
       )
       VALUES (
-        Employees_Seq.NEXTVAL -- Employee_ID
-      , firstName
-      , lastName
-      , mail
-      , TRUNC(SYSDATE) -- Hire_Date
-      , job
-      , mgr
-      , sal
-      , comm
-      , depID
+        Employees_Seq.NEXTVAL, firstName    , lastName  , mail  ,
+        TRUNC(SYSDATE)       , job          , mgr       , sal   ,
+        comm                 , depID
       );
     ELSE
       DBMS_OUTPUT.PUT_LINE(
@@ -106,8 +107,23 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
     RETURN emp;
   END;
 
+  PROCEDURE get_employees (dept_id Employees.Department_ID%TYPE) IS
+    CURSOR testCursor IS
+      SELECT * FROM Employees WHERE Department_ID = dept_id;
+  BEGIN
+    OPEN testCursor;
+    FETCH testCursor BULK COLLECT INTO emp_table;
+    CLOSE testCursor;
+  END;
+
+  PROCEDURE show_employees IS
+  BEGIN
+    FOR i IN 1..emp_table.LAST LOOP
+      print_employee(emp_table(i));
+    END LOOP;    
+  END;
+
   PROCEDURE init_departments IS BEGIN
-    DBMS_OUTPUT.PUT_LINE(someVar || ' -- some var');
     FOR row IN (SELECT Department_ID FROM Departments) LOOP
       valid_departments(row.Department_ID) := TRUE;
     END LOOP;
@@ -137,6 +153,6 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
   END valid_deptid;
 
 BEGIN
-  init_departments();
+  init_departments;
 END emp_pkg;
 /

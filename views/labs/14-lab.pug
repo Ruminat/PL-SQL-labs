@@ -2,28 +2,73 @@
 - var title = "Практическое занятие 14. Встроенные пакеты Oracle";
 
 +lab
-  +task("1", "Создайте процедуру <code>employee_report</code> для генерации сводной выборки из таблицы employees и сохранения ее в текстовом файле операционной системы с помощью стандартного пакета <code>UTL_FILE</code>. Отчет должен содержать информацию о сотрудниках, чья ежемесячная зарплата превышает среднюю зарплату по его отделу.")
+  +task("1", "Создайте процедуру <code class='language-plsql'>employee_report</code> для генерации сводной выборки из таблицы <code class='language-plsql'>Employees</code> и сохранения ее в текстовом файле операционной системы с помощью стандартного пакета <code class='language-plsql'>UTL_FILE</code>. Отчет должен содержать информацию о сотрудниках, чья ежемесячная зарплата превышает среднюю зарплату по его отделу.")
     ul
-      li Процедура должна принимать на вход 2 параметра. Первый параметр — <code>dir</code> — используется для передачи имени директории, в которую будет сохраняться файл с отчетом. Второй параметр передает имя файла, который будет создан в указанной директории. <br>
-        p В качестве имени директории используйте <code>STUD_PLSQL</code>. <br>
-        p <b>Примечание</b>: физическое расположение директории <code>\\Westfold\Student\PLSQL</code> — у вас есть права на просмотр файлов в этой директории по сети.
-      li Создайте процедуру (в пакете <code>emp_pkg</code> или отдельно), в которую добавьте секцию для обработки ошибок.
+      li Процедура должна принимать на вход 2 параметра. Первый параметр — <code class='language-plsql'>dir</code> — используется для передачи имени директории, в которую будет сохраняться файл с отчетом. Второй параметр передает имя файла, который будет создан в указанной директории. <br>
+        p В качестве имени директории используйте <code class='language-plsql'>STUD_PLSQL</code>. <br>
+        p <b>Примечание</b>: физическое расположение директории <code class='language-plsql'>\\Westfold\Student\PLSQL</code> — у вас есть права на просмотр файлов в этой директории по сети.
+      li Создайте процедуру (в пакете <code class='language-plsql'>emp_pkg</code> или отдельно), в которую добавьте секцию для обработки ошибок.
       li В шапке отчета добавьте свою фамилию, номер группы и системное дату и время формирования отчета.
-      li Запустите программу на исполнение, сформируйте второй параметр таким образом, чтобы имя Вашего отчета в директории было уникальным. Шаблон для формирования имени: <code>sal_rpt_XXXX_YYYY.txt</code>, где <code>XXXX</code> — это ваша учетная запись, а <code>YYYY</code> — текущее системное дата и время с точностью до секунды.
+      li Запустите программу на исполнение, сформируйте второй параметр таким образом, чтобы имя Вашего отчета в директории было уникальным. Шаблон для формирования имени: <code class='language-plsql'>sal_rpt_XXXX_YYYY.txt</code>, где <code class='language-plsql'>XXXX</code> — это ваша учетная запись, а <code class='language-plsql'>YYYY</code> — текущее системное дата и время с точностью до секунды.
+
+    +plsql
+      include ../../labs/14 lab/14-1.sql
+    +output.
+      Содержимое файла sal_rpt_vlafur1_16.04.2019 22-29-22.txt:
+      --- Отчёт. Влад Фурман, 33536/2 [16.04.2019 22:29:22] ---
+      Emp #100: Steven King, dep #90, salary is 24000
+      Emp #103: Alexander Hunold, dep #60, salary is 9000
+      Emp #104: Bruce Ernst, dep #60, salary is 6000
+      Emp #108: Nancy Greenberg, dep #100, salary is 12008
+      Emp #109: Daniel Faviet, dep #100, salary is 9000
+      Emp #114: Den Raphaely, dep #30, salary is 11000
+      Emp #120: Matthew Weiss, dep #50, salary is 8000
+      Emp #121: Adam Fripp, dep #50, salary is 8200
+      Emp #122: Payam Kaufling, dep #50, salary is 7900
+      Emp #123: Shanta Vollman, dep #50, salary is 6500
+      Emp #124: Kevin Mourgos, dep #50, salary is 5800
+      Emp #137: Renske Ladwig, dep #50, salary is 3600
+      Emp #141: Trenna Rajs, dep #50, salary is 3500
+      Emp #145: John Russell, dep #80, salary is 14000
+      Emp #146: Karen Partners, dep #80, salary is 13500
+      Emp #147: Alberto Errazuriz, dep #80, salary is 12000
+      Emp #148: Gerald Cambrault, dep #80, salary is 11000
+      Emp #149: Eleni Zlotkey, dep #80, salary is 10500
+      Emp #150: Peter Tucker, dep #80, salary is 10000
+      Emp #151: David Bernstein, dep #80, salary is 9500
+      Emp #152: Peter Hall, dep #80, salary is 9000
+      Emp #156: Janette King, dep #80, salary is 10000
+      Emp #157: Patrick Sully, dep #80, salary is 9500
+      Emp #158: Allan McEwen, dep #80, salary is 9000
+      Emp #162: Clara Vishney, dep #80, salary is 10500
+      Emp #163: Danielle Greene, dep #80, salary is 9500
+      Emp #168: Lisa Ozer, dep #80, salary is 11500
+      Emp #169: Harrison Bloom, dep #80, salary is 10000
+      Emp #170: Tayler Fox, dep #80, salary is 9600
+      Emp #174: Ellen Abel, dep #80, salary is 11000
+      Emp #184: Nandita Sarchand, dep #50, salary is 4200
+      Emp #185: Alexis Bull, dep #50, salary is 4100
+      Emp #188: Kelly Chung, dep #50, salary is 3800
+      Emp #189: Jennifer Dilly, dep #50, salary is 3600
+      Emp #192: Sarah Bell, dep #50, salary is 4000
+      Emp #193: Britney Everett, dep #50, salary is 3900
+      Emp #200: Jennifer Whalen, dep #10, salary is 4400
+      Emp #201: Michael Hartstein, dep #20, salary is 13000
+      Emp #205: Shelley Higgins, dep #110, salary is 12008
 
 
-  +task("2", "Создайте новую процедуру <code>web_employee_report</code>.")
+  +task("2", "Создайте новую процедуру <code class='language-plsql'>web_employee_report</code>.")
     ul
-      li Процедура ничего не принимает на вход и, с помощью стандартного пакета <code>HTP</code>, генерирует отчет, подобный отчету из предыдущей процедуры, в формате HTML.
-      li Для тестирования работы процедуры сначала выполните инструкции <code>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.
-      li Вручную создайте файл <code>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из <code>SQL Developer</code> и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code>WORKDATA</code>.
+      li Процедура ничего не принимает на вход и, с помощью стандартного пакета <code class='language-plsql'>HTP</code>, генерирует отчет, подобный отчету из предыдущей процедуры, в формате HTML.
+      li Для тестирования работы процедуры сначала выполните инструкции <code class='language-plsql'>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code class='language-plsql'>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.
+      li Вручную создайте файл <code class='language-plsql'>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из SQL Developer и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code class='language-plsql'>WORKDATA</code>.
 
 
-  +task("3", "С помощью пакета <code>DBMS_SCHEDULER</code> создайте задание, для регулярной генерации отчетов в формате текстовых файлов, которое по указанному расписанию запускает на исполнение процедуру <code>employee_report</code>.")
+  +task("3", "С помощью пакета <code class='language-plsql'>DBMS_SCHEDULER</code> создайте задание, для регулярной генерации отчетов в формате текстовых файлов, которое по указанному расписанию запускает на исполнение процедуру <code class='language-plsql'>employee_report</code>.")
     ul
-      li Создайте хранимую процедуру <code>schedule_report</code>, которая принимает на вход частоту повторений запуска задания (интервал) и длительность выполнения задания в минутах (по умолчанию — 10).
-      li В теле процедуры создайте задание с именем <code>empsal_report</code>, которое должно представлять собой анонимный блок, запускающийся на исполнение сразу же после вызова процедуры <code>schedule_report</code>.
-        p Задание должно вызывать процедуру <code>employee_report</code> (имя файла для сохранения отчёта должно генерироваться по указанным в задании 5.2 правилам, в качестве имени директории используйте <code>STUD_PLSQL</code>). Для хранения текста анонимного блока (тела задания) используйте локальную переменную <code>plsql_block</code> типа <code>VARCHAR2(200)</code>.
-        p Сформируйте параметр <code>end_date</code> следующим образом: длительность выполнения задания в минутах разделите на количество минут в сутках и прибавьте получившееся значение к текущему значению даты и времени.
-      li Протестируйте работу процедуры <code>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.
-      li После запуска процедуры просмотрите содержимое системной таблички <code>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.
+      li Создайте хранимую процедуру <code class='language-plsql'>schedule_report</code>, которая принимает на вход частоту повторений запуска задания (интервал) и длительность выполнения задания в минутах (по умолчанию — 10).
+      li В теле процедуры создайте задание с именем <code class='language-plsql'>empsal_report</code>, которое должно представлять собой анонимный блок, запускающийся на исполнение сразу же после вызова процедуры <code class='language-plsql'>schedule_report</code>.
+        p Задание должно вызывать процедуру <code class='language-plsql'>employee_report</code> (имя файла для сохранения отчёта должно генерироваться по указанным в задании 5.2 правилам, в качестве имени директории используйте <code class='language-plsql'>STUD_PLSQL</code>). Для хранения текста анонимного блока (тела задания) используйте локальную переменную <code class='language-plsql'>plsql_block</code> типа <code class='language-plsql'>VARCHAR2(200)</code>.
+        p Сформируйте параметр <code class='language-plsql'>end_date</code> следующим образом: длительность выполнения задания в минутах разделите на количество минут в сутках и прибавьте получившееся значение к текущему значению даты и времени.
+      li Протестируйте работу процедуры <code class='language-plsql'>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.
+      li После запуска процедуры просмотрите содержимое системной таблички <code class='language-plsql'>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code class='language-plsql'>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.

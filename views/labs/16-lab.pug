@@ -2,41 +2,236 @@
 - var title = "Практическое занятие 16. Конструирование PL/SQL кода";
 
 +lab
-  +task("1", "Дополните пакет <code>emp_pkg</code> новой процедурой, которая выбирает сотрудников указанного отдела и сохраняет выбранные записи в локальную для пакета <code>PL/SQL</code> таблицу:")
+  +task("1", "Дополните пакет <code class='language-plsql'>emp_pkg</code> новой процедурой, которая выбирает сотрудников указанного отдела и сохраняет выбранные записи в локальную для пакета PL/SQL таблицу:")
     ul
       li В спецификации пакета:
         ul
-          li Добавьте объявление процедуры <code>get_employees</code>. Процедура принимает на вход один параметр <code>dept_id</code>, типа <code>Employees.Department_ID%TYPE</code>.
-          li Объявите <code>emp_tabletype</code> типа <code>TABLE OF Employees%ROWTYPE</code>.
+          li Добавьте объявление процедуры <code class='language-plsql'>get_employees</code>. Процедура принимает на вход один параметр <code class='language-plsql'>dept_id</code>, типа <code class='language-plsql'>Employees.Department_ID%TYPE</code>.
+          li Объявите <code class='language-plsql'>emp_tabletype</code> типа <code class='language-plsql'>TABLE OF Employees%ROWTYPE</code>.
       li В теле пакета:
         ul
-          li Объявите локальную переменную <code>emp_table</code> типа <code>emp_tabletype</code>.
-          li Напишите реализацию процедуры <code>get_employees</code>. Процедура должна заполнять локальную таблицу <code>emp_table</code> с помощью операций массовой закачки данных (<code>bulk fetch</code>).
-      li Создайте новую <code>public</code> процедуру <code>show_employees</code> в спецификации и теле пакета, которая не принимает на вход аргументов. Процедура отображает содержимое <code>private</code> таблицы <code>emp_table</code>. Данная процедура должна использовать процедуру <code>print_employee</code>.
-      li Запустите на исполнение процедуру <code>emp_pkg.get_employees</code> для выборки сотрудников из <code>30</code> отдела и отобразите выборку с помощью <code>emp_pkg.show_employees</code>. Повторите это для обработки сотрудников <code>60</code> отдела.
+          li Объявите локальную переменную <code class='language-plsql'>emp_table</code> типа <code class='language-plsql'>emp_tabletype</code>.
+          li Напишите реализацию процедуры <code class='language-plsql'>get_employees</code>. Процедура должна заполнять локальную таблицу <code class='language-plsql'>emp_table</code> с помощью операций массовой закачки данных (<code class='language-plsql'>bulk fetch</code>).
+      li Создайте новую <code class='language-plsql'>public</code> процедуру <code class='language-plsql'>show_employees</code> в спецификации и теле пакета, которая не принимает на вход аргументов. Процедура отображает содержимое <code class='language-plsql'>private</code> таблицы <code class='language-plsql'>emp_table</code>. Данная процедура должна использовать процедуру <code class='language-plsql'>print_employee</code>.
+      li Запустите на исполнение процедуру <code class='language-plsql'>emp_pkg.get_employees</code> для выборки сотрудников из <code class='language-plsql'>30</code> отдела и отобразите выборку с помощью <code class='language-plsql'>emp_pkg.show_employees</code>. Повторите это для обработки сотрудников <code class='language-plsql'>60</code> отдела.
 
+    +plsql
+      include ../../labs/16 lab/16-1-head.sql
+    +output.
+      Package created.
 
-  +task("2", "Необходимо обеспечить аудит добавления новых сотрудников в таблицу <code>Employees</code> с помощью процедуры <code>emp_pkg.add_employee</code>. Для этого:")
+    +plsql
+      include ../../labs/16 lab/16-1-body.sql
+    +output.
+      Package body created.
+
+    +plsql.
+      BEGIN
+        emp_pkg.get_employees(30);
+        emp_pkg.show_employees;
+      END;
+      /
+    +output.
+      Emp#114: Den Raphaely, depID is 30, job is PU_MAN, salary is 11000.
+      Emp#115: Alexander Khoo, depID is 30, job is PU_CLERK, salary is 3100.
+      Emp#116: Shelli Baida, depID is 30, job is PU_CLERK, salary is 2900.
+      Emp#117: Sigal Tubias, depID is 30, job is PU_CLERK, salary is 2800.
+      Emp#118: Guy Himuro, depID is 30, job is PU_CLERK, salary is 2600.
+      Emp#119: Karen Colmenares, depID is 30, job is PU_CLERK, salary is 2500.
+
+    +plsql.
+      BEGIN
+        emp_pkg.get_employees(60);
+        emp_pkg.show_employees;
+      END;
+      /
+    +output.
+      Emp#103: Alexander Hunold, depID is 60, job is IT_PROG, salary is 9000.
+      Emp#104: Bruce Ernst, depID is 60, job is IT_PROG, salary is 6000.
+      Emp#105: David Austin, depID is 60, job is IT_PROG, salary is 4800.
+      Emp#106: Valli Pataballa, depID is 60, job is IT_PROG, salary is 4800.
+      Emp#107: Diana Lorentz, depID is 60, job is IT_PROG, salary is 4200.
+
+  +task("2", "Необходимо обеспечить аудит добавления новых сотрудников в таблицу <code class='language-plsql'>Employees</code> с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code>. Для этого:")
     ul
-      li Запустите на исполнение скрипт <code>lab_07_02_a.sql</code> (путь к файлу: <code>\\feanor\public2\КИТвП\Курс 4\Семестр 8\Проектирование Web-приложений\Oracle Разработка программных единиц PLSQL\Oracle Database 10g - Develop PL-SQL Program Units\labs</code>). Этот скрипт создаст в вашей схеме таблицу <code>Log_NewEmp</code> и последовательность <code>log_newemp_seq</code>.
-      li В теле пакета <code>emp_pkg</code> измените реализацию той версии процедуры <code>add_employees</code>, которая на самом деле выполняет оператор <code>INSERT</code> в таблицу <code>Employees</code>. Добавьте в реализацию локальную процедуру <code>audit_newEmp</code>.
+      li Запустите на исполнение скрипт <code class='language-plsql'>lab_07_02_a.sql</code> (путь к файлу: <code class='language-plsql'>\\feanor\public2\КИТвП\Курс 4\Семестр 8\Проектирование Web-приложений\Oracle Разработка программных единиц PLSQL\Oracle Database 10g - Develop PL-SQL Program Units\labs</code>). Этот скрипт создаст в вашей схеме таблицу <code class='language-plsql'>Log_NewEmp</code> и последовательность <code class='language-plsql'>log_newemp_seq</code>.
+
+        +plsql.
+          CREATE TABLE log_newemp (
+            entry_id  NUMBER(6) CONSTRAINT log_newemp_pk PRIMARY KEY,
+            user_id   VARCHAR2(30),
+            log_time  DATE,
+            name      VARCHAR2(60)
+          );
+
+          CREATE SEQUENCE log_newemp_seq;
+
+        +output.
+          Table LOG_NEWEMP created.
+          Sequence LOG_NEWEMP_SEQ created.
+
+      li В теле пакета <code class='language-plsql'>emp_pkg</code> измените реализацию той версии процедуры <code class='language-plsql'>add_employee</code>, которая на самом деле выполняет оператор <code class='language-plsql'>INSERT</code> в таблицу <code class='language-plsql'>Employees</code>. Добавьте в реализацию локальную процедуру <code class='language-plsql'>audit_newEmp</code>.
         ul
-          li Процедура <code>audit_newEmp</code> должна быть объявлена как автономная транзакция и выполнять оператор <code>INSERT</code> в таблицу <code>log_newEmp</code>.
-          li Процедура должна добавлять значения <code>USER</code> (имя текущего пользователя, который выполняет модификацию), текущего времени, и имени нового, добавляемого сотрудника. 
-          li Используйте <code>Log_NewEmp_Seq</code> для заполнения столбца <code>Entry_ID</code>.
-      li В теле процедуры <code>add_employees</code> вызовите на исполнение локальную процедуру <code>audit_newEmp</code> перед тем, как добавить запись о новом сотруднике в таблице <code>Employees</code>.
-      li Протестируйте работу новой версии процедуры, добавив с помощью нее информацию о сотрудниках <code>Max Smart</code> из <code>20</code> отдела и <code>Clark Kent</code> из <code>10</code> отдела. 
-      li Просмотрите содержимое таблиц <code>Employees</code> и <code>Log_NewEmp</code>. Сколько записей добавлено в ту и другую таблицу?
-      li Выполните <code>ROLLBACK</code> оператор для отката добавления данных о сотрудниках.
+          li Процедура <code class='language-plsql'>audit_newEmp</code> должна быть объявлена как автономная транзакция и выполнять оператор <code class='language-plsql'>INSERT</code> в таблицу <code class='language-plsql'>log_newEmp</code>.
+          li Процедура должна добавлять значения <code class='language-plsql'>USER</code> (имя текущего пользователя, который выполняет модификацию), текущего времени, и имени нового, добавляемого сотрудника. 
+          li Используйте <code class='language-plsql'>Log_NewEmp_Seq</code> для заполнения столбца <code class='language-plsql'>Entry_ID</code>.
+      li В теле процедуры <code class='language-plsql'>add_employee</code> вызовите на исполнение локальную процедуру <code class='language-plsql'>audit_newEmp</code> перед тем, как добавить запись о новом сотруднике в таблице <code class='language-plsql'>Employees</code>.
+      li Протестируйте работу новой версии процедуры, добавив с помощью нее информацию о сотрудниках <code class='language-plsql'>Max Smart</code> из <code class='language-plsql'>20</code> отдела и <code class='language-plsql'>Clark Kent</code> из <code class='language-plsql'>10</code> отдела. 
+      li Просмотрите содержимое таблиц <code class='language-plsql'>Employees</code> и <code class='language-plsql'>Log_NewEmp</code>. Сколько записей добавлено в ту и другую таблицу?
+      li Выполните <code class='language-plsql'>ROLLBACK</code> оператор для отката добавления данных о сотрудниках.
         ul
-          li Просмотрите содержимое таблицы <code>Employees</code>. 
-          li Просмотрите содержимое таблицы <code>Log_NewEmp</code>.
+          li Просмотрите содержимое таблицы <code class='language-plsql'>Employees</code>. 
+          li Просмотрите содержимое таблицы <code class='language-plsql'>Log_NewEmp</code>.
+
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+          -- ... ... ...
+
+        PROCEDURE add_employee (
+            firstName Employees.First_Name%TYPE
+          ,  lastName Employees.Last_Name%TYPE
+          ,      mail Employees.Email%TYPE
+          ,       job Employees.Job_ID%TYPE         := 'SA_REP'
+          ,       mgr Employees.Manager_ID%TYPE     := 145
+          ,       sal Employees.Salary%TYPE         := 1000
+          ,      comm Employees.Commission_PCT%TYPE := 0
+          ,     depID Employees.Department_ID%TYPE  := 30
+          ) IS
+          PROCEDURE audit_newEmp IS
+          PRAGMA AUTONOMOUS_TRANSACTION;
+          BEGIN
+            INSERT INTO Log_NewEmp (Entry_ID, User_ID, Log_Time, Name)
+            VALUES (
+              Log_NewEmp_Seq.NEXTVAL
+            , USER
+            , SYSDATE
+            , firstName ||' '|| lastName
+            );
+            COMMIT;
+          END;
+        BEGIN
+          IF valid_deptid(depID) THEN
+            audit_newEmp;
+
+            INSERT INTO Employees (
+              Employee_ID          , First_Name   , Last_Name , Email ,
+              Hire_Date            , Job_ID       , Manager_ID, Salary,
+              Commission_PCT       , Department_ID
+            )
+            VALUES (
+              Employees_Seq.NEXTVAL, firstName    , lastName  , mail  ,
+              TRUNC(SYSDATE)       , job          , mgr       , sal   ,
+              comm                 , depID
+            );
+          ELSE
+            DBMS_OUTPUT.PUT_LINE(
+              'Error: cannot add an employee to a nonexistent department #' || depID || '.'
+            );
+          END IF;
+        END add_employee;
+
+        -- ... ... ...
+
+      END emp_pkg;
+      /
+
+    +output.
+      Package body created.
+
+    +plsql.
+      BEGIN
+        emp_pkg.add_employee('Max', 'Smart', 20);
+        emp_pkg.add_employee('Clark', 'Kent', 10);
+      END;
+      /
+
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Employees
+      WHERE Last_Name IN ('Smart', 'Kent');
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>228</td><td>Clark</td><td>Kent</td><td>10</td></tr><tr><td>227</td><td>Max</td><td>Smart</td><td>20</td></tr></tbody></table></row>
+
+    +plsql.
+      SELECT * FROM Log_NewEmp;
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ENTRY_ID</th><th>USER_ID</th><th>LOG_TIME</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Max Smart</td></tr><tr><td>2</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Clark Kent</td></tr></tbody></table></row>
+
+    p.comment В обе таблицы было добавлено по 2 записи.
+
+    +plsql.
+      ROLLBACK;
+
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Employees
+      WHERE Last_Name IN ('Smart', 'Kent');
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row>
+
+    +plsql.
+      SELECT * FROM Log_NewEmp;
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ENTRY_ID</th><th>USER_ID</th><th>LOG_TIME</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Max Smart</td></tr><tr><td>2</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Clark Kent</td></tr></tbody></table></row>
 
 
-  +task("3", "Необходимо обеспечить работу пакета <code>emp_pkg</code> под правами вызывающего.")
+  +task("3", "Необходимо обеспечить работу пакета <code class='language-plsql'>emp_pkg</code> под правами вызывающего.")
     ul
-      li С помощью оператора <code>GRANT</code> выдайте другому студенту права на исполнение (<code>EXECUTE</code>) вашего пакета <code>emp_pkg</code>.
-      li Попросите коллегу выполнить процедуру <code>XXX.emp_pkg.add_employee</code>, где <code>XXX</code> — имя вашей схемы. По умолчанию, вызов происходит с правами владельца. Проверьте, в какой таблице <code>Employees</code> появилась новая запись.
-      li Измените спецификацию своего пакета, добавив в нее инструкцию <code>AUTHID CURRENT_USER</code>. Перекомпилируйте пакет.
-      li Попросите коллегу еще раз вызвать на исполнение вашу процедуру <code>add_employee</code> из пакета <code>emp_pkg</code>.
+      li С помощью оператора <code class='language-plsql'>GRANT</code> выдайте другому студенту права на исполнение (<code class='language-plsql'>EXECUTE</code>) вашего пакета <code class='language-plsql'>emp_pkg</code>.
+      li Попросите коллегу выполнить процедуру <code class='language-plsql'>XXX.emp_pkg.add_employee</code>, где <code class='language-plsql'>XXX</code> — имя вашей схемы. По умолчанию, вызов происходит с правами владельца. Проверьте, в какой таблице <code class='language-plsql'>Employees</code> появилась новая запись.
+      li Измените спецификацию своего пакета, добавив в нее инструкцию <code class='language-plsql'>AUTHID CURRENT_USER</code>. Перекомпилируйте пакет.
+      li Попросите коллегу еще раз вызвать на исполнение вашу процедуру <code class='language-plsql'>add_employee</code> из пакета <code class='language-plsql'>emp_pkg</code>.
       li В какой схеме появиться запись о новом сотруднике?
+
+    p.comment Я (<code class='language-plsql'>Ruminat</code>) выполняю:
+    +plsql.
+      GRANT EXECUTE ON emp_pkg TO C##Bubblegum;
+
+    p.comment Пользователь <code class='language-plsql'>C##Bubblegum</code> выполняет:
+    +plsql.
+      BEGIN
+        Ruminat.emp_pkg.add_employee('Elon', 'Musk', 10);
+      END;
+
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Employees
+      WHERE Last_Name = 'Musk';
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row>
+
+    +plsql.
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Ruminat.Employees
+      WHERE Last_Name = 'Musk';
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>231</td><td>Elon</td><td>Musk</td><td>10</td></tr></tbody></table></row>
+
+    p.comment Новая строчка была добавлена в мою таблицу.
+
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+        -- ... ... ...
+      END emp_pkg;
+      /
+
+    +output.
+      Package created.
+
+    +plsql.
+      BEGIN
+        Ruminat.emp_pkg.add_employee('Albert', 'Einstein', 10);
+      END;
+
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Employees
+      WHERE Last_Name = 'Einstein';
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>228</td><td>Albert</td><td>Einstein</td><td>10</td></tr></tbody></table></row>
+
+    +plsql.
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID
+      FROM Ruminat.Employees
+      WHERE Last_Name = 'Einstein';
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row>
+
+    p.comment Новая строчка была добавлена в таблицу пользователя <code class='language-plsql'>C##Bubblegum</code>.
