@@ -179,64 +179,59 @@ END;
               <li>Для тестирования работы процедуры сначала выполните инструкции <code class='language-plsql'>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code class='language-plsql'>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.</li>
               <li>Вручную создайте файл <code class='language-plsql'>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из SQL Developer и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code class='language-plsql'>WORKDATA</code>.</li>
             </ul>
-            <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
-  employee_report (dir VARCHAR2, fileName VARCHAR2) IS
-  file UTL_FILE.FILE_TYPE := UTL_FILE.FOPEN(dir, fileName, 'W');
+            <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE web_employee_report IS
+  paramVal OWA.VC_ARR;
 BEGIN
-  UTL_FILE.PUT_LINE(
-    file,
-       '--- Отчёт. Влад Фурман, 33536/2 ['
-    || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
-    ||'] ---'
-  );
-  FOR row IN (
-    SELECT *
-    FROM (
-      SELECT
-        Employee_ID, First_Name, Last_Name, Department_ID, Salary,
-        AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
-      FROM Employees
-    )
-    WHERE Salary > Average
-    ORDER BY Employee_ID
-  )
-  LOOP
-    UTL_FILE.PUT_LINE(
-      file,
-         'Emp #' || row.Employee_ID || ': '
-      || row.First_Name || ' ' || row.Last_Name || ', '
-      || 'dep #' || row.Department_ID || ', '
-      || 'salary is ' || row.Salary
-    );
-  END LOOP;
+  paramVal(1) := 1;
+  OWA.INIT_CGI_ENV(paramVal);
 
-  UTL_FILE.FCLOSE(file);
--- EXCEPTION
-END employee_report;
+  HTP.HTMLOPEN;
+    HTP.HEADOPEN;
+      HTP.TITLE('Отчёт');
+      HTP.PRINT('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">'); -- подключаем Bootstrap
+    HTP.HEADCLOSE;
+    HTP.BODYOPEN;
+      HTP.PRINT('<div class="container">');
+        HTP.PRINT(
+            '<h1>--- Отчёт. Влад Фурман, 33536/2 ['
+          || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
+          ||'] ---</h1>'
+        );
+        HTP.PRINT('<table class="table table-SQL table-bordered table-hover table-sm">');
+          HTP.PRINT('<thead class="thead-dark"><tr><th>Emp #</th><th>First Name</th><th>Last Name</th><th>Department #</th><th>Salary</th></tr></thead>');
+          HTP.PRINT('<tbody>');
+            FOR queryR IN (
+              SELECT *
+              FROM (
+                SELECT
+                  Employee_ID, First_Name, Last_Name, Department_ID, Salary,
+                  AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
+                FROM Employees
+              )
+              WHERE Salary > Average
+              ORDER BY Employee_ID
+            ) LOOP
+              HTP.PRINT(
+                '<tr><td>'||    queryR.Employee_ID
+                ||'</td><td>'|| queryR.First_Name
+                ||'</td><td>'|| queryR.Last_Name
+                ||'</td><td>'|| queryR.Department_ID
+                ||'</td><td>'|| queryR.Salary ||'</td></tr>'
+              );
+            END LOOP;
+          HTP.PRINT('</tbody>');
+        HTP.PRINT('</table>');
+
+      HTP.PRINT('</div>');
+    HTP.BODYCLOSE;
+  HTP.HTMLCLOSE;
+END;
 /
 
-
-DECLARE
-  dir           VARCHAR(64)   := 'STUD_PLSQL';
-  theDate       VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
-  fileName      VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
-  currentString VARCHAR2(1024);
-  file UTL_FILE.FILE_TYPE;
+SET SERVEROUTPUT ON;
 BEGIN
-  employee_report (dir, fileName);
-  file := UTL_FILE.FOPEN(dir, fileName, 'R');
-
-  DBMS_OUTPUT.PUT_LINE('Содержимое файла '|| fileName ||':');
-
-  LOOP
-    BEGIN
-      UTL_FILE.GET_LINE(file, currentString);
-      DBMS_OUTPUT.PUT_LINE(currentString);
-    EXCEPTION WHEN NO_DATA_FOUND THEN EXIT;
-    END;
-  END LOOP;
-
-  UTL_FILE.FCLOSE(file);
+  web_employee_report;
+  OWA_UTIL.SHOWPAGE;
 END;
 /</code></pre>
             <p>Результат может быть найден <a href="report.html">здесь</a>.</p>
