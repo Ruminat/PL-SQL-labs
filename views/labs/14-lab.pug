@@ -76,3 +76,7 @@
         p Сформируйте параметр <code class='language-plsql'>end_date</code> следующим образом: длительность выполнения задания в минутах разделите на количество минут в сутках и прибавьте получившееся значение к текущему значению даты и времени.
       li Протестируйте работу процедуры <code class='language-plsql'>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.
       li После запуска процедуры просмотрите содержимое системной таблички <code class='language-plsql'>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code class='language-plsql'>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.
+
+    +plsql
+      include ../../labs/14 lab/14-3.sql
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_NAME</th><th>JOB_TYPE</th></tr></thead><tbody><tr><td>EMPSAL_REPORT</td><td>PLSQL_BLOCK</td></tr></tbody></table></row>

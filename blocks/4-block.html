@@ -247,6 +247,31 @@ END;
               <li>Протестируйте работу процедуры <code class='language-plsql'>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.</li>
               <li>После запуска процедуры просмотрите содержимое системной таблички <code class='language-plsql'>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code class='language-plsql'>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.</li>
             </ul>
+            <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
+  schedule_report (interval SIMPLE_INTEGER, duration SIMPLE_INTEGER := 10) IS
+      theDate VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
+     fileName VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
+  plsql_block VARCHAR2(200) := 'BEGIN employee_report(''STUD_PLSQL'', '''|| fileName ||'''); END;';
+BEGIN
+  DBMS_SCHEDULER.CREATE_JOB (
+            JOB_NAME => 'empsal_report'
+   ,        JOB_TYPE => 'PLSQL_BLOCK'
+   ,      JOB_ACTION => plsql_block
+   ,      START_DATE => SYSTIMESTAMP
+   ,        END_DATE => (SYSTIMESTAMP + duration / (60 * 24))
+   , REPEAT_INTERVAL => 'FREQUENCY=MINUTELY; INTERVAL='|| interval
+   ,         ENABLED => TRUE
+  );
+END schedule_report;
+/
+
+BEGIN
+  schedule_report(2, 6);
+END;
+/
+
+SELECT Job_Name, Job_Type
+FROM USER_SCHEDULER_JOBS;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_NAME</th><th>JOB_TYPE</th></tr></thead><tbody><tr><td>EMPSAL_REPORT</td><td>PLSQL_BLOCK</td></tr></tbody></table></row>
           </div>
         </div>
         <div class="lab" id="lab-15"><a name="#lab-15">
@@ -470,8 +495,7 @@ END;
                 Package body created.
                 </code></pre>
             <pre><code class="language-output">
-                compile_pkg.make('web_employee_report') error:
-                - the type of web_employee_report was not found.
+                Compiled web_employee_report.
                 Compiled emp_pkg's specification and body.
                 compile_pkg.make('emp_details') error:
                 - the type of emp_details was not found.</code></pre>
