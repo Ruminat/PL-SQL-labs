@@ -9,7 +9,7 @@ CREATE OR REPLACE PACKAGE BODY table_pkg IS
     statement VARCHAR2(512) := 'INSERT INTO '|| table_name; 
   BEGIN
     IF cols IS NOT NULL THEN
-      statement := statement ||' ('|| col_values ||')';
+      statement := statement ||' ('|| cols ||')';
     END IF;
     EXECUTE IMMEDIATE statement ||' VALUES ('|| col_values ||')';
   END;

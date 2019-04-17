@@ -8,12 +8,18 @@
       li Создайте процедуру <code class='language-plsql'>check_salary</code>:
         ul
           li Процедура принимает на вход 2 параметра — идентификатор должности сотрудника и величину его зарплаты. 
-          li Процедура использует <code class='language-plsql'>Job ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code class='language-plsql'>Jobs</code>). 
-          li Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение «<code class='language-plsql'>Invalid salary {sal} for this job. Salaries must be between {min} and {max}</code>». Заменяйте именованные зоны соответствующими значениями.
+          li Процедура использует <code class='language-plsql'>Job_ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code class='language-plsql'>Jobs</code>). 
+          li Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение <code class='language-plsql'>'Invalid salary {sal} for this job. Salaries must be between {min} and {max}'</code>. Заменяйте именованные зоны соответствующими значениями.
       li Создайте триггер <code class='language-plsql'>check_salary_trg</code> на таблицу <code class='language-plsql'>Employees</code>, который срабатывает для каждой строки перед операциями <code class='language-plsql'>INSERT</code> и <code class='language-plsql'>UPDATE</code>. 
         ul
           li Триггер должен вызывать на исполнение процедуру <code class='language-plsql'>check_salary</code>.
-          li Триггер должен передавать процедуре значения <code class='language-plsql'>Job ID</code> и зарплаты.
+          li Триггер должен передавать процедуре значения <code class='language-plsql'>Job_ID</code> и зарплаты.
+
+    +plsql
+      include ../../labs/17 lab/17-1.sql
+    +output.
+      Procedure created.
+      Trigger created.
 
 
   +task("2", "Протестируйте работу триггера.")
@@ -21,6 +27,48 @@
       li Добавьте нового сотрудника с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code> c именем <code class='language-plsql'>Eleanor Beh</code> и номером отдела <code class='language-plsql'>30</code>. Что произойдет и почему? Какая зарплата присваивается сотруднику при добавлении?
       li Измените зарплату сотруднику <code class='language-plsql'>115</code> на <code class='language-plsql'>$2000</code>. С помощью отдельной операции измените его должность на <code class='language-plsql'>HR_REP</code>. Что произойдет и почему?
       li Измените зарплату <code class='language-plsql'>115</code> сотрудника на <code class='language-plsql'>$2800</code>. Что произойдет?
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Eleanor', 'Beh', 30);
+    +output.
+      ERROR at line 1:
+      ORA-20001: Invalid salary 1000 for this job. Salaries must be between 6000 and 12008
+      ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+      ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+      ORA-06512: at "RUMINAT.EMP_PKG", line 34
+      ORA-06512: at "RUMINAT.EMP_PKG", line 57
+      ORA-06512: at line 1
+    
+    p.comment У нас не получилось добавить нового сотрудника, так как процедура <code class='language-plsql'>emp_pkg.add_employee</code> по умолчанию устанавливает зарплату, равную $1000.
+
+    +plsql.
+      UPDATE Employees SET Salary = 2000 WHERE Employee_ID = 115;
+    +output.
+      ERROR at line 1:
+      ORA-20001: Invalid salary 2000 for this job. Salaries must be between 2500 and 5500
+      ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+      ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+
+    +plsql.
+      UPDATE Employees SET Job_ID = 'HR_REP' WHERE Employee_ID = 115;
+    +output.
+      ERROR at line 1:
+      ORA-20001: Invalid salary 3100 for this job. Salaries must be between 4000 and 9000
+      ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+      ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+
+    p.comment У нас не получилось изменить строку, так как триггер вызывается и при изменении зарплаты, и при изменении должности.
+
+    +plsql.
+      UPDATE Employees SET Salary = 2800 WHERE Employee_ID = 115;
+    +output.
+      1 row updated.
+
+    p.comment Теперь зарплата попадает в нужный диапазон, всё замечательно.
+
 
   +task("3", "Внесите изменения в триггер таким образом, чтобы он срабатывал только при фактическом изменении зарплаты или должности сотрудника. Проверять допустимость зарплаты нужно в 2 случаях — собственно при изменении зарплаты, и при изменении должности сотрудника. Почему?")
     ul
@@ -36,7 +84,62 @@
       li Присвойте <code class='language-plsql'>Eleanor Beh</code> зарплату равную <code class='language-plsql'>$9000</code>.
       li Измените должность <code class='language-plsql'>Eleanor Beh</code> на <code class='language-plsql'>ST_MAN</code>. Зафиксируйте результат.
 
+    +plsql
+      include ../../labs/17 lab/17-3.sql
+    +output.
+      Trigger created.
+
+    +plsql.
+      BEGIN
+        emp_pkg.add_employee(
+            firstName => 'Eleanor'
+          ,  lastName => 'Beh'
+          ,      mail => 'EBEH'
+          ,       job => 'IT_PROG'
+          ,       sal => 5000
+        );
+      END;
+      /
+
+      SELECT Employee_ID, First_Name, Last_Name, Department_ID, Salary, Job_ID
+      FROM Employees
+      WHERE Last_Name = 'Beh';
+
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>235</td><td>Eleanor</td><td>Beh</td><td>30</td><td>5000</td><td>IT_PROG</td></tr></tbody></table></row>
+
+    +plsql.
+      UPDATE Employees SET Salary = Salary + 2000 WHERE Job_ID = 'IT_PROG';
+    +output.
+      Error starting at line : 16 in command -
+      UPDATE Employees SET Salary = Salary + 2000 WHERE Job_ID = 'IT_PROG'
+      Error report -
+      ORA-20001: Invalid salary 11000 for this job. Salaries must be between 4000 and 10000
+      ORA-06512: на  "RUMINAT.CHECK_SALARY", line 11
+      ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+
+    +plsql.
+      UPDATE Employees SET Salary = 9000 WHERE First_Name = 'Eleanor' AND Last_Name = 'Beh';
+    +output.
+      1 row updated.
+    
+
   +task("4", "Напишите триггер, запрещающий удаление сотрудников в рабочие часы.")
     ul
       li Создайте <code class='language-plsql'>statement</code> триггер с именем <code class='language-plsql'>delete_emp_trg</code> на таблицу <code class='language-plsql'>Employees</code>. Запретите удаление в период с 09:00 до 18:00. (или другой период актуальный на момент тестирования).
       li Попробуйте удалить сотрудника в должности <code class='language-plsql'>SA_REP</code>, который не приписан ни к какому отделу.
+
+    +plsql
+      include ../../labs/17 lab/17-4.sql
+    +output.
+      Trigger created.
+
+    +plsql.
+      DELETE FROM Employees WHERE Job_ID = 'SA_REP' AND Department_ID IS NULL;
+    +output.
+      Error starting at line : 1 in command -
+      DELETE FROM Employees WHERE Job_ID = 'SA_REP' AND Department_ID IS NULL
+      Error report -
+      ORA-20001: You can delete an employee only during normal business hours (08:00–20:00)
+      ORA-06512: на  "RUMINAT.DELETE_EMP_TRG", line 3
+      ORA-04088: ошибка во время выполнения триггера 'RUMINAT.DELETE_EMP_TRG'

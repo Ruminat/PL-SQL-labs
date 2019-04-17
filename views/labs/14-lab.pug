@@ -63,6 +63,10 @@
       li Для тестирования работы процедуры сначала выполните инструкции <code class='language-plsql'>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code class='language-plsql'>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.
       li Вручную создайте файл <code class='language-plsql'>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из SQL Developer и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code class='language-plsql'>WORKDATA</code>.
 
+    +plsql
+      include ../../labs/14 lab/14-1.sql
+    p Результат может быть найден <a href="report.html">здесь</a>.
+
 
   +task("3", "С помощью пакета <code class='language-plsql'>DBMS_SCHEDULER</code> создайте задание, для регулярной генерации отчетов в формате текстовых файлов, которое по указанному расписанию запускает на исполнение процедуру <code class='language-plsql'>employee_report</code>.")
     ul
