@@ -179,61 +179,63 @@ END;
               <li>Для тестирования работы процедуры сначала выполните инструкции <code class='language-plsql'>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code class='language-plsql'>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.</li>
               <li>Вручную создайте файл <code class='language-plsql'>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из SQL Developer и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code class='language-plsql'>WORKDATA</code>.</li>
             </ul>
-            <pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE web_employee_report IS
-  paramVal OWA.VC_ARR;
-BEGIN
-  paramVal(1) := 1;
-  OWA.INIT_CGI_ENV(paramVal);
-
-  HTP.HTMLOPEN;
-    HTP.HEADOPEN;
-      HTP.TITLE('Отчёт');
-      HTP.PRINT('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">'); -- подключаем Bootstrap
-    HTP.HEADCLOSE;
-    HTP.BODYOPEN;
-      HTP.PRINT('<div class="container">');
-        HTP.PRINT(
-            '<h1>--- Отчёт. Влад Фурман, 33536/2 ['
-          || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
-          ||'] ---</h1>'
-        );
-        HTP.PRINT('<table class="table table-SQL table-bordered table-hover table-sm">');
-          HTP.PRINT('<thead class="thead-dark"><tr><th>Emp #</th><th>First Name</th><th>Last Name</th><th>Department #</th><th>Salary</th></tr></thead>');
-          HTP.PRINT('<tbody>');
-            FOR queryR IN (
-              SELECT *
-              FROM (
-                SELECT
-                  Employee_ID, First_Name, Last_Name, Department_ID, Salary,
-                  AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
-                FROM Employees
-              )
-              WHERE Salary > Average
-              ORDER BY Employee_ID
-            ) LOOP
-              HTP.PRINT(
-                '<tr><td>'||    queryR.Employee_ID
-                ||'</td><td>'|| queryR.First_Name
-                ||'</td><td>'|| queryR.Last_Name
-                ||'</td><td>'|| queryR.Department_ID
-                ||'</td><td>'|| queryR.Salary ||'</td></tr>'
-              );
-            END LOOP;
-          HTP.PRINT('</tbody>');
-        HTP.PRINT('</table>');
-
-      HTP.PRINT('</div>');
-    HTP.BODYCLOSE;
-  HTP.HTMLCLOSE;
-END;
-/
-
-SET SERVEROUTPUT ON;
-BEGIN
-  web_employee_report;
-  OWA_UTIL.SHOWPAGE;
-END;
-/</code></pre>
+            <pre class="line-numbers undefined"><code class="language-plsql">
+                CREATE OR REPLACE PROCEDURE web_employee_report IS
+                  paramVal OWA.VC_ARR;
+                BEGIN
+                  paramVal(1) := 1;
+                  OWA.INIT_CGI_ENV(paramVal);
+                
+                  HTP.HTMLOPEN;
+                    HTP.HEADOPEN;
+                      HTP.TITLE('Отчёт');
+                      HTP.PRINT('&lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot; integrity=&quot;sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T&quot; crossorigin=&quot;anonymous&quot;&gt;'); -- подключаем Bootstrap
+                    HTP.HEADCLOSE;
+                    HTP.BODYOPEN;
+                      HTP.PRINT('&lt;div class=&quot;container&quot;&gt;');
+                        HTP.PRINT(
+                            '&lt;h1&gt;--- Отчёт. Влад Фурман, 33536/2 ['
+                          || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
+                          ||'] ---&lt;/h1&gt;'
+                        );
+                        HTP.PRINT('&lt;table class=&quot;table table-SQL table-bordered table-hover table-sm&quot;&gt;');
+                          HTP.PRINT('&lt;thead class=&quot;thead-dark&quot;&gt;&lt;tr&gt;&lt;th&gt;Emp #&lt;/th&gt;&lt;th&gt;First Name&lt;/th&gt;&lt;th&gt;Last Name&lt;/th&gt;&lt;th&gt;Department #&lt;/th&gt;&lt;th&gt;Salary&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;');
+                          HTP.PRINT('&lt;tbody&gt;');
+                            FOR queryR IN (
+                              SELECT *
+                              FROM (
+                                SELECT
+                                  Employee_ID, First_Name, Last_Name, Department_ID, Salary,
+                                  AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
+                                FROM Employees
+                              )
+                              WHERE Salary &gt; Average
+                              ORDER BY Employee_ID
+                            ) LOOP
+                              HTP.PRINT(
+                                '&lt;tr&gt;&lt;td&gt;'||    queryR.Employee_ID
+                                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.First_Name
+                                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Last_Name
+                                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Department_ID
+                                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Salary ||'&lt;/td&gt;&lt;/tr&gt;'
+                              );
+                            END LOOP;
+                          HTP.PRINT('&lt;/tbody&gt;');
+                        HTP.PRINT('&lt;/table&gt;');
+                
+                      HTP.PRINT('&lt;/div&gt;');
+                    HTP.BODYCLOSE;
+                  HTP.HTMLCLOSE;
+                END;
+                /
+                
+                SET SERVEROUTPUT ON;
+                BEGIN
+                  web_employee_report;
+                  OWA_UTIL.SHOWPAGE;
+                END;
+                /
+                </code></pre>
             <p>Результат может быть найден <a href="report.html">здесь</a>.</p>
           </div>
           <div class="task" id="task-14-3">
