@@ -1,7 +1,20 @@
 CREATE OR REPLACE PROCEDURE
-  employee_report (dir VARCHAR2, fileName VARCHAR2) IS
-  file UTL_FILE.FILE_TYPE := UTL_FILE.FOPEN(dir, fileName, 'W');
+  fileErrorsHandler (caller VARCHAR2, errorCode PLS_INTEGER) IS
 BEGIN
+  DBMS_OUTPUT.PUT_LINE(caller ||' error:');
+  CASE errorCode
+    WHEN -29280
+    THEN DBMS_OUTPUT.PUT_LINE('- The directory''s name is wrong.');
+    ELSE DBMS_OUTPUT.PUT_LINE('- Something went wrong.');
+  END CASE;
+END fileErrorsHandler;
+/
+
+CREATE OR REPLACE PROCEDURE
+  employee_report (dir VARCHAR2, fileName VARCHAR2) IS
+  file UTL_FILE.FILE_TYPE;
+BEGIN
+  file := UTL_FILE.FOPEN(dir, fileName, 'W');
   UTL_FILE.PUT_LINE(
     file,
        '--- Отчёт. Влад Фурман, 33536/2 ['
@@ -30,7 +43,9 @@ BEGIN
   END LOOP;
 
   UTL_FILE.FCLOSE(file);
--- EXCEPTION
+EXCEPTION
+  WHEN OTHERS THEN
+    fileErrorsHandler('employee_report('''|| dir ||''', '''|| fileName ||''')', SQLCODE);
 END employee_report;
 /
 
@@ -43,6 +58,7 @@ DECLARE
   file UTL_FILE.FILE_TYPE;
 BEGIN
   employee_report (dir, fileName);
+  DBMS_OUTPUT.PUT_LINE('done');
   file := UTL_FILE.FOPEN(dir, fileName, 'R');
 
   DBMS_OUTPUT.PUT_LINE('Содержимое файла '|| fileName ||':');
