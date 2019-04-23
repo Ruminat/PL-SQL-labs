@@ -4,7 +4,7 @@
   TYPE outputRowLengths IS TABLE OF NUMBER
     INDEX BY PLS_INTEGER;
   
-  header outputRow := outputRow('Строка', 'Подстрока', 'Номер позиции начала 1', 'Номер позиции начала 2');
+  header outputRow := outputRow(&#39;Строка&#39;, &#39;Подстрока&#39;, &#39;Номер позиции начала 1&#39;, &#39;Номер позиции начала 2&#39;);
   lengths outputRowLengths;
 
   TYPE outputTable IS TABLE OF outputRow
@@ -44,16 +44,16 @@ BEGIN
   FOR row IN (SELECT Строка FROM Dop_2_26) LOOP
     str := row.Строка;
     -- если в строке нельзя найти необходимые подстроки
-    IF str IS NULL OR LENGTH(str) < 2 THEN
-      result(NVL(result.LAST + 1, 1)) := outputRow(NVL(str, '(null)'), '-', '-', '-');
+    IF str IS NULL OR LENGTH(str) &lt; 2 THEN
+      result(NVL(result.LAST + 1, 1)) := outputRow(NVL(str, &#39;(null)&#39;), &#39;-&#39;, &#39;-&#39;, &#39;-&#39;);
       CONTINUE;
     END IF;
     substrings(str) := substringsTable();
     foundLength := NULL;
     len := LENGTH(str);
     FOR currentLength IN REVERSE 1..(FLOOR(len / 2)) LOOP
-      EXIT WHEN currentLength < foundLength;
-      &lt&ltposLoop&gt&gt FOR startPos IN 1..(len - currentLength + 1)
+      EXIT WHEN currentLength &lt; foundLength;
+      &lt;&lt;posLoop&gt;&gt; FOR startPos IN 1..(len - currentLength + 1)
       LOOP
         sub := SUBSTR(str, startPos, currentLength);
         occurrings := ( -- кол-во вхождений = (длина - длина_без_подстроки) / длина_подстроки
@@ -86,14 +86,14 @@ BEGIN
         IF newSub = 1 THEN
           result(NVL(result.LAST + 1, 1)) := outputRow(str, sub, startPos, startPos2);
         ELSE
-          result(NVL(result.LAST + 1, 1)) := outputRow(' ', sub, startPos, startPos2);
+          result(NVL(result.LAST + 1, 1)) := outputRow(&#39; &#39;, sub, startPos, startPos2);
         END IF;
         foundLength := currentLength;
       END LOOP posLoop;
     END LOOP;
     -- если не нашли ни одной подходящей подстроки
     IF substrings(str).COUNT = 0 THEN
-      result(NVL(result.LAST + 1, 1)) := outputRow(str, '-', '-', '-');
+      result(NVL(result.LAST + 1, 1)) := outputRow(str, &#39;-&#39;, &#39;-&#39;, &#39;-&#39;);
     END IF;
   END LOOP;
 
@@ -105,7 +105,7 @@ BEGIN
     -- находим длины столбцов таблицы
     FOR row IN 1..result.LAST LOOP
       FOR col IN 1..result(row).LAST LOOP
-        IF LENGTH(result(row)(col)) > lengths(col) THEN
+        IF LENGTH(result(row)(col)) &gt; lengths(col) THEN
           lengths(col) := LENGTH(result(row)(col));
         END IF;
       END LOOP;
@@ -113,23 +113,23 @@ BEGIN
 
     -- выводим заголовок таблицы
     FOR i IN 1..(header.LAST - 1) LOOP
-      rowOutput := rowOutput || RPAD(header(i), lengths(i), ' ') || ' | ';
+      rowOutput := rowOutput || RPAD(header(i), lengths(i), &#39; &#39;) || &#39; | &#39;;
     END LOOP;
     rowOutput := rowOutput || header(header.LAST);
     DBMS_OUTPUT.PUT_LINE(rowOutput);
 
     -- заполняем переменную «горизонтальная линия» (horizontalRule)
     FOR i IN 1..(header.LAST - 1) LOOP
-      horizontalRule := horizontalRule || RPAD('-', lengths(i), '-') || '-|-';
+      horizontalRule := horizontalRule || RPAD(&#39;-&#39;, lengths(i), &#39;-&#39;) || &#39;-|-&#39;;
     END LOOP;
-    horizontalRule := horizontalRule || RPAD('-', lengths(lengths.LAST), '-');
+    horizontalRule := horizontalRule || RPAD(&#39;-&#39;, lengths(lengths.LAST), &#39;-&#39;);
 
     -- выводим таблицу result
     FOR row IN 1..result.LAST LOOP
       DBMS_OUTPUT.PUT_LINE(horizontalRule);
-      rowOutput := '';
+      rowOutput := &#39;&#39;;
       FOR col IN 1..(result(row).LAST - 1) LOOP
-        rowOutput := rowOutput || RPAD(result(row)(col), lengths(col), ' ') || ' | ';
+        rowOutput := rowOutput || RPAD(result(row)(col), lengths(col), &#39; &#39;) || &#39; | &#39;;
       END LOOP;
       rowOutput := rowOutput || result(row)(result(row).LAST);
       DBMS_OUTPUT.PUT_LINE(rowOutput);

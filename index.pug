@@ -6,7 +6,7 @@ include views/templates/_contents.pug
 - var js  = './js/';
 
 mixin blockCard
-  .card
+  .card.block-card
     .card-body
       block
 
@@ -30,6 +30,7 @@ html(lang='ru')
   head
     include views/templates/_head.pug
     link(rel="stylesheet", href="css/index.css")
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
     title Администрирование БД. PL/SQL
   body
     .container
@@ -121,20 +122,12 @@ html(lang='ru')
           ]},
         ];
 
-      .row
-        .col-md-6
-          - for (var b = 0; b < blocks.length; b += 2)
-            +blockCard
-              +blockLink(blocks[b].number)
-              +blockLabs
-                each lab in blocks[b].labs
-                  +labLink(blocks[b].number, lab.number, lab.title)
-        .col-md-6
-          - for (var b = 1; b < blocks.length; b += 2)
-            +blockCard
-              +blockLink(blocks[b].number)
-              +blockLabs
-                each lab in blocks[b].labs
-                  +labLink(blocks[b].number, lab.number, lab.title)
+      .block-cards
+        each Block in blocks
+          +blockCard
+            +blockLink(Block.number)
+            +blockLabs
+              each lab in Block.labs
+                +labLink(Block.number, lab.number, lab.title)
 
   include views/templates/_footer.pug

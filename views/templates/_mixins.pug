@@ -4,7 +4,8 @@ mixin lab
     block
 
 mixin pl(text)
-  code(class="language-plsql") #{text}
+  code(class="language-plsql")
+    :escape-html= text
 
 mixin task(task_n, text)
   div(class="task" id="task-" + lab_n + "-" + task_n)

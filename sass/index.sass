@@ -1,2 +1,19 @@
 .card
   margin-bottom: 1rem
+
+.block-cards
+  width: 100%
+  display: flex
+  align-content: center
+  flex-wrap: wrap
+
+.block-card
+  width: calc(50% - 1rem)
+.block-card:nth-child(odd)
+  width: 50%
+  margin-right: 1rem
+
+@media screen and (max-width: 800px)
+  .block-card, .block-card:nth-child(odd)
+    width: 100%
+    margin-right: 0

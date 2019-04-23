@@ -12,9 +12,9 @@ CREATE OR REPLACE PACKAGE BODY generate IS
     rowsCount SIMPLE_INTEGER := 0;
   BEGIN
     rowsTable.EXTEND(n);
-    <<mainLoop>> WHILE TRUE LOOP
+    &lt;&lt;mainLoop&gt;&gt; WHILE TRUE LOOP
       FOR i IN 1..maxValue LOOP
-        EXIT mainLoop WHEN rowsCount >= n;
+        EXIT mainLoop WHEN rowsCount &gt;= n;
         rowsCount := rowsCount + 1;
         rowsTable(rowsCount) := i;
       END LOOP;
