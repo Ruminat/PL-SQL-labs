@@ -1,5 +1,5 @@
-include mixins.pug
-include contents.pug
+include _mixins.pug
+include _contents.pug
 
 - var css = './../css/';
 - var img = './../img/';
@@ -9,12 +9,12 @@ doctype html
 html(lang='ru')
   head
     block head
-    include head.pug
+    include _head.pug
   body
-    include menu.pug
+    include _menu.pug
 
     #main
       .labs
         block content
 
-    include scripts.pug
+    include _scripts.pug

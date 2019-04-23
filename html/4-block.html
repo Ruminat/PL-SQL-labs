@@ -1,0 +1,746 @@
+<!DOCTYPE html><html lang="ru"><head><title>PL/SQL Лабы. Блок 4</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#lab-14"><div class="icon-part">14.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-14-1" href="#task-14-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-14-2" href="#task-14-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-14-3" href="#task-14-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-15"><div class="icon-part">15.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-15-1" href="#task-15-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-15-2" href="#task-15-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element" href="#lab-16"><div class="icon-part">16.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-16-1" href="#task-16-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-16-2" href="#task-16-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-16-3" href="#task-16-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-17"><div class="icon-part">17.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-17-1" href="#task-17-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-2" href="#task-17-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-3" href="#task-17-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-17-4" href="#task-17-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a></nav><div id="main"><div class="labs"><div class="header"><h2>Четвёртый Блок</h2></div><div class="lab" id="lab-14"><a name="#lab-14"><h4>Практическое занятие 14. Встроенные пакеты Oracle</h4></a><div class="task" id="task-14-1"><p class="task-text" name="task-14-1"><b>Задание 1.</b> Создайте процедуру <code class='language-plsql'>employee_report</code> для генерации сводной выборки из таблицы <code class='language-plsql'>Employees</code> и сохранения ее в текстовом файле операционной системы с помощью стандартного пакета <code class='language-plsql'>UTL_FILE</code>. Отчет должен содержать информацию о сотрудниках, чья ежемесячная зарплата превышает среднюю зарплату по его отделу.</p><ul><li>Процедура должна принимать на вход 2 параметра. Первый параметр — <code class='language-plsql'>dir</code> — используется для передачи имени директории, в которую будет сохраняться файл с отчетом. Второй параметр передает имя файла, который будет создан в указанной директории. <br><p>В качестве имени директории используйте <code class='language-plsql'>STUD_PLSQL</code>. <br></p><p><b>Примечание</b>: физическое расположение директории <code class='language-plsql'>\\Westfold\Student\PLSQL</code> — у вас есть права на просмотр файлов в этой директории по сети.</p></li><li>Создайте процедуру (в пакете <code class='language-plsql'>emp_pkg</code> или отдельно), в которую добавьте секцию для обработки ошибок.</li><li>В шапке отчета добавьте свою фамилию, номер группы и системное дату и время формирования отчета.</li><li>Запустите программу на исполнение, сформируйте второй параметр таким образом, чтобы имя Вашего отчета в директории было уникальным. Шаблон для формирования имени: <code class='language-plsql'>sal_rpt_XXXX_YYYY.txt</code>, где <code class='language-plsql'>XXXX</code> — это ваша учетная запись, а <code class='language-plsql'>YYYY</code> — текущее системное дата и время с точностью до секунды.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
+  fileErrorsHandler (caller VARCHAR2, errorCode PLS_INTEGER) IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(caller ||' error:');
+  CASE errorCode
+    WHEN -29280
+    THEN DBMS_OUTPUT.PUT_LINE('- The directory''s name is wrong.');
+    ELSE DBMS_OUTPUT.PUT_LINE('- Something went wrong.');
+  END CASE;
+END fileErrorsHandler;
+/
+
+CREATE OR REPLACE PROCEDURE
+  employee_report (dir VARCHAR2, fileName VARCHAR2) IS
+  file UTL_FILE.FILE_TYPE;
+BEGIN
+  file := UTL_FILE.FOPEN(dir, fileName, 'W');
+  UTL_FILE.PUT_LINE(
+    file,
+       '--- Отчёт. Влад Фурман, 33536/2 ['
+    || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
+    ||'] ---'
+  );
+  FOR row IN (
+    SELECT *
+    FROM (
+      SELECT
+        Employee_ID, First_Name, Last_Name, Department_ID, Salary,
+        AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
+      FROM Employees
+    )
+    WHERE Salary > Average
+    ORDER BY Employee_ID
+  )
+  LOOP
+    UTL_FILE.PUT_LINE(
+      file,
+         'Emp #' || row.Employee_ID || ': '
+      || row.First_Name || ' ' || row.Last_Name || ', '
+      || 'dep #' || row.Department_ID || ', '
+      || 'salary is ' || row.Salary
+    );
+  END LOOP;
+
+  UTL_FILE.FCLOSE(file);
+EXCEPTION
+  WHEN OTHERS THEN
+    fileErrorsHandler('employee_report('''|| dir ||''', '''|| fileName ||''')', SQLCODE);
+END employee_report;
+/
+
+
+DECLARE
+  dir           VARCHAR(64)   := 'STUD_PLSQL';
+  theDate       VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
+  fileName      VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
+  currentString VARCHAR2(1024);
+  file UTL_FILE.FILE_TYPE;
+BEGIN
+  employee_report (dir, fileName);
+  DBMS_OUTPUT.PUT_LINE('done');
+  file := UTL_FILE.FOPEN(dir, fileName, 'R');
+
+  DBMS_OUTPUT.PUT_LINE('Содержимое файла '|| fileName ||':');
+
+  LOOP
+    BEGIN
+      UTL_FILE.GET_LINE(file, currentString);
+      DBMS_OUTPUT.PUT_LINE(currentString);
+    EXCEPTION WHEN NO_DATA_FOUND THEN EXIT;
+    END;
+  END LOOP;
+
+  UTL_FILE.FCLOSE(file);
+END;
+/</code></pre><pre><code class="language-output">Содержимое файла sal_rpt_vlafur1_16.04.2019 22-29-22.txt:
+--- Отчёт. Влад Фурман, 33536/2 [16.04.2019 22:29:22] ---
+Emp #100: Steven King, dep #90, salary is 24000
+Emp #103: Alexander Hunold, dep #60, salary is 9000
+Emp #104: Bruce Ernst, dep #60, salary is 6000
+Emp #108: Nancy Greenberg, dep #100, salary is 12008
+Emp #109: Daniel Faviet, dep #100, salary is 9000
+Emp #114: Den Raphaely, dep #30, salary is 11000
+Emp #120: Matthew Weiss, dep #50, salary is 8000
+Emp #121: Adam Fripp, dep #50, salary is 8200
+Emp #122: Payam Kaufling, dep #50, salary is 7900
+Emp #123: Shanta Vollman, dep #50, salary is 6500
+Emp #124: Kevin Mourgos, dep #50, salary is 5800
+Emp #137: Renske Ladwig, dep #50, salary is 3600
+Emp #141: Trenna Rajs, dep #50, salary is 3500
+Emp #145: John Russell, dep #80, salary is 14000
+Emp #146: Karen Partners, dep #80, salary is 13500
+Emp #147: Alberto Errazuriz, dep #80, salary is 12000
+Emp #148: Gerald Cambrault, dep #80, salary is 11000
+Emp #149: Eleni Zlotkey, dep #80, salary is 10500
+Emp #150: Peter Tucker, dep #80, salary is 10000
+Emp #151: David Bernstein, dep #80, salary is 9500
+Emp #152: Peter Hall, dep #80, salary is 9000
+Emp #156: Janette King, dep #80, salary is 10000
+Emp #157: Patrick Sully, dep #80, salary is 9500
+Emp #158: Allan McEwen, dep #80, salary is 9000
+Emp #162: Clara Vishney, dep #80, salary is 10500
+Emp #163: Danielle Greene, dep #80, salary is 9500
+Emp #168: Lisa Ozer, dep #80, salary is 11500
+Emp #169: Harrison Bloom, dep #80, salary is 10000
+Emp #170: Tayler Fox, dep #80, salary is 9600
+Emp #174: Ellen Abel, dep #80, salary is 11000
+Emp #184: Nandita Sarchand, dep #50, salary is 4200
+Emp #185: Alexis Bull, dep #50, salary is 4100
+Emp #188: Kelly Chung, dep #50, salary is 3800
+Emp #189: Jennifer Dilly, dep #50, salary is 3600
+Emp #192: Sarah Bell, dep #50, salary is 4000
+Emp #193: Britney Everett, dep #50, salary is 3900
+Emp #200: Jennifer Whalen, dep #10, salary is 4400
+Emp #201: Michael Hartstein, dep #20, salary is 13000
+Emp #205: Shelley Higgins, dep #110, salary is 12008
+
+</code></pre></div><div class="task" id="task-14-2"><p class="task-text" name="task-14-2"><b>Задание 2.</b> Создайте новую процедуру <code class='language-plsql'>web_employee_report</code>.</p><ul><li>Процедура ничего не принимает на вход и, с помощью стандартного пакета <code class='language-plsql'>HTP</code>, генерирует отчет, подобный отчету из предыдущей процедуры, в формате HTML.</li><li>Для тестирования работы процедуры сначала выполните инструкции <code class='language-plsql'>SET SERVEROUTPUT ON</code>, затем выполните процедуру. Результат работы процедуры будет помещен в буфер. Исполните <code class='language-plsql'>OWA_UTIL.SHOWPAGE</code>, чтобы вывести содержимое буфера на экран.</li><li>Вручную создайте файл <code class='language-plsql'>web_employee_report_USERNAME_SYSDATE.html</code>, скопируйте из SQL Developer и вставьте в него результат работы процедуры. Сохраните файл в своем каталоге в папке <code class='language-plsql'>WORKDATA</code>.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE web_employee_report IS
+  paramVal OWA.VC_ARR;
+BEGIN
+  paramVal(1) := 1;
+  OWA.INIT_CGI_ENV(paramVal);
+
+  HTP.HTMLOPEN;
+    HTP.HEADOPEN;
+      HTP.TITLE('Отчёт');
+      HTP.PRINT('&lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot; integrity=&quot;sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T&quot; crossorigin=&quot;anonymous&quot;&gt;'); -- подключаем Bootstrap
+    HTP.HEADCLOSE;
+    HTP.BODYOPEN;
+      HTP.PRINT('&lt;div class=&quot;container&quot;&gt;');
+        HTP.PRINT(
+            '&lt;h1&gt;--- Отчёт. Влад Фурман, 33536/2 ['
+          || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
+          ||'] ---&lt;/h1&gt;'
+        );
+        HTP.PRINT('&lt;table class=&quot;table table-SQL table-bordered table-hover table-sm&quot;&gt;');
+          HTP.PRINT('&lt;thead class=&quot;thead-dark&quot;&gt;&lt;tr&gt;&lt;th&gt;Emp #&lt;/th&gt;&lt;th&gt;First Name&lt;/th&gt;&lt;th&gt;Last Name&lt;/th&gt;&lt;th&gt;Department #&lt;/th&gt;&lt;th&gt;Salary&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;');
+          HTP.PRINT('&lt;tbody&gt;');
+            FOR queryR IN (
+              SELECT *
+              FROM (
+                SELECT
+                  Employee_ID, First_Name, Last_Name, Department_ID, Salary,
+                  AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
+                FROM Employees
+              )
+              WHERE Salary &gt; Average
+              ORDER BY Employee_ID
+            ) LOOP
+              HTP.PRINT(
+                '&lt;tr&gt;&lt;td&gt;'||    queryR.Employee_ID
+                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.First_Name
+                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Last_Name
+                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Department_ID
+                ||'&lt;/td&gt;&lt;td&gt;'|| queryR.Salary ||'&lt;/td&gt;&lt;/tr&gt;'
+              );
+            END LOOP;
+          HTP.PRINT('&lt;/tbody&gt;');
+        HTP.PRINT('&lt;/table&gt;');
+
+      HTP.PRINT('&lt;/div&gt;');
+    HTP.BODYCLOSE;
+  HTP.HTMLCLOSE;
+END;
+/
+
+SET SERVEROUTPUT ON;
+BEGIN
+  web_employee_report;
+  OWA_UTIL.SHOWPAGE;
+END;
+/
+</code></pre><p>Результат может быть найден <a href="report.html">здесь</a>.</p></div><div class="task" id="task-14-3"><p class="task-text" name="task-14-3"><b>Задание 3.</b> С помощью пакета <code class='language-plsql'>DBMS_SCHEDULER</code> создайте задание, для регулярной генерации отчетов в формате текстовых файлов, которое по указанному расписанию запускает на исполнение процедуру <code class='language-plsql'>employee_report</code>.</p><ul><li>Создайте хранимую процедуру <code class='language-plsql'>schedule_report</code>, которая принимает на вход частоту повторений запуска задания (интервал) и длительность выполнения задания в минутах (по умолчанию — 10).</li><li>В теле процедуры создайте задание с именем <code class='language-plsql'>empsal_report</code>, которое должно представлять собой анонимный блок, запускающийся на исполнение сразу же после вызова процедуры <code class='language-plsql'>schedule_report</code>.<p>Задание должно вызывать процедуру <code class='language-plsql'>employee_report</code> (имя файла для сохранения отчёта должно генерироваться по указанным в задании 5.2 правилам, в качестве имени директории используйте <code class='language-plsql'>STUD_PLSQL</code>). Для хранения текста анонимного блока (тела задания) используйте локальную переменную <code class='language-plsql'>plsql_block</code> типа <code class='language-plsql'>VARCHAR2(200)</code>.</p><p>Сформируйте параметр <code class='language-plsql'>end_date</code> следующим образом: длительность выполнения задания в минутах разделите на количество минут в сутках и прибавьте получившееся значение к текущему значению даты и времени.</p></li><li>Протестируйте работу процедуры <code class='language-plsql'>schedule_report</code>. Создайте задание, запускающее процедуру на исполнение каждые 2 минуты в течение 6 минут.</li><li>После запуска процедуры просмотрите содержимое системной таблички <code class='language-plsql'>USER_SCHEDULER_JOBS</code>. Убедитесь, что там есть информация о задании. Просмотрите каталог <code class='language-plsql'>\\Westfold\Student\PLSQL</code>. Там должно появиться несколько отчетов с вашим именем.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
+  schedule_report (interval SIMPLE_INTEGER, duration SIMPLE_INTEGER := 10) IS
+      theDate VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
+     fileName VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
+  plsql_block VARCHAR2(200) := 'BEGIN employee_report(''STUD_PLSQL'', '''|| fileName ||'''); END;';
+BEGIN
+  DBMS_SCHEDULER.CREATE_JOB (
+            JOB_NAME => 'empsal_report'
+   ,        JOB_TYPE => 'PLSQL_BLOCK'
+   ,      JOB_ACTION => plsql_block
+   ,      START_DATE => SYSTIMESTAMP
+   ,        END_DATE => (SYSTIMESTAMP + duration / (60 * 24))
+   , REPEAT_INTERVAL => 'FREQUENCY=MINUTELY; INTERVAL='|| interval
+   ,         ENABLED => TRUE
+  );
+END schedule_report;
+/
+
+BEGIN
+  schedule_report(2, 6);
+END;
+/
+
+SELECT Job_Name, Job_Type
+FROM USER_SCHEDULER_JOBS;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_NAME</th><th>JOB_TYPE</th></tr></thead><tbody><tr><td>EMPSAL_REPORT</td><td>PLSQL_BLOCK</td></tr></tbody></table></row></div></div><div class="lab" id="lab-15"><a name="#lab-15"><h4>Практическое занятие 15. Использование динамического SQL</h4></a><div class="task" id="task-15-1"><p class="task-text" name="task-15-1"><b>Задание 1.</b> Создайте пакет <code class='language-plsql'>table_pkg</code>, с помощью которого можно создавать и удалять таблицы, модифицировать, добавлять и удалять записи из таблиц с помощью Native Dynamic SQL.</p><ul><li>Создайте спецификацию пакета со следующими процедурами:<ul><li>процедура для создания таблиц. Входные параметры — имя таблицы и спецификация столбцов:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE make(table_name VARCHAR2, col_specs VARCHAR2);</code></pre></li><li>процедура для вставки записей в таблицу принимает на вход имя таблицы, список столбцов, значения:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE add_row(table_name VARCHAR2, col_values VARCHAR2, cols VARCHAR2 := NULL);</code></pre></li><li>процедура для изменения записей в таблице принимает на вход название таблицы, условие отбора изменяемых записей, инструкции модификации:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE upd_row(table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL);</code></pre></li><li>процедура для удаления записей из таблицы:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE del_row(table_name VARCHAR2, conditions VARCHAR2 := NULL);</code></pre></li><li>процедура для удаления (<code class='language-plsql'>DROP</code>) таблицы:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE remove(table_name VARCHAR2);</code></pre></li></ul><li>Создайте тело пакета, в котором все перечисленные процедуры, кроме <code class='language-plsql'>remove</code> должны быть реализованы с использованием Native Dynamic SQL. Для реализации процедуры <code class='language-plsql'>remove</code> используйте <code class='language-plsql'>DBMS_SQL</code>.</li><li>Протестируйте работу пакета. Выполните процедуру <pre class="line-numbers undefined"><code class="language-plsql">table_pkg.make('my_contacts', 'id number(4), name varchar2(40)');</code></pre></li><li>Воспользуйтесь оператором <code class='language-plsql'>DESCRIBE</code> для просмотра структуры созданной таблицы. Убедитесь, что все создано правильно.</li><li>Выполните процедуру <code class='language-plsql'>add_row</code> 4 раза, чтобы добавить в новую таблицу 4 записи (указанные значения необходимо передавать в столбцы <code class='language-plsql'>ID</code> и <code class='language-plsql'>Name</code> соответственно):<row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy</td></tr><tr><td>3</td><td>Sunitha Patel</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row></li><li>С помощью оператора <code class='language-plsql'>SELECT</code> убедитесь, что записи добавлены в таблицу.</li><li>С помощью процедуры <code class='language-plsql'>del_row</code> удалите запись со значением <code class='language-plsql'>ID = 3</code>.</li><li>С помощью процедуры <code class='language-plsql'>upd_row</code> измените значение столбца <code class='language-plsql'>Name</code> на <code class='language-plsql'>'Nancy Greenderg'</code> для записи с <code class='language-plsql'>ID = 2</code>. Проверьте с помощью <code class='language-plsql'>SELECT</code>, что все выполняется правильно.</li><li>С помощью процедуры <code class='language-plsql'>table_pkg.remove</code> удалите таблицу <code class='language-plsql'>My_Contacts</code>.</li></li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE table_pkg IS
+  PROCEDURE make    (table_name VARCHAR2, col_specs  VARCHAR2);
+  PROCEDURE add_row (table_name VARCHAR2, col_values VARCHAR2, cols       VARCHAR2 := NULL);
+  PROCEDURE upd_row (table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL);
+  PROCEDURE del_row (table_name VARCHAR2, conditions VARCHAR2 := NULL);
+  PROCEDURE remove  (table_name VARCHAR2);
+END table_pkg;
+/</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY table_pkg IS
+  
+  PROCEDURE make (table_name VARCHAR2, col_specs VARCHAR2) IS
+  BEGIN
+    EXECUTE IMMEDIATE 'CREATE TABLE '|| table_name ||' ('|| col_specs ||')';
+  END;
+
+  PROCEDURE add_row (table_name VARCHAR2, col_values VARCHAR2, cols VARCHAR2 := NULL) IS
+    statement VARCHAR2(512) := 'INSERT INTO '|| table_name; 
+  BEGIN
+    IF cols IS NOT NULL THEN
+      statement := statement ||' ('|| cols ||')';
+    END IF;
+    EXECUTE IMMEDIATE statement ||' VALUES ('|| col_values ||')';
+  END;
+
+  PROCEDURE upd_row (table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL) IS
+    statement VARCHAR2(512) := 'UPDATE '|| table_name ||' SET '|| set_values;
+  BEGIN
+    IF conditions IS NOT NULL THEN 
+      statement := statement ||' WHERE '|| conditions;
+    END IF;
+    EXECUTE IMMEDIATE statement;
+  END;
+
+  PROCEDURE del_row (table_name VARCHAR2, conditions VARCHAR2 := NULL) IS
+    statement VARCHAR2(512) := 'DELETE FROM '|| table_name;
+  BEGIN
+    IF conditions IS NOT NULL THEN
+      statement := statement ||' WHERE '|| conditions;
+    END IF;
+    EXECUTE IMMEDIATE statement;
+  END;
+
+  PROCEDURE remove (table_name VARCHAR2) IS
+    cursorID PLS_INTEGER;
+  BEGIN
+    cursorID := DBMS_SQL.OPEN_CURSOR;
+    DBMS_SQL.PARSE(cursorID, 'DROP TABLE '|| table_name, DBMS_SQL.NATIVE);
+    DBMS_SQL.CLOSE_CURSOR(cursorID);
+  END;
+
+END table_pkg;
+/</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE table_pkg.make('my_contacts', 'id number(4), name varchar2(40)');</code></pre><pre><code class="language-output">PL/SQL procedure successfully completed.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">DESCRIBE My_Contacts;</code></pre><pre><code class="language-output">Name Null? Type         
+---- ----- ------------ 
+ID         NUMBER(4)    
+NAME       VARCHAR2(40) 
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE table_pkg.add_row('my_contacts', '1, ''Lauran Serhal''');
+EXECUTE table_pkg.add_row('my_contacts', '2, ''Nancy''');
+EXECUTE table_pkg.add_row('my_contacts', '3, ''Sunitha Patel''');
+EXECUTE table_pkg.add_row('my_contacts', '4, ''Valli Pataballa''');
+
+SELECT * FROM My_Contacts;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy</td></tr><tr><td>3</td><td>Sunitha Patel</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE table_pkg.del_row('my_contacts', 'ID = 3');
+SELECT * FROM My_Contacts;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE table_pkg.upd_row('my_contacts', 'Name = ''Nancy Greenderg''', 'ID = 2');
+SELECT * FROM My_Contacts;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>Lauran Serhal</td></tr><tr><td>2</td><td>Nancy Greenderg</td></tr><tr><td>4</td><td>Valli Pataballa</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE table_pkg.remove('my_contacts');</code></pre><pre><code class="language-output">PL/SQL procedure successfully completed.
+
+</code></pre></div><div class="task" id="task-15-2"><p class="task-text" name="task-15-2"><b>Задание 2.</b> Создайте пакет <code class='language-plsql'>compile_pkg</code>, для перекомпиляции именованных блоков кода в вашей схеме.</p><ul><li>В спецификации пакета опишите процедуру <code class='language-plsql'>make</code>, которая принимает на вход имя программной единицы, которую необходимо скомпилировать.<li>В теле пакета:<ul><li>Опишите <code class='language-plsql'>private</code> функцию <code class='language-plsql'>get_type</code>, которая по имени блока извлечет из системных словарей его тип. <ul><li>Если имя объекта не будет найдено в системных словарях, функция должна вернуть <code class='language-plsql'>NULL</code>. </li><li>Учтите, что для пакетов в системных словарях фиксируется по одному имени 2 объекта: <code class='language-plsql'>PACKAGE</code> и <code class='language-plsql'>PACKAGE BODY</code>. Функция должна возвращать только <code class='language-plsql'>PACKAGE</code>.</li></ul></li><li>Создайте тело процедуры <code class='language-plsql'>make</code> следующим образом:<ul><li>Один входной параметр <code class='language-plsql'>name</code> для передачи имени программного модуля.</li><li>С помощью функции <code class='language-plsql'>get_type</code> узнайте тип программного модуля и воспользуйтесь им для формирования инструкции перекомпиляции. Если объект не найден в системных словарях в процессе работы функции <code class='language-plsql'>get_type</code> — выдайте пользовательское сообщение об ошибке.</li></ul></li></ul></li><li>Протестируйте работу процедуры <code class='language-plsql'>compile_pkg.make</code> на примере:<ul><li>процедуры <code class='language-plsql'>web_employee_report</code>,</li><li>пакета <code class='language-plsql'>emp_pkg</code>,</li><li>несуществующего объекта <code class='language-plsql'>emp_details</code> (зафиксируйте сообщение об ошибке).</li></ul></li></li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE compile_pkg IS
+  PROCEDURE make (objectName USER_SOURCE.Name%TYPE);
+END compile_pkg;
+/</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY compile_pkg IS
+ 
+  /*
+    --- PRIVATE ---
+  */
+
+  FUNCTION get_type (objectName USER_SOURCE.Name%TYPE)
+  RETURN USER_SOURCE.Type%TYPE IS
+    objectType USER_SOURCE.Type%TYPE;
+  BEGIN
+    SELECT DISTINCT Type
+    INTO      objectType
+    FROM USER_SOURCE
+    WHERE Name = UPPER(objectName) AND Type != 'PACKAGE BODY';
+
+    RETURN objectType;
+
+  EXCEPTION
+    WHEN OTHERS THEN RETURN NULL;
+  END;
+
+  /*
+    --- PUBLIC ---
+  */
+
+  PROCEDURE make (objectName USER_SOURCE.Name%TYPE) IS
+    objectType USER_SOURCE.Type%TYPE := get_type(objectName);
+    statement VARCHAR2(256);
+  BEGIN
+    IF objectType IS NULL THEN
+      DBMS_OUTPUT.PUT_LINE('compile_pkg.make('''|| objectName ||''') error:');
+      DBMS_OUTPUT.PUT_LINE('- the type of '|| objectName ||' was not found.');
+    RETURN; END IF;
+
+    statement := 'ALTER '|| objectType ||' '|| objectName ||' COMPILE';
+    IF objectType != 'PACKAGE' THEN
+      EXECUTE IMMEDIATE statement;
+      DBMS_OUTPUT.PUT_LINE('Compiled '|| objectName ||'.');
+    ELSE
+      EXECUTE IMMEDIATE statement || ' SPECIFICATION';
+      EXECUTE IMMEDIATE statement || ' BODY';
+      DBMS_OUTPUT.PUT_LINE('Compiled '|| objectName ||'''s specification and body.');
+    END IF;
+  END;
+
+END compile_pkg;
+/
+
+BEGIN
+  compile_pkg.make('web_employee_report');
+  compile_pkg.make('emp_pkg');
+  compile_pkg.make('emp_details');
+END;
+/</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre><code class="language-output">Compiled web_employee_report.
+Compiled emp_pkg's specification and body.
+compile_pkg.make('emp_details') error:
+- the type of emp_details was not found.</code></pre></div></div><div class="lab" id="lab-16"><a name="#lab-16"><h4>Практическое занятие 16. Конструирование PL/SQL кода</h4></a><div class="task" id="task-16-1"><p class="task-text" name="task-16-1"><b>Задание 1.</b> Дополните пакет <code class='language-plsql'>emp_pkg</code> новой процедурой, которая выбирает сотрудников указанного отдела и сохраняет выбранные записи в локальную для пакета PL/SQL таблицу:</p><ul><li>В спецификации пакета:<ul><li>Добавьте объявление процедуры <code class='language-plsql'>get_employees</code>. Процедура принимает на вход один параметр <code class='language-plsql'>dept_id</code>, типа <code class='language-plsql'>Employees.Department_ID%TYPE</code>.</li><li>Объявите <code class='language-plsql'>emp_tabletype</code> типа <code class='language-plsql'>TABLE OF Employees%ROWTYPE</code>.</li></ul></li><li>В теле пакета:<ul><li>Объявите локальную переменную <code class='language-plsql'>emp_table</code> типа <code class='language-plsql'>emp_tabletype</code>.</li><li>Напишите реализацию процедуры <code class='language-plsql'>get_employees</code>. Процедура должна заполнять локальную таблицу <code class='language-plsql'>emp_table</code> с помощью операций массовой закачки данных (<code class='language-plsql'>bulk fetch</code>).</li></ul></li><li>Создайте новую <code class='language-plsql'>public</code> процедуру <code class='language-plsql'>show_employees</code> в спецификации и теле пакета, которая не принимает на вход аргументов. Процедура отображает содержимое <code class='language-plsql'>private</code> таблицы <code class='language-plsql'>emp_table</code>. Данная процедура должна использовать процедуру <code class='language-plsql'>print_employee</code>.</li><li>Запустите на исполнение процедуру <code class='language-plsql'>emp_pkg.get_employees</code> для выборки сотрудников из <code class='language-plsql'>30</code> отдела и отобразите выборку с помощью <code class='language-plsql'>emp_pkg.show_employees</code>. Повторите это для обработки сотрудников <code class='language-plsql'>60</code> отдела.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg IS
+  TYPE emp_tableType IS TABLE OF Employees%ROWTYPE;
+
+  PROCEDURE add_employee (
+    firstName Employees.First_Name%TYPE
+  ,  lastName Employees.Last_Name%TYPE
+  ,      mail Employees.Email%TYPE
+  ,       job Employees.Job_ID%TYPE          := 'SA_REP'
+  ,       mgr Employees.Manager_ID%TYPE      := 145
+  ,       sal Employees.Salary%TYPE          := 1000
+  ,      comm Employees.Commission_PCT%TYPE  := 0
+  ,     depID Employees.Department_ID%TYPE   := 30
+  );
+
+  PROCEDURE add_employee (
+    firstName Employees.First_Name%TYPE
+  ,  lastName Employees.Last_Name%TYPE
+  ,     depID Employees.Department_ID%TYPE
+  );
+
+  PROCEDURE get_employee (
+    id            Employees.Employee_ID%TYPE
+  , jobID     OUT Employees.Job_ID%TYPE
+  , empSalary OUT Employees.Salary%TYPE
+  );
+
+  FUNCTION get_employee (p_emp_id Employees.Employee_ID%TYPE)
+  RETURN Employees%ROWTYPE;
+
+  FUNCTION get_employee (p_family_name Employees.Last_Name%TYPE)
+  RETURN Employees%ROWTYPE;
+
+  PROCEDURE get_employees (dept_id Employees.Department_ID%TYPE);
+  PROCEDURE show_employees;
+
+  PROCEDURE init_departments;
+
+  PROCEDURE print_employee (emp Employees%ROWTYPE);
+END emp_pkg;
+/</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+  emp_table emp_tableType;
+
+  TYPE boolean_tab_type IS TABLE OF BOOLEAN INDEX BY BINARY_INTEGER;
+  valid_departments boolean_tab_type;
+
+  FUNCTION valid_deptid (depID Departments.Department_ID%TYPE) RETURN BOOLEAN;
+
+  /*
+    --- PUBLIC ---
+  */
+  PROCEDURE add_employee (
+      firstName Employees.First_Name%TYPE
+    ,  lastName Employees.Last_Name%TYPE
+    ,      mail Employees.Email%TYPE
+    ,       job Employees.Job_ID%TYPE          := 'SA_REP'
+    ,       mgr Employees.Manager_ID%TYPE      := 145
+    ,       sal Employees.Salary%TYPE          := 1000
+    ,      comm Employees.Commission_PCT%TYPE  := 0
+    ,     depID Employees.Department_ID%TYPE   := 30
+    ) IS
+  BEGIN
+    IF valid_deptid(depID) THEN
+      INSERT INTO Employees (
+        Employee_ID
+      , First_Name
+      , Last_Name
+      , Email
+      , Hire_Date
+      , Job_ID
+      , Manager_ID
+      , Salary
+      , Commission_PCT
+      , Department_ID
+      )
+      VALUES (
+        Employees_Seq.NEXTVAL -- Employee_ID
+      , firstName
+      , lastName
+      , mail
+      , TRUNC(SYSDATE) -- Hire_Date
+      , job
+      , mgr
+      , sal
+      , comm
+      , depID
+      );
+    ELSE
+      DBMS_OUTPUT.PUT_LINE(
+        'Error: cannot add an employee to a nonexistent department #' || depID || '.'
+      );
+    END IF;
+  END add_employee;
+
+  PROCEDURE add_employee (
+      firstName Employees.First_Name%TYPE
+    ,  lastName Employees.Last_Name%TYPE
+    ,     depID Employees.Department_ID%TYPE
+    ) IS
+    email Employees.Email%TYPE := UPPER(SUBSTR(firstName, 1, 1)) || UPPER(SUBSTR(lastName, 1, 7));
+  BEGIN
+    add_employee(firstName, lastName, mail => email, depID => depID);
+  END add_employee;
+
+  PROCEDURE get_employee (
+      id            Employees.Employee_ID%TYPE,
+      jobID     OUT Employees.Job_ID%TYPE,
+      empSalary OUT Employees.Salary%TYPE
+    ) IS
+  BEGIN
+    SELECT Job_ID, Salary
+    INTO   jobID,  empSalary
+    FROM Employees
+    WHERE Employee_ID = id;
+
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('get_employee error:');
+      DBMS_OUTPUT.PUT_LINE(
+           '  could not get Employee information from'
+        || ' get_employee(' || id || ', jobID, empSalary).'
+      );
+      DBMS_OUTPUT.PUT_LINE('  There is no employee with ID ' || id || '.');
+  END get_employee;
+
+  FUNCTION get_employee (p_emp_id Employees.Employee_ID%TYPE)
+  RETURN Employees%ROWTYPE IS
+    emp Employees%ROWTYPE;
+  BEGIN
+    SELECT *
+    INTO   emp
+    FROM Employees
+    WHERE Employee_ID = p_emp_id;
+
+    RETURN emp;
+  END;
+
+  FUNCTION get_employee (p_family_name Employees.Last_Name%TYPE)
+  RETURN Employees%ROWTYPE IS
+    emp Employees%ROWTYPE;
+  BEGIN
+    SELECT *
+    INTO   emp
+    FROM Employees
+    WHERE Last_Name = p_family_name;
+
+    RETURN emp;
+  END;
+
+  PROCEDURE get_employees (dept_id Employees.Department_ID%TYPE) IS
+    CURSOR testCursor IS
+      SELECT * FROM Employees WHERE Department_ID = dept_id;
+  BEGIN
+    OPEN testCursor;
+    FETCH testCursor BULK COLLECT INTO emp_table;
+    CLOSE testCursor;
+  END;
+
+  PROCEDURE show_employees IS
+  BEGIN
+    FOR i IN 1..emp_table.LAST LOOP
+      print_employee(emp_table(i));
+    END LOOP;    
+  END;
+
+  PROCEDURE init_departments IS BEGIN
+    FOR row IN (SELECT Department_ID FROM Departments) LOOP
+      valid_departments(row.Department_ID) := TRUE;
+    END LOOP;
+  END;
+
+  PROCEDURE print_employee (emp Employees%ROWTYPE) IS BEGIN
+    DBMS_OUTPUT.PUT_LINE(
+         'Emp#' || emp.Employee_ID || ': '
+      || emp.First_Name || ' ' || emp.Last_Name
+      || ', depID is '  || emp.Department_ID
+      || ', job is '    || emp.Job_ID
+      || ', salary is ' || emp.Salary || '.'
+    );
+  END;
+
+
+  /*
+    --- PRIVATE ---
+  */
+  FUNCTION valid_deptid (depID Departments.Department_ID%TYPE)
+  RETURN BOOLEAN IS 
+  BEGIN
+    IF valid_departments(depID) THEN RETURN TRUE;
+    ELSE RETURN FALSE; END IF;
+  EXCEPTION
+    WHEN OTHERS THEN RETURN FALSE;
+  END valid_deptid;
+
+BEGIN
+  init_departments;
+END emp_pkg;
+/</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  emp_pkg.get_employees(30);
+  emp_pkg.show_employees;
+END;
+/</code></pre><pre><code class="language-output">Emp#114: Den Raphaely, depID is 30, job is PU_MAN, salary is 11000.
+Emp#115: Alexander Khoo, depID is 30, job is PU_CLERK, salary is 3100.
+Emp#116: Shelli Baida, depID is 30, job is PU_CLERK, salary is 2900.
+Emp#117: Sigal Tubias, depID is 30, job is PU_CLERK, salary is 2800.
+Emp#118: Guy Himuro, depID is 30, job is PU_CLERK, salary is 2600.
+Emp#119: Karen Colmenares, depID is 30, job is PU_CLERK, salary is 2500.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  emp_pkg.get_employees(60);
+  emp_pkg.show_employees;
+END;
+/</code></pre><pre><code class="language-output">Emp#103: Alexander Hunold, depID is 60, job is IT_PROG, salary is 9000.
+Emp#104: Bruce Ernst, depID is 60, job is IT_PROG, salary is 6000.
+Emp#105: David Austin, depID is 60, job is IT_PROG, salary is 4800.
+Emp#106: Valli Pataballa, depID is 60, job is IT_PROG, salary is 4800.
+Emp#107: Diana Lorentz, depID is 60, job is IT_PROG, salary is 4200.
+</code></pre></div><div class="task" id="task-16-2"><p class="task-text" name="task-16-2"><b>Задание 2.</b> Необходимо обеспечить аудит добавления новых сотрудников в таблицу <code class='language-plsql'>Employees</code> с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code>. Для этого:</p><ul><li>Запустите на исполнение скрипт <code class='language-plsql'>lab_07_02_a.sql</code> (путь к файлу: <code class='language-plsql'>\\feanor\public2\КИТвП\Курс 4\Семестр 8\Проектирование Web-приложений\Oracle Разработка программных единиц PLSQL\Oracle Database 10g - Develop PL-SQL Program Units\labs</code>). Этот скрипт создаст в вашей схеме таблицу <code class='language-plsql'>Log_NewEmp</code> и последовательность <code class='language-plsql'>log_newemp_seq</code>.<pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE log_newemp (
+  entry_id  NUMBER(6) CONSTRAINT log_newemp_pk PRIMARY KEY,
+  user_id   VARCHAR2(30),
+  log_time  DATE,
+  name      VARCHAR2(60)
+);
+
+CREATE SEQUENCE log_newemp_seq;
+</code></pre><pre><code class="language-output">Table LOG_NEWEMP created.
+Sequence LOG_NEWEMP_SEQ created.
+</code></pre></li><li>В теле пакета <code class='language-plsql'>emp_pkg</code> измените реализацию той версии процедуры <code class='language-plsql'>add_employee</code>, которая на самом деле выполняет оператор <code class='language-plsql'>INSERT</code> в таблицу <code class='language-plsql'>Employees</code>. Добавьте в реализацию локальную процедуру <code class='language-plsql'>audit_newEmp</code>.<ul><li>Процедура <code class='language-plsql'>audit_newEmp</code> должна быть объявлена как автономная транзакция и выполнять оператор <code class='language-plsql'>INSERT</code> в таблицу <code class='language-plsql'>log_newEmp</code>.</li><li>Процедура должна добавлять значения <code class='language-plsql'>USER</code> (имя текущего пользователя, который выполняет модификацию), текущего времени, и имени нового, добавляемого сотрудника. </li><li>Используйте <code class='language-plsql'>Log_NewEmp_Seq</code> для заполнения столбца <code class='language-plsql'>Entry_ID</code>.</li></ul></li><li>В теле процедуры <code class='language-plsql'>add_employee</code> вызовите на исполнение локальную процедуру <code class='language-plsql'>audit_newEmp</code> перед тем, как добавить запись о новом сотруднике в таблице <code class='language-plsql'>Employees</code>.</li><li>Протестируйте работу новой версии процедуры, добавив с помощью нее информацию о сотрудниках <code class='language-plsql'>Max Smart</code> из <code class='language-plsql'>20</code> отдела и <code class='language-plsql'>Clark Kent</code> из <code class='language-plsql'>10</code> отдела. </li><li>Просмотрите содержимое таблиц <code class='language-plsql'>Employees</code> и <code class='language-plsql'>Log_NewEmp</code>. Сколько записей добавлено в ту и другую таблицу?</li><li>Выполните <code class='language-plsql'>ROLLBACK</code> оператор для отката добавления данных о сотрудниках.<ul><li>Просмотрите содержимое таблицы <code class='language-plsql'>Employees</code>. </li><li>Просмотрите содержимое таблицы <code class='language-plsql'>Log_NewEmp</code>.</li></ul></li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+    -- ... ... ...
+
+  PROCEDURE add_employee (
+      firstName Employees.First_Name%TYPE
+    ,  lastName Employees.Last_Name%TYPE
+    ,      mail Employees.Email%TYPE
+    ,       job Employees.Job_ID%TYPE         := 'SA_REP'
+    ,       mgr Employees.Manager_ID%TYPE     := 145
+    ,       sal Employees.Salary%TYPE         := 1000
+    ,      comm Employees.Commission_PCT%TYPE := 0
+    ,     depID Employees.Department_ID%TYPE  := 30
+    ) IS
+    PROCEDURE audit_newEmp IS
+    PRAGMA AUTONOMOUS_TRANSACTION;
+    BEGIN
+      INSERT INTO Log_NewEmp (Entry_ID, User_ID, Log_Time, Name)
+      VALUES (
+        Log_NewEmp_Seq.NEXTVAL
+      , USER
+      , SYSDATE
+      , firstName ||' '|| lastName
+      );
+      COMMIT;
+    END;
+  BEGIN
+    IF valid_deptid(depID) THEN
+      audit_newEmp;
+
+      INSERT INTO Employees (
+        Employee_ID          , First_Name   , Last_Name , Email ,
+        Hire_Date            , Job_ID       , Manager_ID, Salary,
+        Commission_PCT       , Department_ID
+      )
+      VALUES (
+        Employees_Seq.NEXTVAL, firstName    , lastName  , mail  ,
+        TRUNC(SYSDATE)       , job          , mgr       , sal   ,
+        comm                 , depID
+      );
+    ELSE
+      DBMS_OUTPUT.PUT_LINE(
+        'Error: cannot add an employee to a nonexistent department #' || depID || '.'
+      );
+    END IF;
+  END add_employee;
+
+  -- ... ... ...
+
+END emp_pkg;
+/
+</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  emp_pkg.add_employee('Max', 'Smart', 20);
+  emp_pkg.add_employee('Clark', 'Kent', 10);
+END;
+/
+
+SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Employees
+WHERE Last_Name IN ('Smart', 'Kent');
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>228</td><td>Clark</td><td>Kent</td><td>10</td></tr><tr><td>227</td><td>Max</td><td>Smart</td><td>20</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM Log_NewEmp;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ENTRY_ID</th><th>USER_ID</th><th>LOG_TIME</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Max Smart</td></tr><tr><td>2</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Clark Kent</td></tr></tbody></table></row><p class="comment">В обе таблицы было добавлено по 2 записи.</p><pre class="line-numbers undefined"><code class="language-plsql">ROLLBACK;
+
+SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Employees
+WHERE Last_Name IN ('Smart', 'Kent');
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM Log_NewEmp;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ENTRY_ID</th><th>USER_ID</th><th>LOG_TIME</th><th>NAME</th></tr></thead><tbody><tr><td>1</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Max Smart</td></tr><tr><td>2</td><td>RUMINAT</td><td>2019-04-17 03:59:58</td><td>Clark Kent</td></tr></tbody></table></row></div><div class="task" id="task-16-3"><p class="task-text" name="task-16-3"><b>Задание 3.</b> Необходимо обеспечить работу пакета <code class='language-plsql'>emp_pkg</code> под правами вызывающего.</p><ul><li>С помощью оператора <code class='language-plsql'>GRANT</code> выдайте другому студенту права на исполнение (<code class='language-plsql'>EXECUTE</code>) вашего пакета <code class='language-plsql'>emp_pkg</code>.</li><li>Попросите коллегу выполнить процедуру <code class='language-plsql'>XXX.emp_pkg.add_employee</code>, где <code class='language-plsql'>XXX</code> — имя вашей схемы. По умолчанию, вызов происходит с правами владельца. Проверьте, в какой таблице <code class='language-plsql'>Employees</code> появилась новая запись.</li><li>Измените спецификацию своего пакета, добавив в нее инструкцию <code class='language-plsql'>AUTHID CURRENT_USER</code>. Перекомпилируйте пакет.</li><li>Попросите коллегу еще раз вызвать на исполнение вашу процедуру <code class='language-plsql'>add_employee</code> из пакета <code class='language-plsql'>emp_pkg</code>.</li><li>В какой схеме появиться запись о новом сотруднике?</li></ul><p class="comment">Я (<code class='language-plsql'>Ruminat</code>) выполняю:</p><pre class="line-numbers undefined"><code class="language-plsql">GRANT EXECUTE ON emp_pkg TO C##Bubblegum;
+</code></pre><p class="comment">Пользователь <code class='language-plsql'>C##Bubblegum</code> выполняет:</p><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  Ruminat.emp_pkg.add_employee('Elon', 'Musk', 10);
+END;
+
+SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Employees
+WHERE Last_Name = 'Musk';
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Ruminat.Employees
+WHERE Last_Name = 'Musk';
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>231</td><td>Elon</td><td>Musk</td><td>10</td></tr></tbody></table></row><p class="comment">Новая строчка была добавлена в мою таблицу.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+  -- ... ... ...
+END emp_pkg;
+/
+</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  Ruminat.emp_pkg.add_employee('Albert', 'Einstein', 10);
+END;
+
+SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Employees
+WHERE Last_Name = 'Einstein';
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>228</td><td>Albert</td><td>Einstein</td><td>10</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT Employee_ID, First_Name, Last_Name, Department_ID
+FROM Ruminat.Employees
+WHERE Last_Name = 'Einstein';
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th></tr></thead></table></row><p class="comment">Новая строчка была добавлена в таблицу пользователя <code class='language-plsql'>C##Bubblegum</code>.</p></div></div><div class="lab" id="lab-17"><a name="#lab-17"><h4>Практическое занятие 17. Создание триггеров</h4></a><div class="task" id="task-17-1"><p class="task-text" name="task-17-1"><b>Задание 1.</b> В таблице <code class='language-plsql'>Jobs</code> хранятся значения максимально и минимально допустимой зарплаты для данной должности. Необходимо создать триггер, связанный с операциями <code class='language-plsql'>INSERT</code> и <code class='language-plsql'>UPDATE</code> таблицы <code class='language-plsql'>Employees</code>, который не позволит устанавливать некорректную зарплату для сотрудников. Для этого:</p><ul><li>Создайте процедуру <code class='language-plsql'>check_salary</code>:<ul><li>Процедура принимает на вход 2 параметра — идентификатор должности сотрудника и величину его зарплаты. </li><li>Процедура использует <code class='language-plsql'>Job_ID</code> для определения максимально и минимально возможной зарплаты для этой должности (на основе данных в таблице <code class='language-plsql'>Jobs</code>). </li><li>Если значение второго параметра не попадает в установленный для данной должности диапазон значений процедура должна генерировать исключение <code class='language-plsql'>'Invalid salary {sal} for this job. Salaries must be between {min} and {max}'</code>. Заменяйте именованные зоны соответствующими значениями.</li></ul></li><li>Создайте триггер <code class='language-plsql'>check_salary_trg</code> на таблицу <code class='language-plsql'>Employees</code>, который срабатывает для каждой строки перед операциями <code class='language-plsql'>INSERT</code> и <code class='language-plsql'>UPDATE</code>. <ul><li>Триггер должен вызывать на исполнение процедуру <code class='language-plsql'>check_salary</code>.</li><li>Триггер должен передавать процедуре значения <code class='language-plsql'>Job_ID</code> и зарплаты.</li></ul></li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
+  check_salary (jobID Employees.Job_ID%TYPE, sal Employees.Salary%TYPE) IS
+  minSal Jobs.Min_Salary%TYPE;
+  maxSal Jobs.Max_Salary%TYPE;
+BEGIN
+  SELECT Min_Salary, Max_Salary
+  INTO   minSal,     maxSal
+  FROM Jobs
+  WHERE Job_ID = jobID;
+
+  IF sal NOT BETWEEN minSal AND maxSal THEN
+    RAISE_APPLICATION_ERROR(
+      -20001,
+        'Invalid salary '|| sal ||' for this job. Salaries must be between '
+      || minSal ||' and '|| maxSal
+    );
+  END IF;
+END check_salary;
+/
+
+CREATE OR REPLACE TRIGGER check_salary_trg
+BEFORE INSERT OR UPDATE OF Salary, Job_ID ON Employees
+FOR EACH ROW
+BEGIN
+  check_salary(:NEW.Job_ID, :NEW.Salary);
+END;
+/</code></pre><pre><code class="language-output">Procedure created.
+Trigger created.
+
+</code></pre></div><div class="task" id="task-17-2"><p class="task-text" name="task-17-2"><b>Задание 2.</b> Протестируйте работу триггера.</p><ul><li>Добавьте нового сотрудника с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code> c именем <code class='language-plsql'>Eleanor Beh</code> и номером отдела <code class='language-plsql'>30</code>. Что произойдет и почему? Какая зарплата присваивается сотруднику при добавлении?</li><li>Измените зарплату сотруднику <code class='language-plsql'>115</code> на <code class='language-plsql'>$2000</code>. С помощью отдельной операции измените его должность на <code class='language-plsql'>HR_REP</code>. Что произойдет и почему?</li><li>Измените зарплату <code class='language-plsql'>115</code> сотрудника на <code class='language-plsql'>$2800</code>. Что произойдет?</li></ul><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Eleanor', 'Beh', 30);</code></pre><pre><code class="language-output">ERROR at line 1:
+ORA-20001: Invalid salary 1000 for this job. Salaries must be between 6000 and 12008
+ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+ORA-06512: at "RUMINAT.EMP_PKG", line 34
+ORA-06512: at "RUMINAT.EMP_PKG", line 57
+ORA-06512: at line 1
+</code></pre><p class="comment">У нас не получилось добавить нового сотрудника, так как процедура <code class='language-plsql'>emp_pkg.add_employee</code> по умолчанию устанавливает зарплату, равную $1000.</p><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Employees SET Salary = 2000 WHERE Employee_ID = 115;</code></pre><pre><code class="language-output">ERROR at line 1:
+ORA-20001: Invalid salary 2000 for this job. Salaries must be between 2500 and 5500
+ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Employees SET Job_ID = 'HR_REP' WHERE Employee_ID = 115;</code></pre><pre><code class="language-output">ERROR at line 1:
+ORA-20001: Invalid salary 3100 for this job. Salaries must be between 4000 and 9000
+ORA-06512: at "RUMINAT.CHECK_SALARY", line 11
+ORA-06512: at "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: error during execution of trigger 'RUMINAT.CHECK_SALARY_TRG'
+</code></pre><p class="comment">У нас не получилось изменить строку, так как триггер вызывается и при изменении зарплаты, и при изменении должности.</p><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Employees SET Salary = 2800 WHERE Employee_ID = 115;</code></pre><pre><code class="language-output">1 row updated.
+</code></pre><p class="comment">Теперь зарплата попадает в нужный диапазон, всё замечательно.</p></div><div class="task" id="task-17-3"><p class="task-text" name="task-17-3"><b>Задание 3.</b> Внесите изменения в триггер таким образом, чтобы он срабатывал только при фактическом изменении зарплаты или должности сотрудника. Проверять допустимость зарплаты нужно в 2 случаях — собственно при изменении зарплаты, и при изменении должности сотрудника. Почему?</p><ul><li>Добавьте в описание триггера <code class='language-plsql'>WHEN</code>-конструкцию, проверяющую, что значение в столбцах <code class='language-plsql'>Salary</code> или <code class='language-plsql'>Job_ID</code> изменилось. Убедитесь, что Вы предусмотрели ситуацию, когда прежним (<code class='language-plsql'>OLD</code>) значением было <code class='language-plsql'>NULL</code> (в каком случае это происходит?).</li><li>Протестируйте работу триггера с помощью процедуры <code class='language-plsql'>emp_pkg.add_employee</code> и следующим набором параметров:<ul><li><code class='language-plsql'>p_first_name = 'Eleanor'</code>,</li><li><code class='language-plsql'>p_last_name = 'Beh'</code>,</li><li><code class='language-plsql'>p_Email = 'EBEH'</code>,</li><li><code class='language-plsql'>p_Job = 'IT_PROG'</code>,</li><li><code class='language-plsql'>p_sal = 5000</code>.</li></ul></li><li>Обновите зарплату сотрудников в должности <code class='language-plsql'>IT_PROG</code> — повысьте зарплату на <code class='language-plsql'>$2000</code>. Зафиксируйте результат.</li><li>Присвойте <code class='language-plsql'>Eleanor Beh</code> зарплату равную <code class='language-plsql'>$9000</code>.</li><li>Измените должность <code class='language-plsql'>Eleanor Beh</code> на <code class='language-plsql'>ST_MAN</code>. Зафиксируйте результат.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER check_salary_trg
+BEFORE INSERT OR UPDATE OF Salary, Job_ID ON Employees
+FOR EACH ROW
+WHEN (
+     OLD.Job_ID IS NULL       OR OLD.Salary IS NULL
+  OR OLD.Job_ID != NEW.Job_ID OR OLD.Salary != NEW.Salary
+)
+BEGIN
+  check_salary(:NEW.Job_ID, :NEW.Salary);
+END;
+/</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  emp_pkg.add_employee(
+      firstName => 'Eleanor'
+    ,  lastName => 'Beh'
+    ,      mail => 'EBEH'
+    ,       job => 'IT_PROG'
+    ,       sal => 5000
+  );
+END;
+/
+
+SELECT Employee_ID, First_Name, Last_Name, Department_ID, Salary, Job_ID
+FROM Employees
+WHERE Last_Name = 'Beh';
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>FIRST_NAME</th><th>LAST_NAME</th><th>DEPARTMENT_ID</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>235</td><td>Eleanor</td><td>Beh</td><td>30</td><td>5000</td><td>IT_PROG</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Employees SET Salary = Salary + 2000 WHERE Job_ID = 'IT_PROG';</code></pre><pre><code class="language-output">Error starting at line : 16 in command -
+UPDATE Employees SET Salary = Salary + 2000 WHERE Job_ID = 'IT_PROG'
+Error report -
+ORA-20001: Invalid salary 11000 for this job. Salaries must be between 4000 and 10000
+ORA-06512: на  "RUMINAT.CHECK_SALARY", line 11
+ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Employees SET Salary = 9000 WHERE First_Name = 'Eleanor' AND Last_Name = 'Beh';</code></pre><pre><code class="language-output">1 row updated.
+
+</code></pre></div><div class="task" id="task-17-4"><p class="task-text" name="task-17-4"><b>Задание 4.</b> Напишите триггер, запрещающий удаление сотрудников в рабочие часы.</p><ul><li>Создайте <code class='language-plsql'>statement</code> триггер с именем <code class='language-plsql'>delete_emp_trg</code> на таблицу <code class='language-plsql'>Employees</code>. Запретите удаление в период с 09:00 до 18:00. (или другой период актуальный на момент тестирования).</li><li>Попробуйте удалить сотрудника в должности <code class='language-plsql'>SA_REP</code>, который не приписан ни к какому отделу.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER delete_emp_trg
+BEFORE DELETE ON Employees
+BEGIN
+  IF TO_NUMBER(TO_CHAR(SYSDATE, 'HH24')) NOT BETWEEN 8 AND 17 THEN
+    RAISE_APPLICATION_ERROR(
+      -20001,
+      'You can delete an employee only during normal business hours (08:00–18:00)'
+    );      
+  END IF;
+END;
+/</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">DELETE FROM Employees WHERE Job_ID = 'SA_REP' AND Department_ID IS NULL;</code></pre><pre><code class="language-output">Error starting at line : 1 in command -
+DELETE FROM Employees WHERE Job_ID = 'SA_REP' AND Department_ID IS NULL
+Error report -
+ORA-20001: You can delete an employee only during normal business hours (08:00–20:00)
+ORA-06512: на  "RUMINAT.DELETE_EMP_TRG", line 3
+ORA-04088: ошибка во время выполнения триггера 'RUMINAT.DELETE_EMP_TRG'</code></pre></div></div></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>

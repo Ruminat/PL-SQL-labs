@@ -1,0 +1,27 @@
+{
+  "name": "plsql",
+  "version": "1.0.0",
+  "description": "Данный репозиторий представляет собой сборник лекционных и практических материалов по курсу «Администрирование баз данных (Oracle)». Здесь так же находятся решения к блокам и доп. задачам.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ruminat/Oracle-PL-SQL-labs.git"
+  },
+  "author": "ruminat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ruminat/Oracle-PL-SQL-labs/issues"
+  },
+  "homepage": "https://github.com/Ruminat/Oracle-PL-SQL-labs#readme",
+  "dependencies": {
+    "gulp": "^4.0.1",
+    "gulp-pug": "^4.0.1",
+    "pug": "^2.0.3"
+  },
+  "devDependencies": {
+    "gulp-watch": "^5.0.1"
+  }
+}

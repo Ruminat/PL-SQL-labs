@@ -1,4 +1,4 @@
-extends templates/extra.pug
+extends ../views/templates/_extra.pug
 
 block head
   title Доп. задание 1.7
@@ -19,7 +19,7 @@ block content
   a(name="solution"): h4 Решение
 
   +plsql
-    include extras/1-7.sql
+    include sql/1-7.sql
 
   a(name="result"): h4 Результат
 

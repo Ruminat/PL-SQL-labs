@@ -1,4 +1,4 @@
-include ../views/templates/mixins.pug
+include ../views/templates/_mixins.pug
 //- include ../views/templates/contents.pug
 
 mixin section(title)
@@ -20,13 +20,13 @@ html(lang='ru')
   
   head
     block head
-    include ../views/templates/head.pug
+    include ../views/templates/_head.pug
   body
-    include ../views/templates/menu.pug
+    include ../views/templates/_menu.pug
 
     #main
       block content
 
       //- p #{section}
 
-    include ../views/templates/scripts.pug
+    include ../views/templates/_scripts.pug

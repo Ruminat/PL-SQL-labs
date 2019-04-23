@@ -1,2 +1,4 @@
 *.ini
 *.hide
+node_modules
+node_modules/*

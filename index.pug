@@ -1,5 +1,5 @@
-include views/templates/mixins.pug
-include views/templates/contents.pug
+include views/templates/_mixins.pug
+include views/templates/_contents.pug
 
 - var css = './css/';
 - var img = './img/';
@@ -11,7 +11,7 @@ mixin blockCard
       block
 
 mixin blockLink(blockN)
-  h5.card-title: a(href='blocks/'+ blockN +'-block.html')
+  h5.card-title: a(href='html/'+ blockN +'-block.html')
     <i class="fas fa-cube"></i> #{blockN} Блок
 
 mixin blockLabs
@@ -19,17 +19,16 @@ mixin blockLabs
     block
 
 mixin labLink(blockN, labN, title)
-  li: a(href='blocks/'+ blockN +'-block.html#lab-' + labN)
+  li: a(href='html/'+ blockN +'-block.html#lab-' + labN)
     <i class="fas fa-flask"></i> #{labN} #{title}
 
 mixin extraLink(blockN, extraN, title)
-  li: a(href='blocks/'+ blockN +'-'+ extraN +'.html')
+  li: a(href='html/'+ blockN +'-'+ extraN +'.html')
     <i class="fas fa-file-code"></i> #{blockN}.#{extraN} #{title}
 
-doctype html
 html(lang='ru')
   head
-    include views/templates/head.pug
+    include views/templates/_head.pug
     link(rel="stylesheet", href="css/index.css")
     title Администрирование БД. PL/SQL
   body
@@ -66,7 +65,7 @@ html(lang='ru')
             .card-body
               ul.list-unstyled
                 each chapter in chapters
-                  li: a(href='synopsis/'+ chapter.number +'-chapter.html')
+                  li: a(href='html/'+ chapter.number +'-chapter.html')
                     <i class="fas fa-book-open"></i> #{chapter.number} #{chapter.title}
 
         .col-md-6
@@ -79,6 +78,7 @@ html(lang='ru')
           .card
             .card-body
               +blockLabs
+                +extraLink('4', '8', 'Удалить дублирующиеся строки')
                 +extraLink('3', '14', 'Пути между городами')
                 +extraLink('2', '26', 'Две подстроки')
                 +extraLink('1', '7', 'Информация об отделе')
@@ -137,4 +137,4 @@ html(lang='ru')
                 each lab in blocks[b].labs
                   +labLink(blocks[b].number, lab.number, lab.title)
 
-  include views/templates/footer.pug
+  include views/templates/_footer.pug

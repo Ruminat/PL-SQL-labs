@@ -1,0 +1,28 @@
+extends ../views/templates/_extra.pug
+
+block head
+  title Доп. задание 4.8
+
+block content
+  .labs
+    .header
+      h2 Дополнительное задание 4.8
+
+  a(name="task"): h4 Постановка задачи
+
+  p.task-text Создать процедуру, которая будет удалять из таблицы все дублирующиеся строки. Имя таблицы и схема — параметры. Задачу решить двумя способами:
+  ol
+    li Средствами языка SQL (с использованием только базового варианта команды #[+pl('SELECT')] (без разделов #[+pl('WITH')], #[+pl('UNION')], #[+pl('START WITH')], #[+pl('CONNECT BY')], подзапросов и пр.).
+    li При помощи пакета #[+pl('DBMS_SQL')].
+
+  p Сравнить эффективность программ.
+
+  a(name="solution"): h4 Решение
+
+  +plsql
+    include sql/4-8.sql
+
+  a(name="solution"): h4 Результат
+
+block contents
+  +extraContents
