@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 4.8</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 4.8</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать процедуру, которая будет удалять из таблицы все дублирующиеся строки. Имя таблицы и схема — параметры. Задачу решить двумя способами:</p><ol><li>Средствами языка SQL (с использованием только базового варианта команды <code class="language-plsql">SELECT</code> (без разделов <code class="language-plsql">WITH</code>, <code class="language-plsql">UNION</code>, <code class="language-plsql">START WITH</code>, <code class="language-plsql">CONNECT BY</code>, подзапросов и пр.).</li><li>При помощи пакета <code class="language-plsql">DBMS_SQL</code>.</li></ol><p>Сравнить эффективность программ.</p><a name="solution"><h4>Решение</h4></a><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE generate IS
+<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 4.8</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 4.8</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать процедуру, которая будет удалять из таблицы все дублирующиеся строки. Имя таблицы и схема — параметры. Задачу решить двумя способами:</p><ol><li>Средствами языка SQL (с использованием только базового варианта команды <code class="language-plsql">SELECT</code> (без разделов <code class="language-plsql">WITH</code>, <code class="language-plsql">UNION</code>, <code class="language-plsql">START WITH</code>, <code class="language-plsql">CONNECT BY</code>, подзапросов и пр.).</li><li>При помощи пакета <code class="language-plsql">DBMS_SQL</code>.</li></ol><p>Сравнить эффективность программ.</p><a name="solution"><h4>Решение</h4></a><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE generate IS
   PROCEDURE rows (n SIMPLE_INTEGER := 0);
 END;
 /
@@ -28,11 +28,85 @@ CREATE OR REPLACE PACKAGE BODY generate IS
 END;
 /
 
+CREATE OR REPLACE PROCEDURE distinctDSQL (
+    tableName VARCHAR2, userName VARCHAR2 := USER
+  ) IS
+  fullName VARCHAR2(255) := userName ||&#39;.&#39;|| tableName;
+BEGIN
+  EXECUTE IMMEDIATE
+       &#39;DECLARE&#39;
+    || &#39;  TYPE tableRowsT IS TABLE OF &#39;|| fullName ||&#39;%ROWTYPE;&#39;
+    || &#39;  tableRows tableRowsT;&#39;
+    || &#39;BEGIN&#39;
+    || &#39;  SELECT DISTINCT * BULK COLLECT INTO tableRows FROM &#39;|| fullName ||&#39;;&#39;
+    || &#39;  DELETE FROM &#39;|| fullName ||&#39;;&#39;
+    || &#39;  FORALL i IN tableRows.FIRST..tableRows.LAST&#39;
+    || &#39;    INSERT INTO &#39;|| fullName ||&#39; VALUES tableRows(i);&#39;
+    || &#39;END;&#39;;
+END;
+/
 
+CREATE OR REPLACE PROCEDURE distinctDBMS_SQL (
+    tableName VARCHAR2, userName VARCHAR2 := USER
+  ) IS
+  fullName VARCHAR2(255) := userName ||&#39;.&#39;|| tableName;
+  cursorID PLS_INTEGER := DBMS_SQL.OPEN_CURSOR;
+  rowsAdded PLS_INTEGER;
+BEGIN
+  DBMS_SQL.PARSE(
+     cursorID
+   ,    &#39;DECLARE&#39;
+     || &#39;  TYPE tableRowsT IS TABLE OF &#39;|| fullName ||&#39;%ROWTYPE;&#39;
+     || &#39;  tableRows tableRowsT;&#39;
+     || &#39;BEGIN&#39;
+     || &#39;  SELECT DISTINCT * BULK COLLECT INTO tableRows FROM &#39;|| fullName ||&#39;;&#39;
+     || &#39;  DELETE FROM &#39;|| fullName ||&#39;;&#39;
+     || &#39;  FORALL i IN tableRows.FIRST..tableRows.LAST&#39;
+     || &#39;    INSERT INTO &#39;|| fullName ||&#39; VALUES tableRows(i);&#39;
+     || &#39;END;&#39;
+   , DBMS_SQL.NATIVE
+  );
+  rowsAdded := DBMS_SQL.EXECUTE(cursorID);
+  DBMS_SQL.CLOSE_CURSOR(cursorID);
+END;
+/
+
+SELECT COUNT(*) FROM TestEmps;  --     109 строк
+SELECT COUNT(*) FROM TestEmps2; --  11 990 строк
+SELECT COUNT(*) FROM TestEmps3; -- 275 793 строк
+
+DECLARE
+  kek CONSTANT SIMPLE_INTEGER := 42;
+BEGIN
+  EXECUTE IMMEDIATE &#39;BEGIN DBMS_OUTPUT.PUT_LINE(&#39;&#39;kek: :1&#39;&#39;); END;&#39; USING kek;
+  DBMS_OUTPUT.PUT_LINE(&#39;done!&#39;);
+END;
+/
+
+DROP TABLE TestEmps PURGE;
+CREATE TABLE TestEmps AS
+  SELECT * FROM Employees;
+
+DROP TABLE TestEmps2 PURGE;
+CREATE TABLE TestEmps2 AS
+  SELECT * FROM TestEmps
+  CONNECT BY LEVEL &lt;= 2;
+
+DROP TABLE TestEmps3 PURGE;
+CREATE TABLE TestEmps3 AS
+  SELECT * FROM TestEmps
+  START WITH Employee_ID &gt; 185
+  CONNECT BY LEVEL &lt;= 3;
 
 TRUNCATE TABLE Duplicates;
-EXECUTE generate.rows(1000);
+EXECUTE generate.rows(10**7);
 
-SELECT * FROM Duplicates;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP);
+  -- distinctDSQL(&#39;Duplicates&#39;);
+  distinctDBMS_SQL(&#39;Duplicates&#39;);
+  DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP);
+END;
+/
 
--- DELETE FROM Duplicates WHERE </code></pre><a name="solution"><h4>Результат</h4></a></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
+SELECT COUNT(*) FROM Duplicates;</code></pre><a name="solution"><h4>Результат</h4></a></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>

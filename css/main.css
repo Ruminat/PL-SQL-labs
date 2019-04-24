@@ -25,9 +25,10 @@ pre[class*="language-"] {
   word-break: normal;
   word-wrap: normal;
   line-height: 1.5;
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
+  font-size: 0.8rem;
+  -moz-tab-size: 2;
+  -o-tab-size: 2;
+  tab-size: 2;
   -webkit-hyphens: none;
   -moz-hyphens: none;
   -ms-hyphens: none;
@@ -314,6 +315,10 @@ div.code-toolbar > .toolbar span:focus {
   #menu.closed .text-part {
     display: none; }
 
+@media screen and (max-width: 800px) {
+  #menu.closed {
+    height: 1.75rem; } }
+
 * {
   box-sizing: border-box;
   outline: none !important; }
@@ -331,6 +336,14 @@ html, body {
 #main.full {
   width: calc(100vw - 2rem);
   margin-left: 2rem; }
+
+@media screen and (max-width: 800px) {
+  #main {
+    padding: 0; }
+  #main.full {
+    width: 100vw;
+    margin: 0;
+    padding: 0 1rem 0 1rem; } }
 
 h1, h2, h3, h4, h5, h6, p, li, footer, .menu *, button {
   font-family: "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia;
