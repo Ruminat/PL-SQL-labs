@@ -1,34 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 4.8</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 4.8</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать процедуру, которая будет удалять из таблицы все дублирующиеся строки. Имя таблицы и схема — параметры. Задачу решить двумя способами:</p><ol><li>Средствами языка SQL (с использованием только базового варианта команды <code class="language-plsql">SELECT</code> (без разделов <code class="language-plsql">WITH</code>, <code class="language-plsql">UNION</code>, <code class="language-plsql">START WITH</code>, <code class="language-plsql">CONNECT BY</code>, подзапросов и пр.).</li><li>При помощи пакета <code class="language-plsql">DBMS_SQL</code>.</li></ol><p>Сравнить эффективность программ.</p><a name="solution"><h4>Решение</h4></a><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE generate IS
-  PROCEDURE rows (n SIMPLE_INTEGER := 0);
-END;
-/
-
-CREATE OR REPLACE PACKAGE BODY generate IS
-  TYPE rowsT IS TABLE OF SIMPLE_INTEGER;
-
-  PROCEDURE rows (n SIMPLE_INTEGER := 0) IS
-    rowsTable rowsT := rowsT();
-    maxValue  SIMPLE_INTEGER := 1;
-    rowsCount SIMPLE_INTEGER := 0;
-  BEGIN
-    rowsTable.EXTEND(n);
-    &lt;&lt;mainLoop&gt;&gt; WHILE TRUE LOOP
-      FOR i IN 1..maxValue LOOP
-        EXIT mainLoop WHEN rowsCount &gt;= n;
-        rowsCount := rowsCount + 1;
-        rowsTable(rowsCount) := i;
-      END LOOP;
-      maxValue := maxValue + 1;
-    END LOOP mainLoop;
-
-    FORALL i IN 1..n
-      SAVE EXCEPTIONS
-      INSERT INTO Duplicates VALUES (rowsTable(i));
-  END;
-END;
-/
-
-CREATE OR REPLACE PROCEDURE distinctDSQL (
+<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 4.8</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 4.8</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать процедуру, которая будет удалять из таблицы все дублирующиеся строки. Имя таблицы и схема — параметры. Задачу решить двумя способами:</p><ol><li>Средствами языка SQL (с использованием только базового варианта команды <code class="language-plsql">SELECT</code> (без разделов <code class="language-plsql">WITH</code>, <code class="language-plsql">UNION</code>, <code class="language-plsql">START WITH</code>, <code class="language-plsql">CONNECT BY</code>, подзапросов и пр.).</li><li>При помощи пакета <code class="language-plsql">DBMS_SQL</code>.</li></ol><p>Сравнить эффективность программ.</p><a name="solution"><h4>Решение</h4></a><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE distinctDSQL (
     tableName VARCHAR2, userName VARCHAR2 := USER
   ) IS
   fullName VARCHAR2(255) := userName ||&#39;.&#39;|| tableName;
@@ -69,44 +39,58 @@ BEGIN
   rowsAdded := DBMS_SQL.EXECUTE(cursorID);
   DBMS_SQL.CLOSE_CURSOR(cursorID);
 END;
-/
-
-SELECT COUNT(*) FROM TestEmps;  --     109 строк
-SELECT COUNT(*) FROM TestEmps2; --  11 990 строк
-SELECT COUNT(*) FROM TestEmps3; -- 275 793 строк
-
-DECLARE
-  kek CONSTANT SIMPLE_INTEGER := 42;
+/</code></pre><a name="result"><h4>Результат</h4></a><p>Сравним время выполнения первого варианта и второго для таблиц с различным количеством столбцов и строк. Сравнивать будет по следующему шаблону:</p><pre class="line-numbers undefined"><code class="language-plsql">DECLARE
+  startTimestamp TIMESTAMP;
 BEGIN
-  EXECUTE IMMEDIATE &#39;BEGIN DBMS_OUTPUT.PUT_LINE(&#39;&#39;kek: :1&#39;&#39;); END;&#39; USING kek;
-  DBMS_OUTPUT.PUT_LINE(&#39;done!&#39;);
+  startTimestamp := SYSTIMESTAMP;
+  -- distinctDSQL('Название Таблицы');     (1) -- Выполним сначала для Dynamic SQL,
+  -- distinctDBMS_SQL('Название Таблицы'); (2) -- а потом — для DBMS_SQL.
+  DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP - startTimestamp); -- Длительность выполнения.
+END;
+/
+</code></pre><h5>Тест №1</h5><p>Используем таблицу <code class="language-plsql">Duplicates</code>, состояющую из одного столбца (<code class="language-plsql">Value</code>) и из строк вида:</p><pre><code class="language-output">VALUE  UNION ALL  VALUE   UNION ALL  VALUE   ...
+-----             -----              -----
+    1                 1                  1
+                      2                  2
+                                         3
+</code></pre><p>Генерируются эти строки с помощью следующего пакета:</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE generate IS
+  PROCEDURE rows (n SIMPLE_INTEGER := 0);
 END;
 /
 
-DROP TABLE TestEmps PURGE;
-CREATE TABLE TestEmps AS
+CREATE OR REPLACE PACKAGE BODY generate IS
+  TYPE rowsT IS TABLE OF SIMPLE_INTEGER;
+
+  PROCEDURE rows (n SIMPLE_INTEGER := 0) IS
+    rowsTable rowsT := rowsT();
+    maxValue  SIMPLE_INTEGER := 1;
+    rowsCount SIMPLE_INTEGER := 0;
+  BEGIN
+    rowsTable.EXTEND(n);
+    &lt;&lt;mainLoop&gt;&gt; WHILE TRUE LOOP
+      FOR i IN 1..maxValue LOOP
+        EXIT mainLoop WHEN rowsCount &gt;= n;
+        rowsCount := rowsCount + 1;
+        rowsTable(rowsCount) := i;
+        DBMS_OUTPUT.PUT_LINE(i);
+      END LOOP;
+      maxValue := maxValue + 1;
+    END LOOP mainLoop;
+
+    FORALL i IN 1..n
+      SAVE EXCEPTIONS
+      INSERT INTO Duplicates VALUES (rowsTable(i));
+  END;
+END;
+/</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th class="text-right">Строк в Duplicates</th><th class="text-right">Время выполнения Dynamic SQL (с)</th><th class="text-left"> Время выполнения DBMS_SQL (с)</th></tr></thead><tbody><tr><th class="text-right">1 000</th><th class="text-right">0.009</th><th class="text-left"> 0.013</th></tr><tr><th class="text-right">10 000</th><th class="text-right">0.015</th><th class="text-left"> 0.060</th></tr><tr><th class="text-right">100 000</th><th class="text-right">0.064</th><th class="text-left"> 0.147</th></tr><tr><th class="text-right">1 000 000</th><th class="text-right">0.633</th><th class="text-left"> 0.816</th></tr><tr><th class="text-right">10 000 000</th><th class="text-right">16.416</th><th class="text-left"> 20.916</th></tr></tbody></table></row><p>Как можно заметить, Dynamic SQL работает быстрее, чем <code class="language-plsql">DBMS_SQL</code>.</p><h5>Тест №2</h5><p>Используем таблицы <code class="language-plsql">TestEmps</code>, <code class="language-plsql">TestEmps2</code>, <code class="language-plsql">TestEmps3</code>, содержащие, соответственно 109, 11990 и 275793 строки. Эти таблицы являются результатом копирования строк в таблице <code class="language-plsql">Employees</code> посредством <code class="language-plsql">CONNECT BY</code>.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE TestEmps AS  --     109 строк
   SELECT * FROM Employees;
 
-DROP TABLE TestEmps2 PURGE;
-CREATE TABLE TestEmps2 AS
+CREATE TABLE TestEmps2 AS --  11 990 строк
   SELECT * FROM TestEmps
-  CONNECT BY LEVEL &lt;= 2;
+  CONNECT BY LEVEL <= 2;
 
-DROP TABLE TestEmps3 PURGE;
-CREATE TABLE TestEmps3 AS
+CREATE TABLE TestEmps3 AS -- 275 793 строки
   SELECT * FROM TestEmps
-  START WITH Employee_ID &gt; 185
-  CONNECT BY LEVEL &lt;= 3;
-
-TRUNCATE TABLE Duplicates;
-EXECUTE generate.rows(10**7);
-
-BEGIN
-  DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP);
-  -- distinctDSQL(&#39;Duplicates&#39;);
-  distinctDBMS_SQL(&#39;Duplicates&#39;);
-  DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP);
-END;
-/
-
-SELECT COUNT(*) FROM Duplicates;</code></pre><a name="solution"><h4>Результат</h4></a></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
+  START WITH Employee_ID > 185
+  CONNECT BY LEVEL <= 3;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th class="text-left">Таблица</th><th class="text-right">Время выполнения Dynamic SQL (с)</th><th class="text-left"> Время выполнения DBMS_SQL (с)</th></tr></thead><tbody><tr><th class="text-left">TestEmps</th><th class="text-right">0.035</th><th class="text-left"> 0.046</th></tr><tr><th class="text-left">TestEmps2</th><th class="text-right">0.138</th><th class="text-left"> 0.140</th></tr><tr><th class="text-left">TestEmps3</th><th class="text-right">1.448</th><th class="text-left"> 1.651</th></tr></tbody></table></row><p>Тут, опять же, <code class="language-plsql">DBMS_SQL</code> показал себя несколько хуже.</p></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>

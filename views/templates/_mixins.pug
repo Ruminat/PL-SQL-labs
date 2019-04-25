@@ -7,6 +7,11 @@ mixin pl(text)
   code(class="language-plsql")
     :escape-html= text
 
+mixin sqlTable
+  row.aligment-center
+    table.table.table-SQL.table-bordered.table-hover.table-sm
+      block
+
 mixin task(task_n, text)
   div(class="task" id="task-" + lab_n + "-" + task_n)
     p(name="task-" + lab_n + "-" + task_n class="task-text") <b>Задание #{task_n}.</b> !{text}

@@ -22,7 +22,103 @@ block content
   +plsql
     include:escape-html sql/4-8.sql
 
-  a(name="solution"): h4 Результат
+  a(name="result"): h4 Результат
+
+  p Сравним время выполнения первого варианта и второго для таблиц с различным количеством столбцов и строк. Сравнивать будет по следующему шаблону:
+
+  +plsql.
+    DECLARE
+      startTimestamp TIMESTAMP;
+    BEGIN
+      startTimestamp := SYSTIMESTAMP;
+      -- distinctDSQL('Название Таблицы');     (1) -- Выполним сначала для Dynamic SQL,
+      -- distinctDBMS_SQL('Название Таблицы'); (2) -- а потом — для DBMS_SQL.
+      DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP - startTimestamp); -- Длительность выполнения.
+    END;
+    /
+
+  h5 Тест №1
+
+  p Используем таблицу #[+pl('Duplicates')], состояющую из одного столбца (#[+pl('Value')]) и из строк вида:
+  +output.
+    VALUE  UNION ALL  VALUE   UNION ALL  VALUE   ...
+    -----             -----              -----
+        1                 1                  1
+                          2                  2
+                                             3
+
+  p Генерируются эти строки с помощью следующего пакета:
+
+  +plsql
+    include:escape-html sql/4-8.generate.sql
+
+  +sqlTable
+    thead.thead-dark
+      tr
+        th.text-right Строк в Duplicates
+        th.text-right Время выполнения Dynamic SQL (с)
+        th.text-left  Время выполнения DBMS_SQL (с)
+    tbody
+      tr
+        th.text-right 1 000
+        th.text-right 0.009
+        th.text-left  0.013
+      tr
+        th.text-right 10 000
+        th.text-right 0.015
+        th.text-left  0.060
+      tr
+        th.text-right 100 000
+        th.text-right 0.064
+        th.text-left  0.147
+      tr
+        th.text-right 1 000 000
+        th.text-right 0.633
+        th.text-left  0.816
+      tr
+        th.text-right 10 000 000
+        th.text-right 16.416
+        th.text-left  20.916
+
+  p Как можно заметить, Dynamic SQL работает быстрее, чем #[+pl('DBMS_SQL')].
+
+  h5 Тест №2
+
+  p Используем таблицы #[+pl('TestEmps')], #[+pl('TestEmps2')], #[+pl('TestEmps3')], содержащие, соответственно 109, 11990 и 275793 строки. Эти таблицы являются результатом копирования строк в таблице #[+pl('Employees')] посредством #[+pl('CONNECT BY')].
+  +plsql.
+    CREATE TABLE TestEmps AS  --     109 строк
+      SELECT * FROM Employees;
+
+    CREATE TABLE TestEmps2 AS --  11 990 строк
+      SELECT * FROM TestEmps
+      CONNECT BY LEVEL <= 2;
+
+    CREATE TABLE TestEmps3 AS -- 275 793 строки
+      SELECT * FROM TestEmps
+      START WITH Employee_ID > 185
+      CONNECT BY LEVEL <= 3;
+
+  +sqlTable
+    thead.thead-dark
+      tr
+        th.text-left Таблица
+        th.text-right Время выполнения Dynamic SQL (с)
+        th.text-left  Время выполнения DBMS_SQL (с)
+    tbody
+      tr
+        th.text-left TestEmps
+        th.text-right 0.035
+        th.text-left  0.046
+      tr
+        th.text-left TestEmps2
+        th.text-right 0.138
+        th.text-left  0.140
+      tr
+        th.text-left TestEmps3
+        th.text-right 1.448
+        th.text-left  1.651
+
+  p Тут, опять же, #[+pl('DBMS_SQL')] показал себя несколько хуже.
 
 block contents
   +extraContents
