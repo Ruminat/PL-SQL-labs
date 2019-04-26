@@ -1,0 +1,34 @@
+- var lab_n = 20;
+- var title = "Практическое занятие 20. Обслуживание кода PL/SQL";
+
+
++lab
+  +task("1", "Просмотрите и выполните скрипт <code>lab_11_01.sql</code>. В результате выполнения скрипта будет установлен флаг для отображения <code>debugging</code> и <code>trace</code> информации. Скрипт так же создаст пакет <code class='language-plsql'>my_pkg</code> и процедуру <code class='language-plsql'>circle_area</code>.")
+    +plsql
+      include ../../labs/16 lab/16-1-head.sql
+
+
+  +task("2", "С помощью подпрограммы <code class='language-plsql'>dbms_preprocessor</code> отобразите текст из файла <code>lab_11_01.sql</code> в том виде, который он примет после выполнения директив условной компиляции.")
+
+
+  +task("3", "Создайте PL/SQL скрипт, который использует <code class='language-plsql'>dbms_db_version</code> константу. Скрипт определяет версию Oracle.")
+    ul
+      li Если версия меньше или равна 10.1, необходимо выдать сообщение:
+        +output.
+          Unsupported database release
+      li В ином случае — показать сообщение:
+        +output.
+          Release {используемые версия СУБД и номер релиза} is supported
+
+
+  +task("4", "Откройте скрипт <code>lab_11_04.sql</code>. В нем предполагается использование предустановленной процедуры <code class='language-plsql'>create_wrapped</code> для динамического создания и обработки (шифрования) пакета. Отредактируйте скрипт следующим образом:")
+    ul
+      li Добавьте в используемый анонимный блок исполняемую секцию, в которой:
+        ul
+          li Сгенерируйте текст для создания спецификации пакета с помощью процедуры <code class='language-plsql'>generate_spec</code>, установив значение параметра <code class='language-plsql'>pkgname</code> равным <code class='language-plsql'>'EMP_ACTIONS'</code>. Сохраните его в соответствующей переменной.
+          li Создайте и зашифруйте (<code>wrap</code>) спецификацию пакета.
+          li Сгенерируйте текст для создания тела пакета с помощью процедуры <code class='language-plsql'>generate_body</code>. Сохраните его в соответствующей переменной.
+          li Создайте и зашифруйте (<code>wrap</code>) тело пакета.
+      li Сохраните и выполните скрипт.
+      li Вызовите процедуру <code class='language-plsql'>emp_actions.raise_salary</code> с параметрами <code class='language-plsql'>(120, 100)</code>. Проверьте результат; 
+      li С помощью словаря <code class='language-plsql'>USER_SOURCE</code> проверьте, что исполняемый код скрыт.

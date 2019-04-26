@@ -1,0 +1,43 @@
+- var lab_n = 19;
+- var title = "Практическое занятие 19. Использование компилятора PL/SQL";
+
+
++lab
+  +task("1", "Запустите скрипт с именем <code class='language-plsql'>lab_10_01</code>. Создайте и выполните запрос для осуществления выборки из словаря <code class='language-plsql'>user_plsql_object_settings</code> следующей информации о параметрах инициализации, влияющих на компиляцию кода:")
+    ul
+      li Имя объекта.
+      li Тип объекта.
+      li Был ли объект #[+pl('compiled for debugging')].
+      li Режим компиляции объекта.
+      li Уровень оптимизации компиляции.
+    p Зафиксируйте результат. Обратите внимание на информацию об объекте #[+pl('add_job_history')].
+
+    +plsql
+      include ../../labs/15 lab/15-1-head.sql
+
+
+  +task("2", "Измените значение параметра <code class='language-plsql'>plsql_code_type</code> для текущей сессии и скомпилируйте объект <code class='language-plsql'>add_job_history</code>.")
+    ul
+      li Выполните команду #[+pl('ALTER SESSION')] для разрешения native compilation.
+      li Перекомпилируйте объект #[+pl('add_job_history')].
+      li Выполните запрос из задачи 10.1 ещё раз. Зафиксируйте результат. Отметьте, что изменилось.
+      li Верните обратно прежний режим компиляции.
+
+    +plsql
+      include ../../labs/15 lab/15-2-head.sql
+
+
+  +task("3", "С помощью <code>Tools -> Preference -> Database -> PL/SQL Compiler</code> отключите все категории <code>compiler warnings</code>.")
+    ul
+      li Отредактируйте, просмотрите и выполните скрипт <code>lab_10_04.sql</code> для создания процедуры #[+pl('unreachable_code')]. Перекомпилируйте процедуру после создания.
+      li Удалось ли вам получить какие-то сообщения об ошибках или предупреждения на вкладке <code>Compiler — Log</code>?
+    +plsql
+      include ../../labs/15 lab/15-2-head.sql
+
+
+  +task("4", "С помощью <code>Tools -> Preference -> PL/SQL Compiler Options</code> включите отображение всех предупреждений компилятора.")
+    ul
+      li Перекомпилируйте процедуру <code class='language-plsql'>unreachable_code</code>. 
+      li Что отобразилось на вкладке <code>Compiler — Log?</code> (Вы также можете воспользоваться словарем <code class='language-plsql'>USER_ERRORS</code>).
+
+  +task("5", "Создайте скрипт с именем <code class='language-plsql'>warning_msgs</code>, в котором используется <code class='language-plsql'>EXECUTE</code> в сочетании с процедурами из пакетов <code class='language-plsql'>DBMS_OUTPUT</code> и <code class='language-plsql'>DBMS_WARNING</code> для идентификации категорий следующих сообщений: <code>5050, 6075, 7100</code>.")

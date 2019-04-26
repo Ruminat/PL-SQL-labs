@@ -1,0 +1,40 @@
+- var lab_n = 21;
+- var title = "Практическое занятие 21. Обслуживание зависимостей";
+
++lab
+  +task("1", "Проанализируйте зависимости между объектами в следующем сценарии:")
+    p Хранимая процедура #[+pl('my_proc')] вызывает внутри себя на исполнение другую хранимую процедуру #[+pl('my_proc_pack')], размещенную в пакете. Скажется ли изменение реализации и перекомпиляция процедуры #[+pl('my_proc_pack')] (без изменения ее объявления в спецификации пакета) на статус процедуры #[+pl('my_proc')]. Будет ли она помечена как #[+pl('INVALID')]?
+
+    +plsql
+      include ../../labs/17 lab/17-1.sql
+    +output.
+      Procedure created.
+      Trigger created.
+
+
+  +task("2", "Создайте древовидную структуру, отражающую все зависимости между объектами на примере процедуры <code class='language-plsql'>add_employee</code> и функции <code class='language-plsql'>valid_deptid</code>.")
+    ul
+      li Просмотрите и выполните скрипт <code>utldtree.sql</code> из папки курса.
+      li Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>add_employee</code>.
+      li С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.
+      li Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>valid_deptid</code>.
+      li С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.
+      li Проанализируйте код процедуры <code class='language-plsql'>deptree_fill</code>. Какие системные ресурсы она опрашивает.
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Eleanor', 'Beh', 30);
+
+
+  +task("3", "Динамически определите <code class='language-plsql'>INVALID</code> объекты:")
+    ul
+      li Создайте копию таблицы <code class='language-plsql'>Employees</code> и назовите ее <code class='language-plsql'>Emps</code>.
+      li Измените таблицу <code class='language-plsql'>Employees</code>. Добавьте в нее колонку <code class='language-plsql'>TotSal</code> с типом данных <code class='language-plsql'>NUMBER(9, 2)</code>.
+      li Создайте и сохраните локально скрипт для отображения имени, типа и статуса всех <code class='language-plsql'>INVALID</code> объектов. Запустите его и посмотрите результат.
+      li В пакет <code class='language-plsql'>compile_pkg</code> добавьте процедуру <code class='language-plsql'>recompile</code>, которая перекомпилирует все <code class='language-plsql'>INVALID</code> объекты схемы (с использованием Native Dynamic SQL).
+      li Выполните процедуру <code class='language-plsql'>compile_pkg.recompile</code>.
+      li Выполните заново скрипт из пункта с. Убедитесь, что объектов со статусом <code class='language-plsql'>INVALID</code> в схеме не осталось.
+
+    +plsql
+      include ../../labs/17 lab/17-3.sql
+    +output.
+      Trigger created.
