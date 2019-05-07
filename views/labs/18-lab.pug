@@ -1,9 +1,8 @@
 - var lab_n = 18;
 - var title = "Практическое занятие 18. Создание Compound триггеров, DDL-триггеров и триггеров на события в базе данных";
 
-
 +lab
-  +task("1", "С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше, минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.")
+  +task("1", "С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.")
     ul
       li В пакет #[+pl('emp_pkg')] добавьте хранимую процедуру #[+pl('set_salary')].
         ul 
@@ -11,43 +10,141 @@
           li Процедура должна принимать на вход 2 параметра: 
             ul
               li ID должности
-              li и новую минимальную величину зарплаты для этой должности 
+              li и новую минимальную величину зарплаты для этой должности. 
           li Процедура должна обновлять зарплату всех сотрудников соответствующей должности так, чтобы она была не меньше новой минимальной.
       li Создайте строчный триггер #[+pl('upd_minsalary_trg')], связанный с таблицей #[+pl('Jobs')], который будет вызывать процедуру #[+pl('emp_pkg.set_salary')], когда минимальный уровень зарплаты для той или иной должности будет изменяться.
-      li Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности #[+pl('\'IT_PROG\'')], зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти и что произошло на самом деле? 
-      p При тестировании работы триггера, вы столкнетесь с проблемой #[+pl('\'mutating table\'')] — чтение изменяющейся таблицы. (В таблице #[+pl('Employees')] есть свой триггер #[+pl('check_salary')], который будет читать таблицу #[+pl('Jobs')]). Эту ошибку надо исправить.
+      li Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности #[+pl('\'IT_PROG\'')], зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти, и что произошло на самом деле? 
+      p При тестировании работы триггера, вы столкнетесь с проблемой «mutating table» — чтение изменяющейся таблицы. (В таблице #[+pl('Employees')] есть свой триггер #[+pl('check_salary')], который будет читать таблицу #[+pl('Jobs')]). Эту ошибку надо исправить.
+
+    +plsql.
+      CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+        -- ... ... ...
+        PROCEDURE set_salary (jobID Employees.Job_ID%TYPE, newSalary Employees.Salary%TYPE);
+      END emp_pkg;
+      /
+    +output.
+      Package created.
+
+    +plsql.
+      CREATE OR REPLACE PACKAGE BODY emp_pkg IS
+
+        -- ... ... ...
+
+        PROCEDURE set_salary (jobID Employees.Job_ID%TYPE, newSalary Employees.Salary%TYPE) IS
+        BEGIN
+          UPDATE Employees
+          SET Salary = GREATEST(Salary, newSalary)
+          WHERE Job_ID = jobID;
+        END;
+
+        -- ... ... ...
+
+      END emp_pkg;
+      /
+    +output.
+      Package body created.
 
     +plsql
-      include ../../labs/14 lab/14-1.sql
+      include ../../labs/18 lab/18-1-trigger.sql
+    +output.
+      Trigger created.
+
+    +plsql.
+      SELECT Last_Name, First_Name, Salary, Job_ID
+      FROM Employees
+      WHERE Job_ID = 'IT_PROG';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td>4200</td><td>IT_PROG</td></tr></tbody></table></row>
+
+    +plsql.
+      UPDATE Jobs
+      SET Min_Salary = Min_Salary + 1000
+      WHERE Job_ID = 'IT_PROG';
+    +output.
+      [42000][4091] ORA-04091: таблица RUMINAT.JOBS изменяется, триггер/функция может не заметить это
+      ORA-06512: на  "RUMINAT.CHECK_SALARY", line 6
+      ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+      ORA-06512: на  "RUMINAT.EMP_PKG", line 128
+      ORA-06512: на  "RUMINAT.UPD_MINSALARY_TRG", line 2
+      ORA-04088: ошибка во время выполнения триггера 'RUMINAT.UPD_MINSALARY_TRG'
+
+    p Мы должны были обновить поле #[+pl('Salary')] у работников с #[+pl('Job_ID = \'IT_PROG\'')], однако вместо этого получили ошибку.
 
 
-  +task("2", "Чтобы обойти проблему <code class='language-plsql'>'mutating table'</code> вам потребуется создать временную копию таблицы <code class='language-plsql'>Jobs</code> изменить процедуру <code class='language-plsql'>check_salary</code> так, чтобы она обращалась к этой временной таблице, вместо чтения оригинальной таблицы <code class='language-plsql'>Jobs</code>.")
+  +task("2", "Чтобы обойти проблему «mutating table» вам потребуется создать временную копию таблицы <code class='language-plsql'>Jobs</code> изменить процедуру <code class='language-plsql'>check_salary</code> так, чтобы она обращалась к этой временной таблице, вместо чтения оригинальной таблицы <code class='language-plsql'>Jobs</code>.")
     ul
       li Создайте новый пакет #[+pl('jobs_pkg')] со следующей спецификацией:
         +plsql.
           PROCEDURE initialize;
-          FUNCTION  get_minSalary(jobid VARCHAR2) RETURN NUMBER;
-          FUNCTION  get_maxSalary(jobid VARCHAR2) RETURN NUMBER;
-          PROCEDURE set_minSalary(jobid VARCHAR2, min_salary NUMBER);
-          PROCEDURE set_maxSalary(jobid VARCHAR2, max_salary NUMBER);
+          FUNCTION  get_minSalary (jobID VARCHAR2) RETURN NUMBER;
+          FUNCTION  get_maxSalary (jobID VARCHAR2) RETURN NUMBER;
+          PROCEDURE set_minSalary (jobID VARCHAR2, min_salary NUMBER);
+          PROCEDURE set_maxSalary (jobID VARCHAR2, max_salary NUMBER);
       li Создайте тело пакета #[+pl('jobs_pkg')]:
         ul 
           li В теле пакета опишите тип индексированной таблицы #[+pl('jobs_tab_type')], записи в этой таблице должны быть #[+pl('Jobs%ROWTYPE')], а проиндексированы они должны быть с помощью строковых переменных типа #[+pl('Jobs.Job_ID%TYPE')]. 
-          li Создайте локальную переменную в пакете #[+pl('jobstab')] типа #[+pl('jobs_tab_type')].
+          li Создайте локальную переменную в пакете #[+pl('jobsTab')] типа #[+pl('jobs_tab_type')].
           li В теле процедуры #[+pl('initialize')] в цикле заполните индексированную таблицу на основе таблицы #[+pl('Jobs')]. Значения из столбца #[+pl('Jobs.Job_ID')] используйте в качестве индексного значения.
-          li Опишите функцию #[+pl('get_minsalary')]: функция по индексу находит в таблице запись и возвращает значение столбца #[+pl('min_salary')].
-          li Опишите функцию #[+pl('get_maxSalary')]: функция по индексу находит в таблице запись и возвращает значение столбца #[+pl('max_salary')].
-          li Опишите процедуры #[+pl('set_minsalary')] и #[+pl('set_maxsalary')], которые будут обновлять соответствующие столбцы в индексированной таблице пакета #[+pl('jobtab')].
-      li Измените описание хранимой процедуры #[+pl('check_salary')] (которую вы создавали в упражнении 9.1) следующим образом:
+          li Опишите функцию #[+pl('get_minSalary')]: функция по индексу находит в таблице запись и возвращает значение столбца #[+pl('Min_Salary')].
+          li Опишите функцию #[+pl('get_maxSalary')]: функция по индексу находит в таблице запись и возвращает значение столбца #[+pl('Max_Salary')].
+          li Опишите процедуры #[+pl('set_minSalary')] и #[+pl('set_maxSalary')], которые будут обновлять соответствующие столбцы в индексированной таблице пакета #[+pl('jobsTab')].
+      li Измените описание хранимой процедуры #[+pl('check_salary')] (которую вы создавали в упражнении 17.1) следующим образом:
         ul  
           li Закомментируйте выборку минимального и максимального значения из таблицы #[+pl('Jobs')].
-          li Заполните локальные переменные #[+pl('minSal')] и #[+pl('maxSal')] с помощью функций #[+pl('jobs_pkg.get_minsalary')] и #[+pl('jobs_pkg.get_maxSalary')] соответственно.
+          li Заполните локальные переменные #[+pl('minSal')] и #[+pl('maxSal')] с помощью функций #[+pl('jobs_pkg.get_minSalary')] и #[+pl('jobs_pkg.get_maxSalary')] соответственно.
       li Создайте statement триггер #[+pl('BEFORE INSERT OR UPDATE')] для таблицы #[+pl('Jobs')] с именем #[+pl('init_jobspkg_trg')]. В теле триггера вызовите на исполнение хранимую процедуру #[+pl('jobs_pkg.initialize')], чтобы заполнить локальную индексированную таблицу в пакете до того, как начнется модификация данных.
       li Протестируйте работу нового кода:
         ul  
           li Просмотрите информацию о программистах и их зарплатах.
           li Увеличьте минимально возможную зарплату для программистов (#[+pl('\'IT_PROG\'')]) в таблице #[+pl('Jobs')] на $1000.
           li Просмотрите информацию о программистах заново. Найдите и перечислите тех сотрудников, зарплата которых изменилась.
+    
+    +plsql
+      include ../../labs/18 lab/18-2-temp.sql
+    +output.
+      Procedure created.
+
+    +plsql
+      include ../../labs/18 lab/18-2-head.sql
+    +output.
+      Package created.
+
+    +plsql
+      include ../../labs/18 lab/18-2-body.sql
+    +output.
+      Package body created.
+
+    +plsql
+      include ../../labs/18 lab/18-2-trigger.sql
+    +output.
+      Trigger created.
+
+    +plsql.
+      SELECT * FROM Jobs WHERE Job_ID = 'IT_PROG';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_PROG</td><td>Programmer</td><td>4000</td><td>10000</td></tr></tbody></table></row>
+
+    +plsql.
+      SELECT Last_Name, First_Name, Salary, Job_ID
+      FROM Employees
+      WHERE Job_ID = 'IT_PROG';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td>4200</td><td>IT_PROG</td></tr></tbody></table></row>
+
+    +plsql.
+      UPDATE Jobs
+      SET Min_Salary = Min_Salary + 1000
+      WHERE Job_ID = 'IT_PROG';
+    +output.
+      1 row updated.
+
+    +plsql.
+      SELECT * FROM Jobs WHERE Job_ID = 'IT_PROG';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_PROG</td><td>Programmer</td><td><em class="correct">5000</em></td><td>10000</td></tr></tbody></table></row>
+
+    +plsql.
+      SELECT Last_Name, First_Name, Salary, Job_ID
+      FROM Employees
+      WHERE Job_ID = 'IT_PROG';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr></tbody></table></row>
 
 
   +task("3", "Протестируйте работу триггеров при добавлении нового сотрудника:")
@@ -57,8 +154,26 @@
         ul
           li #[+pl('(\'Steven\', \'Morse\', \'SMORSE\', sal => 6500)')]
         | Что произойдет?
-      li Для исправления ситуации создайте #[+pl('BEFORE INSERT OR UPDATE')] триггер #[+pl('employee_initjobs_trg')] на таблицу #[+pl('Employees')], в теле которого вызывайте на исполнение процедуру #[+pl('jobs_pkg.initialize')].
+      li Для исправления ситуации создайте #[+pl('BEFORE INSERT OR UPDATE')] триггер #[+pl('employee_initJobs_trg')] на таблицу #[+pl('Employees')], в теле которого вызывайте на исполнение процедуру #[+pl('jobs_pkg.initialize')].
       li Еще раз протестируйте работу триггеров и попытайтесь добавить #[+pl('\'Steven Morse\'')]. Убедитесь, что информация о новом сотруднике успешно добавлена в таблицу.
 
-    +plsql
-      include ../../labs/14 lab/14-3.sql
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
+    +output.
+      [02000][1403] ORA-01403: данные не найдены
+      ORA-01403: данные не найдены
+      ORA-06512: на  "RUMINAT.JOBS_PKG", line 14
+      ORA-06512: на  "RUMINAT.CHECK_SALARY", line 3
+      ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+      ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+      ORA-06512: на  "RUMINAT.EMP_PKG", line 34
+      ORA-06512: на  line 2
+
+    p Мы получили ошибку, так как таблица #[+pl('jobs_pkg.jobsTab')] на данный момент не заполнена.
+
+    +plsql.
+      EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
+
+      SELECT Employee_ID, Last_Name, First_Name, Email, Job_ID, Salary, Department_ID
+      FROM Employees WHERE Last_Name = 'Morse';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>FIRST_NAME</th><th>EMAIL</th><th>JOB_ID</th><th>SALARY</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>245</td><td>Morse</td><td>Steven</td><td>SMORSE</td><td>SA_REP</td><td>6500</td><td>30</td></tr></tbody></table></row>

@@ -1,107 +1,131 @@
-<!DOCTYPE html><html lang="ru"><head><title>PL/SQL Лабы. Блок 5</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#lab-18"><div class="icon-part">18.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-18-1" href="#task-18-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-2" href="#task-18-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-3" href="#task-18-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-19"><div class="icon-part">19.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-19-1" href="#task-19-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-2" href="#task-19-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-3" href="#task-19-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-4" href="#task-19-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-5" href="#task-19-5"><div class="icon-part">5.</div><div class="text-part">задание</div></a><a class="element" href="#lab-20"><div class="icon-part">20.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-20-1" href="#task-20-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-2" href="#task-20-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-3" href="#task-20-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-4" href="#task-20-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element" href="#lab-21"><div class="icon-part">21.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-21-1" href="#task-21-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-2" href="#task-21-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-3" href="#task-21-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a></nav><div id="main"><div class="labs"><div class="header"><h2>Пятый Блок</h2></div><div class="lab" id="lab-18"><a name="#lab-18"><h4>Практическое занятие 18. Создание Compound триггеров, DDL-триггеров и триггеров на события в базе данных</h4></a><div class="task" id="task-18-1"><p class="task-text" name="task-18-1"><b>Задание 1.</b> С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше, минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.</p><ul><li>В пакет <code class="language-plsql">emp_pkg</code> добавьте хранимую процедуру <code class="language-plsql">set_salary</code>.<ul> <li><code class="language-plsql">set_salary</code> должна обновлять зарплаты сотрудников. </li><li>Процедура должна принимать на вход 2 параметра: <ul><li>ID должности</li><li>и новую минимальную величину зарплаты для этой должности </li></ul></li><li>Процедура должна обновлять зарплату всех сотрудников соответствующей должности так, чтобы она была не меньше новой минимальной.</li></ul></li><li>Создайте строчный триггер <code class="language-plsql">upd_minsalary_trg</code>, связанный с таблицей <code class="language-plsql">Jobs</code>, который будет вызывать процедуру <code class="language-plsql">emp_pkg.set_salary</code>, когда минимальный уровень зарплаты для той или иной должности будет изменяться.</li><li>Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности <code class="language-plsql">'IT_PROG'</code>, зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти и что произошло на самом деле? </li><p>При тестировании работы триггера, вы столкнетесь с проблемой <code class="language-plsql">'mutating table'</code> — чтение изменяющейся таблицы. (В таблице <code class="language-plsql">Employees</code> есть свой триггер <code class="language-plsql">check_salary</code>, который будет читать таблицу <code class="language-plsql">Jobs</code>). Эту ошибку надо исправить.</p></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
-  fileErrorsHandler (caller VARCHAR2, errorCode PLS_INTEGER) IS
-BEGIN
-  DBMS_OUTPUT.PUT_LINE(caller ||' error:');
-  CASE errorCode
-    WHEN -29280
-    THEN DBMS_OUTPUT.PUT_LINE('- The directory''s name is wrong.');
-    ELSE DBMS_OUTPUT.PUT_LINE('- Something went wrong.');
-  END CASE;
-END fileErrorsHandler;
-/
+<!DOCTYPE html><html lang="ru"><head><title>PL/SQL Лабы. Блок 5</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#lab-18"><div class="icon-part">18.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-18-1" href="#task-18-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-2" href="#task-18-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-3" href="#task-18-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-19"><div class="icon-part">19.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-19-1" href="#task-19-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-2" href="#task-19-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-3" href="#task-19-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-4" href="#task-19-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-5" href="#task-19-5"><div class="icon-part">5.</div><div class="text-part">задание</div></a><a class="element" href="#lab-20"><div class="icon-part">20.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-20-1" href="#task-20-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-2" href="#task-20-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-3" href="#task-20-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-4" href="#task-20-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element" href="#lab-21"><div class="icon-part">21.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-21-1" href="#task-21-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-2" href="#task-21-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-3" href="#task-21-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a></nav><div id="main"><div class="labs"><div class="header"><h2>Пятый Блок</h2></div><div class="lab" id="lab-18"><a name="#lab-18"><h4>Практическое занятие 18. Создание Compound триггеров, DDL-триггеров и триггеров на события в базе данных</h4></a><div class="task" id="task-18-1"><p class="task-text" name="task-18-1"><b>Задание 1.</b> С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.</p><ul><li>В пакет <code class="language-plsql">emp_pkg</code> добавьте хранимую процедуру <code class="language-plsql">set_salary</code>.<ul> <li><code class="language-plsql">set_salary</code> должна обновлять зарплаты сотрудников. </li><li>Процедура должна принимать на вход 2 параметра: <ul><li>ID должности</li><li>и новую минимальную величину зарплаты для этой должности. </li></ul></li><li>Процедура должна обновлять зарплату всех сотрудников соответствующей должности так, чтобы она была не меньше новой минимальной.</li></ul></li><li>Создайте строчный триггер <code class="language-plsql">upd_minsalary_trg</code>, связанный с таблицей <code class="language-plsql">Jobs</code>, который будет вызывать процедуру <code class="language-plsql">emp_pkg.set_salary</code>, когда минимальный уровень зарплаты для той или иной должности будет изменяться.</li><li>Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности <code class="language-plsql">'IT_PROG'</code>, зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти, и что произошло на самом деле? </li><p>При тестировании работы триггера, вы столкнетесь с проблемой «mutating table» — чтение изменяющейся таблицы. (В таблице <code class="language-plsql">Employees</code> есть свой триггер <code class="language-plsql">check_salary</code>, который будет читать таблицу <code class="language-plsql">Jobs</code>). Эту ошибку надо исправить.</p></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+  -- ... ... ...
+  PROCEDURE set_salary (jobID Employees.Job_ID%TYPE, newSalary Employees.Salary%TYPE);
+END emp_pkg;
+/</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY emp_pkg IS
 
-CREATE OR REPLACE PROCEDURE
-  employee_report (dir VARCHAR2, fileName VARCHAR2) IS
-  file UTL_FILE.FILE_TYPE;
+  -- ... ... ...
+
+  PROCEDURE set_salary (jobID Employees.Job_ID%TYPE, newSalary Employees.Salary%TYPE) IS
+  BEGIN
+    UPDATE Employees
+    SET Salary = GREATEST(Salary, newSalary)
+    WHERE Job_ID = jobID;
+  END;
+
+  -- ... ... ...
+
+END emp_pkg;
+/</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER upd_minsalary_trg
+AFTER UPDATE OF Min_Salary ON Jobs
+FOR EACH ROW
+WHEN (OLD.Min_Salary != NEW.Min_Salary)
 BEGIN
-  file := UTL_FILE.FOPEN(dir, fileName, 'W');
-  UTL_FILE.PUT_LINE(
-    file,
-       '--- Отчёт. Влад Фурман, 33536/2 ['
-    || TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24:MI:SS')
-    ||'] ---'
-  );
-  FOR row IN (
-    SELECT *
-    FROM (
-      SELECT
-        Employee_ID, First_Name, Last_Name, Department_ID, Salary,
-        AVG(Salary) OVER (PARTITION BY Department_ID) AS Average
-      FROM Employees
-    )
-    WHERE Salary > Average
-    ORDER BY Employee_ID
-  )
-  LOOP
-    UTL_FILE.PUT_LINE(
-      file,
-         'Emp #' || row.Employee_ID || ': '
-      || row.First_Name || ' ' || row.Last_Name || ', '
-      || 'dep #' || row.Department_ID || ', '
-      || 'salary is ' || row.Salary
+  emp_pkg.set_salary(:NEW.Job_ID, :NEW.Min_Salary);
+END;
+/</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT Last_Name, First_Name, Salary, Job_ID
+FROM Employees
+WHERE Job_ID = 'IT_PROG';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td>4200</td><td>IT_PROG</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Jobs
+SET Min_Salary = Min_Salary + 1000
+WHERE Job_ID = 'IT_PROG';</code></pre><pre><code class="language-output">[42000][4091] ORA-04091: таблица RUMINAT.JOBS изменяется, триггер/функция может не заметить это
+ORA-06512: на  "RUMINAT.CHECK_SALARY", line 6
+ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+ORA-06512: на  "RUMINAT.EMP_PKG", line 128
+ORA-06512: на  "RUMINAT.UPD_MINSALARY_TRG", line 2
+ORA-04088: ошибка во время выполнения триггера 'RUMINAT.UPD_MINSALARY_TRG'
+</code></pre><p>Мы должны были обновить поле <code class="language-plsql">Salary</code> у работников с <code class="language-plsql">Job_ID = 'IT_PROG'</code>, однако вместо этого получили ошибку.</p></div><div class="task" id="task-18-2"><p class="task-text" name="task-18-2"><b>Задание 2.</b> Чтобы обойти проблему «mutating table» вам потребуется создать временную копию таблицы <code class='language-plsql'>Jobs</code> изменить процедуру <code class='language-plsql'>check_salary</code> так, чтобы она обращалась к этой временной таблице, вместо чтения оригинальной таблицы <code class='language-plsql'>Jobs</code>.</p><ul><li>Создайте новый пакет <code class="language-plsql">jobs_pkg</code> со следующей спецификацией:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE initialize;
+FUNCTION  get_minSalary (jobID VARCHAR2) RETURN NUMBER;
+FUNCTION  get_maxSalary (jobID VARCHAR2) RETURN NUMBER;
+PROCEDURE set_minSalary (jobID VARCHAR2, min_salary NUMBER);
+PROCEDURE set_maxSalary (jobID VARCHAR2, max_salary NUMBER);</code></pre></li><li>Создайте тело пакета <code class="language-plsql">jobs_pkg</code>:<ul> <li>В теле пакета опишите тип индексированной таблицы <code class="language-plsql">jobs_tab_type</code>, записи в этой таблице должны быть <code class="language-plsql">Jobs%ROWTYPE</code>, а проиндексированы они должны быть с помощью строковых переменных типа <code class="language-plsql">Jobs.Job_ID%TYPE</code>. </li><li>Создайте локальную переменную в пакете <code class="language-plsql">jobsTab</code> типа <code class="language-plsql">jobs_tab_type</code>.</li><li>В теле процедуры <code class="language-plsql">initialize</code> в цикле заполните индексированную таблицу на основе таблицы <code class="language-plsql">Jobs</code>. Значения из столбца <code class="language-plsql">Jobs.Job_ID</code> используйте в качестве индексного значения.</li><li>Опишите функцию <code class="language-plsql">get_minSalary</code>: функция по индексу находит в таблице запись и возвращает значение столбца <code class="language-plsql">Min_Salary</code>.</li><li>Опишите функцию <code class="language-plsql">get_maxSalary</code>: функция по индексу находит в таблице запись и возвращает значение столбца <code class="language-plsql">Max_Salary</code>.</li><li>Опишите процедуры <code class="language-plsql">set_minSalary</code> и <code class="language-plsql">set_maxSalary</code>, которые будут обновлять соответствующие столбцы в индексированной таблице пакета <code class="language-plsql">jobsTab</code>.</li></ul></li><li>Измените описание хранимой процедуры <code class="language-plsql">check_salary</code> (которую вы создавали в упражнении 17.1) следующим образом:<ul> <li>Закомментируйте выборку минимального и максимального значения из таблицы <code class="language-plsql">Jobs</code>.</li><li>Заполните локальные переменные <code class="language-plsql">minSal</code> и <code class="language-plsql">maxSal</code> с помощью функций <code class="language-plsql">jobs_pkg.get_minSalary</code> и <code class="language-plsql">jobs_pkg.get_maxSalary</code> соответственно.</li></ul></li><li>Создайте statement триггер <code class="language-plsql">BEFORE INSERT OR UPDATE</code> для таблицы <code class="language-plsql">Jobs</code> с именем <code class="language-plsql">init_jobspkg_trg</code>. В теле триггера вызовите на исполнение хранимую процедуру <code class="language-plsql">jobs_pkg.initialize</code>, чтобы заполнить локальную индексированную таблицу в пакете до того, как начнется модификация данных.</li><li>Протестируйте работу нового кода:<ul> <li>Просмотрите информацию о программистах и их зарплатах.</li><li>Увеличьте минимально возможную зарплату для программистов (<code class="language-plsql">'IT_PROG'</code>) в таблице <code class="language-plsql">Jobs</code> на $1000.</li><li>Просмотрите информацию о программистах заново. Найдите и перечислите тех сотрудников, зарплата которых изменилась.</li></ul></li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
+  check_salary (jobID Employees.Job_ID%TYPE, sal Employees.Salary%TYPE) IS
+  minSal Jobs.Min_Salary%TYPE := jobs_pkg.get_minSalary(jobID);
+  maxSal Jobs.Max_Salary%TYPE := jobs_pkg.get_maxSalary(jobID);
+BEGIN
+  -- SELECT Min_Salary, Max_Salary
+  -- INTO   minSal,     maxSal
+  -- FROM Jobs
+  -- WHERE Job_ID = jobID;
+ 
+  IF sal NOT BETWEEN minSal AND maxSal THEN
+    RAISE_APPLICATION_ERROR(
+      -20001,
+        'Invalid salary '|| sal ||' for this job. Salaries must be between '
+      || minSal ||' and '|| maxSal
     );
-  END LOOP;
+  END IF;
+END check_salary;
+/</code></pre><pre><code class="language-output">Procedure created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE jobs_pkg IS
+  PROCEDURE initialize;
+  FUNCTION  get_minSalary (jobID VARCHAR2) RETURN NUMBER;
+  FUNCTION  get_maxSalary (jobID VARCHAR2) RETURN NUMBER;
+  PROCEDURE set_minSalary (jobID VARCHAR2, min_salary NUMBER);
+  PROCEDURE set_maxSalary (jobID VARCHAR2, max_salary NUMBER);
+END jobs_pkg;
+/</code></pre><pre><code class="language-output">Package created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY jobs_pkg IS
+  TYPE jobs_tab_type IS TABLE OF Jobs%ROWTYPE INDEX BY Jobs.Job_ID%TYPE;
+  jobsTab jobs_tab_type;
 
-  UTL_FILE.FCLOSE(file);
-EXCEPTION
-  WHEN OTHERS THEN
-    fileErrorsHandler('employee_report('''|| dir ||''', '''|| fileName ||''')', SQLCODE);
-END employee_report;
-/
+  PROCEDURE initialize IS
+  BEGIN
+    FOR job IN (SELECT * FROM Jobs) LOOP
+      jobsTab(job.Job_ID) := job;
+    END LOOP;
+  END;
+  
+  FUNCTION  get_minSalary (jobID VARCHAR2) RETURN NUMBER IS
+  BEGIN
+    RETURN jobsTab(jobID).Min_Salary;
+  END;
+  
+  FUNCTION  get_maxSalary (jobID VARCHAR2) RETURN NUMBER IS
+  BEGIN
+    RETURN jobsTab(jobID).Max_Salary;
+  END;
+  
+  PROCEDURE set_minSalary (jobID VARCHAR2, min_salary NUMBER) IS
+  BEGIN
+    jobsTab(jobID).Min_Salary := min_salary;
+  END;
+  
+  PROCEDURE set_maxSalary (jobID VARCHAR2, max_salary NUMBER) IS
+  BEGIN
+    jobsTab(jobID).Max_Salary := max_salary;
+  END;
 
-
-DECLARE
-  dir           VARCHAR(64)   := 'STUD_PLSQL';
-  theDate       VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
-  fileName      VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
-  currentString VARCHAR2(1024);
-  file UTL_FILE.FILE_TYPE;
+END jobs_pkg;
+/</code></pre><pre><code class="language-output">Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER init_jobspkg_trg
+BEFORE INSERT OR UPDATE ON Jobs
 BEGIN
-  employee_report (dir, fileName);
-  DBMS_OUTPUT.PUT_LINE('done');
-  file := UTL_FILE.FOPEN(dir, fileName, 'R');
-
-  DBMS_OUTPUT.PUT_LINE('Содержимое файла '|| fileName ||':');
-
-  LOOP
-    BEGIN
-      UTL_FILE.GET_LINE(file, currentString);
-      DBMS_OUTPUT.PUT_LINE(currentString);
-    EXCEPTION WHEN NO_DATA_FOUND THEN EXIT;
-    END;
-  END LOOP;
-
-  UTL_FILE.FCLOSE(file);
+  jobs_pkg.initialize;
 END;
-/</code></pre></div><div class="task" id="task-18-2"><p class="task-text" name="task-18-2"><b>Задание 2.</b> Чтобы обойти проблему <code class='language-plsql'>'mutating table'</code> вам потребуется создать временную копию таблицы <code class='language-plsql'>Jobs</code> изменить процедуру <code class='language-plsql'>check_salary</code> так, чтобы она обращалась к этой временной таблице, вместо чтения оригинальной таблицы <code class='language-plsql'>Jobs</code>.</p><ul><li>Создайте новый пакет <code class="language-plsql">jobs_pkg</code> со следующей спецификацией:<pre class="line-numbers undefined"><code class="language-plsql">PROCEDURE initialize;
-FUNCTION  get_minSalary(jobid VARCHAR2) RETURN NUMBER;
-FUNCTION  get_maxSalary(jobid VARCHAR2) RETURN NUMBER;
-PROCEDURE set_minSalary(jobid VARCHAR2, min_salary NUMBER);
-PROCEDURE set_maxSalary(jobid VARCHAR2, max_salary NUMBER);</code></pre></li><li>Создайте тело пакета <code class="language-plsql">jobs_pkg</code>:<ul> <li>В теле пакета опишите тип индексированной таблицы <code class="language-plsql">jobs_tab_type</code>, записи в этой таблице должны быть <code class="language-plsql">Jobs%ROWTYPE</code>, а проиндексированы они должны быть с помощью строковых переменных типа <code class="language-plsql">Jobs.Job_ID%TYPE</code>. </li><li>Создайте локальную переменную в пакете <code class="language-plsql">jobstab</code> типа <code class="language-plsql">jobs_tab_type</code>.</li><li>В теле процедуры <code class="language-plsql">initialize</code> в цикле заполните индексированную таблицу на основе таблицы <code class="language-plsql">Jobs</code>. Значения из столбца <code class="language-plsql">Jobs.Job_ID</code> используйте в качестве индексного значения.</li><li>Опишите функцию <code class="language-plsql">get_minsalary</code>: функция по индексу находит в таблице запись и возвращает значение столбца <code class="language-plsql">min_salary</code>.</li><li>Опишите функцию <code class="language-plsql">get_maxSalary</code>: функция по индексу находит в таблице запись и возвращает значение столбца <code class="language-plsql">max_salary</code>.</li><li>Опишите процедуры <code class="language-plsql">set_minsalary</code> и <code class="language-plsql">set_maxsalary</code>, которые будут обновлять соответствующие столбцы в индексированной таблице пакета <code class="language-plsql">jobtab</code>.</li></ul></li><li>Измените описание хранимой процедуры <code class="language-plsql">check_salary</code> (которую вы создавали в упражнении 9.1) следующим образом:<ul> <li>Закомментируйте выборку минимального и максимального значения из таблицы <code class="language-plsql">Jobs</code>.</li><li>Заполните локальные переменные <code class="language-plsql">minSal</code> и <code class="language-plsql">maxSal</code> с помощью функций <code class="language-plsql">jobs_pkg.get_minsalary</code> и <code class="language-plsql">jobs_pkg.get_maxSalary</code> соответственно.</li></ul></li><li>Создайте statement триггер <code class="language-plsql">BEFORE INSERT OR UPDATE</code> для таблицы <code class="language-plsql">Jobs</code> с именем <code class="language-plsql">init_jobspkg_trg</code>. В теле триггера вызовите на исполнение хранимую процедуру <code class="language-plsql">jobs_pkg.initialize</code>, чтобы заполнить локальную индексированную таблицу в пакете до того, как начнется модификация данных.</li><li>Протестируйте работу нового кода:<ul> <li>Просмотрите информацию о программистах и их зарплатах.</li><li>Увеличьте минимально возможную зарплату для программистов (<code class="language-plsql">'IT_PROG'</code>) в таблице <code class="language-plsql">Jobs</code> на $1000.</li><li>Просмотрите информацию о программистах заново. Найдите и перечислите тех сотрудников, зарплата которых изменилась.</li></ul></li></ul></div><div class="task" id="task-18-3"><p class="task-text" name="task-18-3"><b>Задание 3.</b> Протестируйте работу триггеров при добавлении нового сотрудника:</p><ul><li>Прервите сеанс работы с БД, а затем подключитесь заново.</li><li>С помощью процедуры <code class="language-plsql">emp_pkg.add_employee</code> добавьте нового сотрудника со следующими параметрами <ul><li><code class="language-plsql">('Steven', 'Morse', 'SMORSE', sal =&gt; 6500)</code></li></ul>Что произойдет?</li><li>Для исправления ситуации создайте <code class="language-plsql">BEFORE INSERT OR UPDATE</code> триггер <code class="language-plsql">employee_initjobs_trg</code> на таблицу <code class="language-plsql">Employees</code>, в теле которого вызывайте на исполнение процедуру <code class="language-plsql">jobs_pkg.initialize</code>.</li><li>Еще раз протестируйте работу триггеров и попытайтесь добавить <code class="language-plsql">'Steven Morse'</code>. Убедитесь, что информация о новом сотруднике успешно добавлена в таблицу.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PROCEDURE
-  schedule_report (interval SIMPLE_INTEGER, duration SIMPLE_INTEGER := 10) IS
-      theDate VARCHAR(64)   := TO_CHAR(SYSDATE, 'DD.MM.YYYY HH24-MI-SS');
-     fileName VARCHAR2(256) := 'sal_rpt_vlafur1_'|| theDate ||'.txt';
-  plsql_block VARCHAR2(200) := 'BEGIN employee_report(''STUD_PLSQL'', '''|| fileName ||'''); END;';
-BEGIN
-  DBMS_SCHEDULER.CREATE_JOB (
-            JOB_NAME => 'empsal_report'
-   ,        JOB_TYPE => 'PLSQL_BLOCK'
-   ,      JOB_ACTION => plsql_block
-   ,      START_DATE => SYSTIMESTAMP
-   ,        END_DATE => (SYSTIMESTAMP + duration / (60 * 24))
-   , REPEAT_INTERVAL => 'FREQUENCY=MINUTELY; INTERVAL='|| interval
-   ,         ENABLED => TRUE
-  );
-END schedule_report;
-/
+/</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM Jobs WHERE Job_ID = 'IT_PROG';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_PROG</td><td>Programmer</td><td>4000</td><td>10000</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT Last_Name, First_Name, Salary, Job_ID
+FROM Employees
+WHERE Job_ID = 'IT_PROG';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td>4800</td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td>4200</td><td>IT_PROG</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Jobs
+SET Min_Salary = Min_Salary + 1000
+WHERE Job_ID = 'IT_PROG';</code></pre><pre><code class="language-output">1 row updated.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM Jobs WHERE Job_ID = 'IT_PROG';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>JOB_ID</th><th>JOB_TITLE</th><th>MIN_SALARY</th><th>MAX_SALARY</th></tr></thead><tbody><tr><td>IT_PROG</td><td>Programmer</td><td><em class="correct">5000</em></td><td>10000</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT Last_Name, First_Name, Salary, Job_ID
+FROM Employees
+WHERE Job_ID = 'IT_PROG';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>LAST_NAME</th><th>FIRST_NAME</th><th>SALARY</th><th>JOB_ID</th></tr></thead><tbody><tr><td>Hunold</td><td>Alexander</td><td>9000</td><td>IT_PROG</td></tr><tr><td>Ernst</td><td>Bruce</td><td>6000</td><td>IT_PROG</td></tr><tr><td>Austin</td><td>David</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr><tr><td>Pataballa</td><td>Valli</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr><tr><td>Lorentz</td><td>Diana</td><td><em class="correct">5000</em></td><td>IT_PROG</td></tr></tbody></table></row></div><div class="task" id="task-18-3"><p class="task-text" name="task-18-3"><b>Задание 3.</b> Протестируйте работу триггеров при добавлении нового сотрудника:</p><ul><li>Прервите сеанс работы с БД, а затем подключитесь заново.</li><li>С помощью процедуры <code class="language-plsql">emp_pkg.add_employee</code> добавьте нового сотрудника со следующими параметрами <ul><li><code class="language-plsql">('Steven', 'Morse', 'SMORSE', sal =&gt; 6500)</code></li></ul>Что произойдет?</li><li>Для исправления ситуации создайте <code class="language-plsql">BEFORE INSERT OR UPDATE</code> триггер <code class="language-plsql">employee_initJobs_trg</code> на таблицу <code class="language-plsql">Employees</code>, в теле которого вызывайте на исполнение процедуру <code class="language-plsql">jobs_pkg.initialize</code>.</li><li>Еще раз протестируйте работу триггеров и попытайтесь добавить <code class="language-plsql">'Steven Morse'</code>. Убедитесь, что информация о новом сотруднике успешно добавлена в таблицу.</li></ul><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);</code></pre><pre><code class="language-output">[02000][1403] ORA-01403: данные не найдены
+ORA-01403: данные не найдены
+ORA-06512: на  "RUMINAT.JOBS_PKG", line 14
+ORA-06512: на  "RUMINAT.CHECK_SALARY", line 3
+ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
+ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
+ORA-06512: на  "RUMINAT.EMP_PKG", line 34
+ORA-06512: на  line 2
+</code></pre><p>Мы получили ошибку, так как таблица <code class="language-plsql">jobs_pkg.jobsTab</code> на данный момент не заполнена.</p><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
 
-BEGIN
-  schedule_report(2, 6);
-END;
-/
-
-SELECT Job_Name, Job_Type
-FROM USER_SCHEDULER_JOBS;</code></pre></div></div><div class="lab" id="lab-19"><a name="#lab-19"><h4>Практическое занятие 19. Использование компилятора PL/SQL</h4></a><div class="task" id="task-19-1"><p class="task-text" name="task-19-1"><b>Задание 1.</b> Запустите скрипт с именем <code class='language-plsql'>lab_10_01</code>. Создайте и выполните запрос для осуществления выборки из словаря <code class='language-plsql'>user_plsql_object_settings</code> следующей информации о параметрах инициализации, влияющих на компиляцию кода:</p><ul><li>Имя объекта.</li><li>Тип объекта.</li><li>Был ли объект <code class="language-plsql">compiled for debugging</code>.</li><li>Режим компиляции объекта.</li><li>Уровень оптимизации компиляции.</li></ul><p>Зафиксируйте результат. Обратите внимание на информацию об объекте <code class="language-plsql">add_job_history</code>.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE table_pkg IS
+SELECT Employee_ID, Last_Name, First_Name, Email, Job_ID, Salary, Department_ID
+FROM Employees WHERE Last_Name = 'Morse';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>FIRST_NAME</th><th>EMAIL</th><th>JOB_ID</th><th>SALARY</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>245</td><td>Morse</td><td>Steven</td><td>SMORSE</td><td>SA_REP</td><td>6500</td><td>30</td></tr></tbody></table></row></div></div><div class="lab" id="lab-19"><a name="#lab-19"><h4>Практическое занятие 19. Использование компилятора PL/SQL</h4></a><div class="task" id="task-19-1"><p class="task-text" name="task-19-1"><b>Задание 1.</b> Запустите скрипт с именем <code class='language-plsql'>lab_10_01</code>. Создайте и выполните запрос для осуществления выборки из словаря <code class='language-plsql'>user_plsql_object_settings</code> следующей информации о параметрах инициализации, влияющих на компиляцию кода:</p><ul><li>Имя объекта.</li><li>Тип объекта.</li><li>Был ли объект <code class="language-plsql">compiled for debugging</code>.</li><li>Режим компиляции объекта.</li><li>Уровень оптимизации компиляции.</li></ul><p>Зафиксируйте результат. Обратите внимание на информацию об объекте <code class="language-plsql">add_job_history</code>.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE table_pkg IS
   PROCEDURE make    (table_name VARCHAR2, col_specs  VARCHAR2);
   PROCEDURE add_row (table_name VARCHAR2, col_values VARCHAR2, cols       VARCHAR2 := NULL);
   PROCEDURE upd_row (table_name VARCHAR2, set_values VARCHAR2, conditions VARCHAR2 := NULL);
