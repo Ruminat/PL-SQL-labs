@@ -122,7 +122,13 @@ ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
 ORA-04088: ошибка во время выполнения триггера 'RUMINAT.CHECK_SALARY_TRG'
 ORA-06512: на  "RUMINAT.EMP_PKG", line 34
 ORA-06512: на  line 2
-</code></pre><p>Мы получили ошибку, так как таблица <code class="language-plsql">jobs_pkg.jobsTab</code> на данный момент не заполнена.</p><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
+</code></pre><p>Мы получили ошибку, так как таблица <code class="language-plsql">jobs_pkg.jobsTab</code> на данный момент не заполнена.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER employee_initJobs_trg
+BEFORE INSERT OR UPDATE ON Employees
+BEGIN
+  jobs_pkg.initialize;
+END;
+/</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
 
 SELECT Employee_ID, Last_Name, First_Name, Email, Job_ID, Salary, Department_ID
 FROM Employees WHERE Last_Name = 'Morse';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>FIRST_NAME</th><th>EMAIL</th><th>JOB_ID</th><th>SALARY</th><th>DEPARTMENT_ID</th></tr></thead><tbody><tr><td>245</td><td>Morse</td><td>Steven</td><td>SMORSE</td><td>SA_REP</td><td>6500</td><td>30</td></tr></tbody></table></row></div></div><div class="lab" id="lab-19"><a name="#lab-19"><h4>Практическое занятие 19. Использование компилятора PL/SQL</h4></a><div class="task" id="task-19-1"><p class="task-text" name="task-19-1"><b>Задание 1.</b> Запустите скрипт с именем <code class='language-plsql'>lab_10_01</code>. Создайте и выполните запрос для осуществления выборки из словаря <code class='language-plsql'>user_plsql_object_settings</code> следующей информации о параметрах инициализации, влияющих на компиляцию кода:</p><ul><li>Имя объекта.</li><li>Тип объекта.</li><li>Был ли объект <code class="language-plsql">compiled for debugging</code>.</li><li>Режим компиляции объекта.</li><li>Уровень оптимизации компиляции.</li></ul><p>Зафиксируйте результат. Обратите внимание на информацию об объекте <code class="language-plsql">add_job_history</code>.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE table_pkg IS
