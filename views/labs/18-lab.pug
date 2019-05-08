@@ -59,7 +59,7 @@
       UPDATE Jobs
       SET Min_Salary = Min_Salary + 1000
       WHERE Job_ID = 'IT_PROG';
-    +output.
+    +output('error-code').
       [42000][4091] ORA-04091: таблица RUMINAT.JOBS изменяется, триггер/функция может не заметить это
       ORA-06512: на  "RUMINAT.CHECK_SALARY", line 6
       ORA-06512: на  "RUMINAT.CHECK_SALARY_TRG", line 2
@@ -159,7 +159,7 @@
 
     +plsql.
       EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
-    +output.
+    +output('error-code').
       [02000][1403] ORA-01403: данные не найдены
       ORA-01403: данные не найдены
       ORA-06512: на  "RUMINAT.JOBS_PKG", line 14

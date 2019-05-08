@@ -4,14 +4,55 @@
 
 +lab
   +task("1", "Просмотрите и выполните скрипт <code>lab_11_01.sql</code>. В результате выполнения скрипта будет установлен флаг для отображения <code>debugging</code> и <code>trace</code> информации. Скрипт так же создаст пакет <code class='language-plsql'>my_pkg</code> и процедуру <code class='language-plsql'>circle_area</code>.")
+
     +plsql
-      include ../../labs/16 lab/16-1-head.sql
+      include ../../scripts/lab_11_01.sql
+    +output.
+      Session altered.
+      Package created.
+      Package body created.
+      Procedure created.
+
+  +task("2", "С помощью подпрограммы <code class='language-plsql'>DBMS_PREPROCESSOR</code> отобразите текст из файла <code>lab_11_01.sql</code> в том виде, который он примет после выполнения директив условной компиляции.")
 
 
-  +task("2", "С помощью подпрограммы <code class='language-plsql'>dbms_preprocessor</code> отобразите текст из файла <code>lab_11_01.sql</code> в том виде, который он примет после выполнения директив условной компиляции.")
+    +plsql
+      include ../../labs/20 lab/20-2.sql
+    +plsql.
+      PACKAGE my_pkg AS
+        SUBTYPE my_real IS
+          
+                                           BINARY_DOUBLE;
+
+        my_pi my_real;
+      my_e my_real;
+      END my_pkg;
+      PACKAGE BODY my_pkg AS
+      BEGIN
+        
 
 
-  +task("3", "Создайте PL/SQL скрипт, который использует <code class='language-plsql'>dbms_db_version</code> константу. Скрипт определяет версию Oracle.")
+
+             my_pi := 3.14016408289008292431940027343666863227d;
+             my_e  := 2.71828182845904523536028747135266249775d;
+        
+      END my_pkg;
+      PROCEDURE circle_area(radius my_pkg.my_real) IS
+        my_area my_pkg.my_real;
+      my_datatype VARCHAR2(30);
+      BEGIN
+        my_area := my_pkg.my_pi * radius;
+      DBMS_OUTPUT.PUT_LINE('Radius: ' || TO_CHAR(radius)
+                             || ' Area: ' || TO_CHAR(my_area) );
+
+
+
+
+
+      END;
+
+
+  +task("3", "Создайте PL/SQL скрипт, который использует <code class='language-plsql'>DBMS_DB_VERSION</code> константу. Скрипт определяет версию Oracle.")
     ul
       li Если версия меньше или равна 10.1, необходимо выдать сообщение:
         +output.
@@ -19,6 +60,11 @@
       li В ином случае — показать сообщение:
         +output.
           Release {используемые версия СУБД и номер релиза} is supported
+
+    +plsql
+      include ../../labs/20 lab/20-3.sql
+    +output.
+      Release 18.0 is supported
 
 
   +task("4", "Откройте скрипт <code>lab_11_04.sql</code>. В нем предполагается использование предустановленной процедуры <code class='language-plsql'>create_wrapped</code> для динамического создания и обработки (шифрования) пакета. Отредактируйте скрипт следующим образом:")
@@ -32,3 +78,27 @@
       li Сохраните и выполните скрипт.
       li Вызовите процедуру <code class='language-plsql'>emp_actions.raise_salary</code> с параметрами <code class='language-plsql'>(120, 100)</code>. Проверьте результат; 
       li С помощью словаря <code class='language-plsql'>USER_SOURCE</code> проверьте, что исполняемый код скрыт.
+
+  +plsql.
+    SELECT Employee_ID, Last_Name, Salary
+    FROM Employees
+    WHERE Employee_ID = 120;
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>SALARY</th></tr></thead><tbody><tr><td>120</td><td>Weiss</td><td>8000</td></tr></tbody></table></row>
+
+  +plsql
+    include ../../labs/20 lab/20-4.sql
+  +output.
+    PL/SQL procedure successfully completed.
+    PL/SQL procedure successfully completed.
+
+  +plsql.
+    SELECT Employee_ID, Last_Name, Salary
+    FROM Employees
+    WHERE Employee_ID = 120;
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>SALARY</th></tr></thead><tbody><tr><td>120</td><td>Weiss</td><td><em class="correct">8100</em></td></tr></tbody></table></row>
+
+  +plsql.
+    SELECT Name, Text
+    FROM USER_SOURCE
+    WHERE Name = 'EMP_ACTIONS';
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>NAME</th><th>TYPE</th><th>TEXT</th></tr></thead><tbody><tr><td>EMP_ACTIONS</td><td>PACKAGE</td><td>"PACKAGE EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr><tr><td>EMP_ACTIONS</td><td>PACKAGE BODY</td><td>"PACKAGE BODY EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr></tbody></table></row>

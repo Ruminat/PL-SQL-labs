@@ -25,10 +25,10 @@ DECLARE
   startTimestamp TIMESTAMP;
 BEGIN
   startTimestamp := SYSTIMESTAMP;
-  -- distinctDSQL('TestEmps');
-  distinctDBMS_SQL('TestEmps');
+  -- distinctDSQL('Duplicates');
+  distinctDBMS_SQL('Duplicates');
   DBMS_OUTPUT.PUT_LINE(SYSTIMESTAMP - startTimestamp);
 END;
 /
 
-SELECT COUNT(*) FROM TestEmps;
+SELECT COUNT(*) FROM Duplicates;
