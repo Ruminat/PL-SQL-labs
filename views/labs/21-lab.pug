@@ -3,14 +3,66 @@
 
 +lab
   +task("1", "Проанализируйте зависимости между объектами в следующем сценарии:")
-    p Хранимая процедура #[+pl('my_proc')] вызывает внутри себя на исполнение другую хранимую процедуру #[+pl('my_proc_pack')], размещенную в пакете. Скажется ли изменение реализации и перекомпиляция процедуры #[+pl('my_proc_pack')] (без изменения ее объявления в спецификации пакета) на статус процедуры #[+pl('my_proc')]. Будет ли она помечена как #[+pl('INVALID')]?
+    p Хранимая процедура #[+pl('my_proc')] вызывает внутри себя на исполнение другую хранимую процедуру #[+pl('my_proc_pack')], размещенную в пакете. Скажется ли изменение реализации и перекомпиляция процедуры #[+pl('my_proc_pack')] (без изменения ее объявления в спецификации пакета) на статус процедуры #[+pl('my_proc')]. Будет ли она помечена как <code>INVALID</code>?
 
-    //- +plsql
-    //-   include ../../labs/17 lab/17-1.sql
-    //- +output.
-    //-   Procedure created.
-    //-   Trigger created.
+    +plsql.
+      CREATE OR REPLACE PACKAGE testPackage IS
+        PROCEDURE my_proc_pack;
+      END testPackage;
+      /
+      CREATE OR REPLACE PACKAGE BODY testPackage IS
+        PROCEDURE my_proc_pack IS
+        BEGIN
+          DBMS_OUTPUT.PUT_LINE('I say! I''m testPackage.my_proc_pack!');
+        END;
+      END testPackage;
+      /
+      
+      CREATE OR REPLACE
+      PROCEDURE my_proc IS
+      BEGIN
+        DBMS_OUTPUT.PUT_LINE('Hello there, I''m my_proc!');
+        DBMS_OUTPUT.PUT_LINE('I want to call the testPackage.my_proc_pack.');
+        testPackage.my_proc_pack;
+      END;
+      /
+    +output.
+      Package created.
+      Package body created.
+      Procedure created.
 
+    +plsql.
+      SELECT Object_Name, Object_Type, Status
+      FROM USER_OBJECTS
+      WHERE LOWER(Object_Name) = 'my_proc';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>OBJECT_NAME</th><th>OBJECT_TYPE</th><th>STATUS</th></tr></thead><tbody><tr><td>MY_PROC</td><td>PROCEDURE</td><td>VALID</td></tr></tbody></table></row>
+
+    p Изменим код процедуры #[+pl('testPackage.my_proc_pack')] и перекомпилируем её.
+
+    +plsql.
+      CREATE OR REPLACE PACKAGE testPackage IS
+        PROCEDURE my_proc_pack;
+      END testPackage;
+      /
+      CREATE OR REPLACE PACKAGE BODY testPackage IS
+        PROCEDURE my_proc_pack IS
+        BEGIN
+          DBMS_OUTPUT.PUT_LINE('I say! I''m testPackage.my_proc_pack!');
+          DBMS_OUTPUT.PUT_LINE('I''m a completely different procedure now!');
+        END;
+      END testPackage;
+      /
+    +output.
+      Package created.
+      Package body created.
+    
+    +plsql.
+      SELECT Object_Name, Object_Type, Status
+      FROM USER_OBJECTS
+      WHERE LOWER(Object_Name) = 'my_proc';
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>OBJECT_NAME</th><th>OBJECT_TYPE</th><th>STATUS</th></tr></thead><tbody><tr><td>MY_PROC</td><td>PROCEDURE</td><td>VALID</td></tr></tbody></table></row>
+
+    p Как можно заметить, процедура #[+pl('my_proc')] не получила статус <code>INVALID</code>.
 
   +task("2", "Создайте древовидную структуру, отражающую все зависимости между объектами на примере процедуры <code class='language-plsql'>add_employee</code> и функции <code class='language-plsql'>valid_deptid</code>.")
     ul
@@ -21,20 +73,108 @@
       li С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.
       li Проанализируйте код процедуры <code class='language-plsql'>deptree_fill</code>. Какие системные ресурсы она опрашивает.
 
-    //- +plsql.
-    //-   EXECUTE emp_pkg.add_employee('Eleanor', 'Beh', 30);
+    p Скрипт <code>utldtree.sql</code>:
+    +plsql
+      include ../../scripts/utldtree.sql
+    
+    +plsql.
+      EXECUTE deptree_fill('procedure', 'ruminat', 'add_employee');
+    +output.
+      PL/SQL procedure successfully completed.
+
+    +plsql.
+      SELECT * FROM ideptree;
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPENDENCIES</th></tr></thead><tbody><tr><td>PROCEDURE RUMINAT.ADD_EMPLOYEE</td></tr></tbody></table></row>
+
+    +plsql.
+      EXECUTE deptree_fill('function', 'ruminat', 'valid_deptid');
+    +output.
+      PL/SQL procedure successfully completed.
+
+    +plsql.
+      SELECT * FROM ideptree;
+    <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPENDENCIES</th></tr></thead><tbody><tr><td style="white-space: pre;">   PROCEDURE RUMINAT.ADD_EMPLOYEE</td></tr><tr><td>FUNCTION RUMINAT.VALID_DEPTID</td></tr></tbody></table></row>
+
+    p Процедура #[+pl('deptree_fill')] использует следующие системные словари: #[+pl('ALL_OBJECTS')], #[+pl('PUBLIC_DEPENDENCY')].
 
 
-  +task("3", "Динамически определите <code class='language-plsql'>INVALID</code> объекты:")
-    ul
-      li Создайте копию таблицы <code class='language-plsql'>Employees</code> и назовите ее <code class='language-plsql'>Emps</code>.
+  +task("3", "Динамически определите <code>INVALID</code> объекты:")
+    ol
+      li Создайте копию таблицы <code class='language-plsql'>Employees</code> и назовите её <code class='language-plsql'>Emps</code>.
+        +plsql.
+          CREATE TABLE Emps AS SELECT * FROM Employees;
+        +output.
+          Table created.
       li Измените таблицу <code class='language-plsql'>Employees</code>. Добавьте в нее колонку <code class='language-plsql'>TotSal</code> с типом данных <code class='language-plsql'>NUMBER(9, 2)</code>.
-      li Создайте и сохраните локально скрипт для отображения имени, типа и статуса всех <code class='language-plsql'>INVALID</code> объектов. Запустите его и посмотрите результат.
-      li В пакет <code class='language-plsql'>compile_pkg</code> добавьте процедуру <code class='language-plsql'>recompile</code>, которая перекомпилирует все <code class='language-plsql'>INVALID</code> объекты схемы (с использованием Native Dynamic SQL).
-      li Выполните процедуру <code class='language-plsql'>compile_pkg.recompile</code>.
-      li Выполните заново скрипт из пункта с. Убедитесь, что объектов со статусом <code class='language-plsql'>INVALID</code> в схеме не осталось.
+        +plsql.
+          ALTER TABLE Employees ADD (TotSal NUMBER(9, 2));
+        +output.
+          Table altered.
+      li Создайте и сохраните локально скрипт для отображения имени, типа и статуса всех <code>INVALID</code> объектов. Запустите его и посмотрите результат.
+        +plsql
+          include ../../labs/21 lab/21-3-display.sql
+        +output.
+          Procedure created.
+          
+          INVALID objects:
+          - PACKAGE: EMP_PKG is INVALID
+          - PACKAGE BODY: EMP_PKG is INVALID
+          - PACKAGE BODY: EMP_ACTIONS is INVALID
+          - PROCEDURE: GET_EMPLOYEE is INVALID
+          - TRIGGER: UPD_MINSALARY_TRG is INVALID
+          - TRIGGER: DELETE_EMP_TRG is INVALID
+          - TRIGGER: EMPLOYEE_INITJOBS_TRG is INVALID
+          - VIEW: EMPLOYEES_VU is INVALID
+          - VIEW: DISTR_VIEW is INVALID
+          - VIEW: SALARY_VU is INVALID
+      li В пакет <code class='language-plsql'>compile_pkg</code> добавьте процедуру <code class='language-plsql'>recompile</code>, которая перекомпилирует все <code>INVALID</code> объекты схемы (с использованием Native Dynamic SQL).
+        +plsql
+          include ../../labs/21 lab/21-3-head.sql
+        +output.
+          Package created.
+        +plsql.
+          CREATE OR REPLACE PACKAGE BODY compile_pkg IS
+           
+            -- ... ... ...
 
-    //- +plsql
-    //-   include ../../labs/17 lab/17-3.sql
-    //- +output.
-    //-   Trigger created.
+            PROCEDURE recompile IS
+                objectType USER_SOURCE.Type%TYPE;
+                statement VARCHAR2(256);
+              BEGIN
+                FOR queryRow IN (
+                  SELECT *
+                  FROM USER_OBJECTS
+                  WHERE Status = 'INVALID'
+                ) LOOP
+                  objectType := REGEXP_SUBSTR(queryRow.Object_Type, '\w+', 1, 1);
+                  statement  := 'ALTER '|| objectType ||' '|| queryRow.Object_Name;
+                  IF objectType = 'PACKAGE' THEN
+                    EXECUTE IMMEDIATE statement ||' COMPILE SPECIFICATION';    
+                    EXECUTE IMMEDIATE statement ||' COMPILE BODY';    
+                  ELSE
+                    EXECUTE IMMEDIATE statement ||' COMPILE';    
+                  END IF;
+                END LOOP;
+              END;
+          
+          END compile_pkg;
+          /
+        +output.
+          Package body created.
+      li Выполните процедуру <code class='language-plsql'>compile_pkg.recompile</code>.
+        +plsql.
+          BEGIN
+            compile_pkg.recompile;
+          END;
+          /
+        +output.
+          PL/SQL procedure successfully completed.
+      li Выполните заново скрипт из пункта 3. Убедитесь, что объектов со статусом <code>INVALID</code> в схеме не осталось.
+        +plsql.
+          BEGIN
+            displayInvalidObjects;
+          END;
+          /
+        +output.
+          INVALID objects:
+          none

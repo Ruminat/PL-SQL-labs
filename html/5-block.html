@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ru"><head><title>PL/SQL Лабы. Блок 5</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#lab-18"><div class="icon-part">18.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-18-1" href="#task-18-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-2" href="#task-18-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-3" href="#task-18-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-19"><div class="icon-part">19.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-19-1" href="#task-19-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-2" href="#task-19-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-3" href="#task-19-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-4" href="#task-19-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-5" href="#task-19-5"><div class="icon-part">5.</div><div class="text-part">задание</div></a><a class="element" href="#lab-20"><div class="icon-part">20.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-20-1" href="#task-20-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-2" href="#task-20-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-3" href="#task-20-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-4" href="#task-20-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element" href="#lab-21"><div class="icon-part">21.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-21-1" href="#task-21-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-2" href="#task-21-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-3" href="#task-21-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a></nav><div id="main"><div class="labs"><div class="header"><h2>Пятый Блок</h2></div><div class="lab" id="lab-18"><a name="#lab-18"><h4>Практическое занятие 18. Создание Compound триггеров, DDL-триггеров и триггеров на события в базе данных</h4></a><div class="task" id="task-18-1"><p class="task-text" name="task-18-1"><b>Задание 1.</b> С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.</p><ul><li>В пакет <code class="language-plsql">emp_pkg</code> добавьте хранимую процедуру <code class="language-plsql">set_salary</code>.<ul> <li><code class="language-plsql">set_salary</code> должна обновлять зарплаты сотрудников. </li><li>Процедура должна принимать на вход 2 параметра: <ul><li>ID должности</li><li>и новую минимальную величину зарплаты для этой должности. </li></ul></li><li>Процедура должна обновлять зарплату всех сотрудников соответствующей должности так, чтобы она была не меньше новой минимальной.</li></ul></li><li>Создайте строчный триггер <code class="language-plsql">upd_minsalary_trg</code>, связанный с таблицей <code class="language-plsql">Jobs</code>, который будет вызывать процедуру <code class="language-plsql">emp_pkg.set_salary</code>, когда минимальный уровень зарплаты для той или иной должности будет изменяться.</li><li>Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности <code class="language-plsql">'IT_PROG'</code>, зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти, и что произошло на самом деле? </li><p>При тестировании работы триггера, вы столкнетесь с проблемой «mutating table» — чтение изменяющейся таблицы. (В таблице <code class="language-plsql">Employees</code> есть свой триггер <code class="language-plsql">check_salary</code>, который будет читать таблицу <code class="language-plsql">Jobs</code>). Эту ошибку надо исправить.</p></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
+<!DOCTYPE html><html lang="ru"><head><title>PL/SQL Лабы. Блок 5</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#lab-18"><div class="icon-part">18.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-18-1" href="#task-18-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-2" href="#task-18-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-18-3" href="#task-18-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element" href="#lab-19"><div class="icon-part">19.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-19-1" href="#task-19-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-2" href="#task-19-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-3" href="#task-19-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-4" href="#task-19-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-19-5" href="#task-19-5"><div class="icon-part">5.</div><div class="text-part">задание</div></a><a class="element" href="#lab-20"><div class="icon-part">20.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-20-1" href="#task-20-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-2" href="#task-20-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-3" href="#task-20-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-20-4" href="#task-20-4"><div class="icon-part">4.</div><div class="text-part">задание</div></a><a class="element" href="#lab-21"><div class="icon-part">21.</div><div class="text-part">лабораторная</div></a><a class="element sub" id="contents-task-21-1" href="#task-21-1"><div class="icon-part">1.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-2" href="#task-21-2"><div class="icon-part">2.</div><div class="text-part">задание</div></a><a class="element sub" id="contents-task-21-3" href="#task-21-3"><div class="icon-part">3.</div><div class="text-part">задание</div></a></nav><div id="main"><div class="labs"><div class="header"><h2>Пятый Блок</h2></div><div class="lab" id="lab-18"><a name="#lab-18"><h4>Практическое занятие 18. Создание Compound триггеров, DDL-триггеров и триггеров на события в базе данных</h4></a><div class="task" id="task-18-1"><p class="task-text" name="task-18-1"><b>Задание 1.</b> С помощью триггеров необходимо реализовать следующее бизнес-правило: зарплата любого сотрудника не может быть меньше минимальной зарплаты установленной для его должности/категории. При повышении минимальной зарплаты для той или иной должности/категории в таблице <code class='language-plsql'>Jobs</code> необходимо просмотреть данные по всем сотрудникам этой должности в таблице <code class='language-plsql'>Employees</code> и повысить до необходимой величины зарплату всем тем сотрудникам, чья текущая зарплата оказалась ниже нового минимального оклада. Создайте триггер, связанный с таблицей <code class='language-plsql'>Jobs</code>, который будет использовать пакетную хранимую процедуру.</p><ul><li>В пакет <code class="language-plsql">emp_pkg</code> добавьте хранимую процедуру <code class="language-plsql">set_salary</code>.<ul> <li><code class="language-plsql">set_salary</code> должна обновлять зарплаты сотрудников. </li><li>Процедура должна принимать на вход 2 параметра:<ul><li>ID должности</li><li>и новую минимальную величину зарплаты для этой должности. </li></ul></li><li>Процедура должна обновлять зарплату всех сотрудников соответствующей должности так, чтобы она была не меньше новой минимальной.</li></ul></li><li>Создайте строчный триггер <code class="language-plsql">upd_minsalary_trg</code>, связанный с таблицей <code class="language-plsql">Jobs</code>, который будет вызывать процедуру <code class="language-plsql">emp_pkg.set_salary</code>, когда минимальный уровень зарплаты для той или иной должности будет изменяться.</li><li>Протестируйте работу триггера. Для этого просмотрите информацию о всех сотрудниках, работающих в должности <code class="language-plsql">'IT_PROG'</code>, зафиксируйте их текущие зарплаты. Увеличьте минимальный оклад для этой должности на $1000. Что должно было произойти, и что произошло на самом деле? </li><p>При тестировании работы триггера, вы столкнетесь с проблемой «mutating table» — чтение изменяющейся таблицы. (В таблице <code class="language-plsql">Employees</code> есть свой триггер <code class="language-plsql">check_salary</code>, который будет читать таблицу <code class="language-plsql">Jobs</code>). Эту ошибку надо исправить.</p></ul><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE emp_pkg AUTHID CURRENT_USER IS
   -- ... ... ...
   PROCEDURE set_salary (jobID Employees.Job_ID%TYPE, newSalary Employees.Salary%TYPE);
 END emp_pkg;
@@ -323,4 +323,257 @@ PL/SQL procedure successfully completed.
 FROM Employees
 WHERE Employee_ID = 120;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>EMPLOYEE_ID</th><th>LAST_NAME</th><th>SALARY</th></tr></thead><tbody><tr><td>120</td><td>Weiss</td><td><em class="correct">8100</em></td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">SELECT Name, Text
 FROM USER_SOURCE
-WHERE Name = 'EMP_ACTIONS';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>NAME</th><th>TYPE</th><th>TEXT</th></tr></thead><tbody><tr><td>EMP_ACTIONS</td><td>PACKAGE</td><td>"PACKAGE EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr><tr><td>EMP_ACTIONS</td><td>PACKAGE BODY</td><td>"PACKAGE BODY EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr></tbody></table></row></div><div class="lab" id="lab-21"><a name="#lab-21"><h4>Практическое занятие 21. Обслуживание зависимостей</h4></a><div class="task" id="task-21-1"><p class="task-text" name="task-21-1"><b>Задание 1.</b> Проанализируйте зависимости между объектами в следующем сценарии:</p><p>Хранимая процедура <code class="language-plsql">my_proc</code> вызывает внутри себя на исполнение другую хранимую процедуру <code class="language-plsql">my_proc_pack</code>, размещенную в пакете. Скажется ли изменение реализации и перекомпиляция процедуры <code class="language-plsql">my_proc_pack</code> (без изменения ее объявления в спецификации пакета) на статус процедуры <code class="language-plsql">my_proc</code>. Будет ли она помечена как <code class="language-plsql">INVALID</code>?</p></div><div class="task" id="task-21-2"><p class="task-text" name="task-21-2"><b>Задание 2.</b> Создайте древовидную структуру, отражающую все зависимости между объектами на примере процедуры <code class='language-plsql'>add_employee</code> и функции <code class='language-plsql'>valid_deptid</code>.</p><ul><li>Просмотрите и выполните скрипт <code>utldtree.sql</code> из папки курса.</li><li>Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>add_employee</code>.</li><li>С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.</li><li>Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>valid_deptid</code>.</li><li>С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.</li><li>Проанализируйте код процедуры <code class='language-plsql'>deptree_fill</code>. Какие системные ресурсы она опрашивает.</li></ul></div><div class="task" id="task-21-3"><p class="task-text" name="task-21-3"><b>Задание 3.</b> Динамически определите <code class='language-plsql'>INVALID</code> объекты:</p><ul><li>Создайте копию таблицы <code class='language-plsql'>Employees</code> и назовите ее <code class='language-plsql'>Emps</code>.</li><li>Измените таблицу <code class='language-plsql'>Employees</code>. Добавьте в нее колонку <code class='language-plsql'>TotSal</code> с типом данных <code class='language-plsql'>NUMBER(9, 2)</code>.</li><li>Создайте и сохраните локально скрипт для отображения имени, типа и статуса всех <code class='language-plsql'>INVALID</code> объектов. Запустите его и посмотрите результат.</li><li>В пакет <code class='language-plsql'>compile_pkg</code> добавьте процедуру <code class='language-plsql'>recompile</code>, которая перекомпилирует все <code class='language-plsql'>INVALID</code> объекты схемы (с использованием Native Dynamic SQL).</li><li>Выполните процедуру <code class='language-plsql'>compile_pkg.recompile</code>.</li><li>Выполните заново скрипт из пункта с. Убедитесь, что объектов со статусом <code class='language-plsql'>INVALID</code> в схеме не осталось.</li></ul></div></div></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
+WHERE Name = 'EMP_ACTIONS';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>NAME</th><th>TYPE</th><th>TEXT</th></tr></thead><tbody><tr><td>EMP_ACTIONS</td><td>PACKAGE</td><td>"PACKAGE EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr><tr><td>EMP_ACTIONS</td><td>PACKAGE BODY</td><td>"PACKAGE BODY EMP_ACTIONS wrapped <em class="correct">a000000 369...</em></td></tr></tbody></table></row></div><div class="lab" id="lab-21"><a name="#lab-21"><h4>Практическое занятие 21. Обслуживание зависимостей</h4></a><div class="task" id="task-21-1"><p class="task-text" name="task-21-1"><b>Задание 1.</b> Проанализируйте зависимости между объектами в следующем сценарии:</p><p>Хранимая процедура <code class="language-plsql">my_proc</code> вызывает внутри себя на исполнение другую хранимую процедуру <code class="language-plsql">my_proc_pack</code>, размещенную в пакете. Скажется ли изменение реализации и перекомпиляция процедуры <code class="language-plsql">my_proc_pack</code> (без изменения ее объявления в спецификации пакета) на статус процедуры <code class="language-plsql">my_proc</code>. Будет ли она помечена как <code>INVALID</code>?</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE testPackage IS
+  PROCEDURE my_proc_pack;
+END testPackage;
+/
+CREATE OR REPLACE PACKAGE BODY testPackage IS
+  PROCEDURE my_proc_pack IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('I say! I''m testPackage.my_proc_pack!');
+  END;
+END testPackage;
+/
+
+CREATE OR REPLACE
+PROCEDURE my_proc IS
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Hello there, I''m my_proc!');
+  DBMS_OUTPUT.PUT_LINE('I want to call the testPackage.my_proc_pack.');
+  testPackage.my_proc_pack;
+END;
+/</code></pre><pre><code class="language-output">Package created.
+Package body created.
+Procedure created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT Object_Name, Object_Type, Status
+FROM USER_OBJECTS
+WHERE LOWER(Object_Name) = 'my_proc';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>OBJECT_NAME</th><th>OBJECT_TYPE</th><th>STATUS</th></tr></thead><tbody><tr><td>MY_PROC</td><td>PROCEDURE</td><td>VALID</td></tr></tbody></table></row><p>Изменим код процедуры <code class="language-plsql">testPackage.my_proc_pack</code> и перекомпилируем её.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE testPackage IS
+  PROCEDURE my_proc_pack;
+END testPackage;
+/
+CREATE OR REPLACE PACKAGE BODY testPackage IS
+  PROCEDURE my_proc_pack IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('I say! I''m testPackage.my_proc_pack!');
+    DBMS_OUTPUT.PUT_LINE('I''m a completely different procedure now!');
+  END;
+END testPackage;
+/</code></pre><pre><code class="language-output">Package created.
+Package body created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT Object_Name, Object_Type, Status
+FROM USER_OBJECTS
+WHERE LOWER(Object_Name) = 'my_proc';</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>OBJECT_NAME</th><th>OBJECT_TYPE</th><th>STATUS</th></tr></thead><tbody><tr><td>MY_PROC</td><td>PROCEDURE</td><td>VALID</td></tr></tbody></table></row><p>Как можно заметить, процедура <code class="language-plsql">my_proc</code> не получила статус <code>INVALID</code>.</p></div><div class="task" id="task-21-2"><p class="task-text" name="task-21-2"><b>Задание 2.</b> Создайте древовидную структуру, отражающую все зависимости между объектами на примере процедуры <code class='language-plsql'>add_employee</code> и функции <code class='language-plsql'>valid_deptid</code>.</p><ul><li>Просмотрите и выполните скрипт <code>utldtree.sql</code> из папки курса.</li><li>Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>add_employee</code>.</li><li>С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.</li><li>Выполните процедуру <code class='language-plsql'>deptree_fill</code> для объекта <code class='language-plsql'>valid_deptid</code>.</li><li>С помощью представления <code class='language-plsql'>ideptree</code> просмотрите результат.</li><li>Проанализируйте код процедуры <code class='language-plsql'>deptree_fill</code>. Какие системные ресурсы она опрашивает.</li></ul><p>Скрипт <code>utldtree.sql</code>:</p><pre class="line-numbers undefined"><code class="language-plsql">Rem 
+Rem $Header: utldtree.sql,v 1.2 1992/10/26 16:24:44 RKOOI Stab $ 
+Rem 
+Rem  Copyright (c) 1991 by Oracle Corporation 
+Rem    NAME
+Rem      deptree.sql - Show objects recursively dependent on given object
+Rem    DESCRIPTION
+Rem      This procedure, view and temp table will allow you to see all
+Rem      objects that are (recursively) dependent on the given object.
+Rem      Note: you will only see objects for which you have permission.
+Rem      Examples:
+Rem        execute deptree_fill('procedure', 'scott', 'billing');
+Rem        select * from deptree order by seq#;
+Rem
+Rem        execute deptree_fill('table', 'scott', 'emp');
+Rem        select * from deptree order by seq#;
+Rem
+Rem        execute deptree_fill('package body', 'scott', 'accts_payable');
+Rem        select * from deptree order by seq#;
+Rem
+Rem        A prettier way to display this information than
+Rem		select * from deptree order by seq#;
+Rem	   is
+Rem             select * from ideptree;
+Rem        This shows the dependency relationship via indenting.  Notice
+Rem        that no order by clause is needed with ideptree.
+Rem    RETURNS
+Rem 
+Rem    NOTES
+Rem      Run this script once for each schema that needs this utility.
+Rem      
+Rem    MODIFIED   (MM/DD/YY)
+Rem     rkooi      10/26/92 -  owner -> schema for SQL2 
+Rem     glumpkin   10/20/92 -  Renamed from DEPTREE.SQL 
+Rem     rkooi      09/02/92 -  change ORU errors 
+Rem     rkooi      06/10/92 -  add rae errors 
+Rem     rkooi      01/13/92 -  update for sys vs. regular user 
+Rem     rkooi      01/10/92 -  fix ideptree 
+Rem     rkooi      01/10/92 -  Better formatting, add ideptree view 
+Rem     rkooi      12/02/91 -  deal with cursors 
+Rem     rkooi      10/19/91 -  Creation 
+
+drop sequence deptree_seq
+/
+create sequence deptree_seq cache 200 /* cache 200 to make sequence faster */
+/
+drop table deptree_temptab
+/
+create table deptree_temptab
+(
+  object_id            number,
+  referenced_object_id number,
+  nest_level           number,
+  seq#                 number      
+)
+/
+create or replace procedure deptree_fill (type char, schema char, name char) is
+  obj_id number;
+begin
+  delete from deptree_temptab;
+  commit;
+  select object_id into obj_id from all_objects
+    where owner        = upper(deptree_fill.schema)
+    and   object_name  = upper(deptree_fill.name)
+    and   object_type  = upper(deptree_fill.type);
+  insert into deptree_temptab
+    values(obj_id, 0, 0, 0);
+  insert into deptree_temptab
+    select object_id, referenced_object_id,
+        level, deptree_seq.nextval
+      from public_dependency
+      connect by prior object_id = referenced_object_id
+      start with referenced_object_id = deptree_fill.obj_id;
+exception
+  when no_data_found then
+    raise_application_error(-20000, 'ORU-10013: ' ||
+      type || ' ' || schema || '.' || name || ' was not found.');
+end;
+/
+
+drop view deptree
+/
+
+set echo on
+
+REM This view will succeed if current user is sys.  This view shows 
+REM which shared cursors depend on the given object.  If the current
+REM user is not sys, then this view get an error either about lack
+REM of privileges or about the non-existence of table x$kglxs.
+
+set echo off
+create view sys.deptree
+  (nested_level, type, schema, name, seq#)
+as
+  select d.nest_level, o.object_type, o.owner, o.object_name, d.seq#
+  from deptree_temptab d, dba_objects o
+  where d.object_id = o.object_id (+)
+union all
+  select d.nest_level+1, 'CURSOR', '<shared>', '"'||c.kglnaobj||'"', d.seq#+.5
+  from deptree_temptab d, x$kgldp k, x$kglob g, obj$ o, user$ u, x$kglob c,
+      x$kglxs a
+    where d.object_id = o.obj#
+    and   o.name = g.kglnaobj
+    and   o.owner# = u.user#
+    and   u.name = g.kglnaown
+    and   g.kglhdadr = k.kglrfhdl
+    and   k.kglhdadr = a.kglhdadr   /* make sure it is not a transitive */
+    and   k.kgldepno = a.kglxsdep   /* reference, but a direct one */
+    and   k.kglhdadr = c.kglhdadr
+    and   c.kglhdnsp = 0 /* a cursor */
+/
+
+set echo on
+
+REM This view will succeed if current user is not sys.  This view
+REM does *not* show which shared cursors depend on the given object.
+REM If the current user is sys then this view will get an error 
+REM indicating that the view already exists (since prior view create
+REM will have succeeded).
+
+set echo off
+create view deptree
+  (nested_level, type, schema, name, seq#)
+as
+  select d.nest_level, o.object_type, o.owner, o.object_name, d.seq#
+  from deptree_temptab d, all_objects o
+  where d.object_id = o.object_id (+)
+/
+
+drop view ideptree
+/
+create view ideptree (dependencies)
+as
+  select lpad(' ',3*(max(nested_level))) || max(nvl(type, '<no permission>')
+    || ' ' || schema || decode(type, NULL, '', '.') || name)
+  from deptree
+  group by seq# /* So user can omit sort-by when selecting from ideptree */
+/
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE deptree_fill('procedure', 'ruminat', 'add_employee');</code></pre><pre><code class="language-output">PL/SQL procedure successfully completed.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM ideptree;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPENDENCIES</th></tr></thead><tbody><tr><td>PROCEDURE RUMINAT.ADD_EMPLOYEE</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE deptree_fill('function', 'ruminat', 'valid_deptid');</code></pre><pre><code class="language-output">PL/SQL procedure successfully completed.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">SELECT * FROM ideptree;</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>DEPENDENCIES</th></tr></thead><tbody><tr><td style="white-space: pre;">   PROCEDURE RUMINAT.ADD_EMPLOYEE</td></tr><tr><td>FUNCTION RUMINAT.VALID_DEPTID</td></tr></tbody></table></row><p>Процедура <code class="language-plsql">deptree_fill</code> использует следующие системные словари: <code class="language-plsql">ALL_OBJECTS</code>, <code class="language-plsql">PUBLIC_DEPENDENCY</code>.</p></div><div class="task" id="task-21-3"><p class="task-text" name="task-21-3"><b>Задание 3.</b> Динамически определите <code>INVALID</code> объекты:</p><ol><li>Создайте копию таблицы <code class='language-plsql'>Employees</code> и назовите её <code class='language-plsql'>Emps</code>.<pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE Emps AS SELECT * FROM Employees;</code></pre><pre><code class="language-output">Table created.</code></pre></li><li>Измените таблицу <code class='language-plsql'>Employees</code>. Добавьте в нее колонку <code class='language-plsql'>TotSal</code> с типом данных <code class='language-plsql'>NUMBER(9, 2)</code>.<pre class="line-numbers undefined"><code class="language-plsql">ALTER TABLE Employees ADD (TotSal NUMBER(9, 2));</code></pre><pre><code class="language-output">Table altered.</code></pre></li><li>Создайте и сохраните локально скрипт для отображения имени, типа и статуса всех <code>INVALID</code> объектов. Запустите его и посмотрите результат.<pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE
+PROCEDURE displayInvalidObjects IS
+  counter SIMPLE_INTEGER := 0;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('INVALID objects:');
+  FOR queryRow IN (
+    SELECT *
+    FROM USER_OBJECTS
+    WHERE Status = 'INVALID'
+    ORDER BY Object_Type
+  ) LOOP
+    counter := counter + 1;
+    DBMS_OUTPUT.PUT_LINE(
+        ' - '|| queryRow.Object_Type
+      ||': ' || queryRow.Object_Name ||' is '|| queryRow.Status
+    );
+  END LOOP;
+  IF counter = 0 THEN
+    DBMS_OUTPUT.PUT_LINE('none');      
+  END IF;
+END;
+/
+
+BEGIN
+  displayInvalidObjects;
+END;
+/</code></pre><pre><code class="language-output">Procedure created.
+
+INVALID objects:
+- PACKAGE: EMP_PKG is INVALID
+- PACKAGE BODY: EMP_PKG is INVALID
+- PACKAGE BODY: EMP_ACTIONS is INVALID
+- PROCEDURE: GET_EMPLOYEE is INVALID
+- TRIGGER: UPD_MINSALARY_TRG is INVALID
+- TRIGGER: DELETE_EMP_TRG is INVALID
+- TRIGGER: EMPLOYEE_INITJOBS_TRG is INVALID
+- VIEW: EMPLOYEES_VU is INVALID
+- VIEW: DISTR_VIEW is INVALID
+- VIEW: SALARY_VU is INVALID</code></pre></li><li>В пакет <code class='language-plsql'>compile_pkg</code> добавьте процедуру <code class='language-plsql'>recompile</code>, которая перекомпилирует все <code>INVALID</code> объекты схемы (с использованием Native Dynamic SQL).<pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE compile_pkg IS
+  PROCEDURE make (objectName USER_SOURCE.Name%TYPE);
+  PROCEDURE recompile;
+END compile_pkg;
+/</code></pre><pre><code class="language-output">Package created.</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE PACKAGE BODY compile_pkg IS
+ 
+  -- ... ... ...
+
+  PROCEDURE recompile IS
+      objectType USER_SOURCE.Type%TYPE;
+      statement VARCHAR2(256);
+    BEGIN
+      FOR queryRow IN (
+        SELECT *
+        FROM USER_OBJECTS
+        WHERE Status = 'INVALID'
+      ) LOOP
+        objectType := REGEXP_SUBSTR(queryRow.Object_Type, '\w+', 1, 1);
+        statement  := 'ALTER '|| objectType ||' '|| queryRow.Object_Name;
+        IF objectType = 'PACKAGE' THEN
+          EXECUTE IMMEDIATE statement ||' COMPILE SPECIFICATION';    
+          EXECUTE IMMEDIATE statement ||' COMPILE BODY';    
+        ELSE
+          EXECUTE IMMEDIATE statement ||' COMPILE';    
+        END IF;
+      END LOOP;
+    END;
+
+END compile_pkg;
+/</code></pre><pre><code class="language-output">Package body created.</code></pre></li><li>Выполните процедуру <code class='language-plsql'>compile_pkg.recompile</code>.<pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  compile_pkg.recompile;
+END;
+/</code></pre><pre><code class="language-output">PL/SQL procedure successfully completed.</code></pre></li><li>Выполните заново скрипт из пункта 3. Убедитесь, что объектов со статусом <code>INVALID</code> в схеме не осталось.<pre class="line-numbers undefined"><code class="language-plsql">BEGIN
+  displayInvalidObjects;
+END;
+/</code></pre><pre><code class="language-output">INVALID objects:
+none</code></pre></li></ol></div></div></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
