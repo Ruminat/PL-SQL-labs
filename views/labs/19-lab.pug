@@ -88,3 +88,11 @@
       7:5:PLW-06002: Недоступный код
 
   +task("5", "Создайте скрипт с именем <code class='language-plsql'>warning_msgs</code>, в котором используется <code class='language-plsql'>EXECUTE</code> в сочетании с процедурами из пакетов <code class='language-plsql'>DBMS_OUTPUT</code> и <code class='language-plsql'>DBMS_WARNING</code> для идентификации категорий следующих сообщений: <code>5050</code>, <code>6075</code>, <code>7100</code>.")
+    +plsql.
+      EXECUTE DBMS_OUTPUT.PUT_LINE('Category of 5050-message is '|| DBMS_WARNING.GET_CATEGORY(5050));
+      EXECUTE DBMS_OUTPUT.PUT_LINE('Category of 6075-message is '|| DBMS_WARNING.GET_CATEGORY(6075));
+      EXECUTE DBMS_OUTPUT.PUT_LINE('Category of 7100-message is '|| DBMS_WARNING.GET_CATEGORY(7100));
+    +output.
+      Category of 5050-message is SEVERE
+      Category of 6075-message is INFORMATIONAL
+      Category of 7100-message is PERFORMANCE
