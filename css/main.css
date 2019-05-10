@@ -295,7 +295,7 @@ div.code-toolbar > .toolbar span:focus {
   #menu .icon-part {
     width: 1.75rem; }
   #menu .text-part {
-    font-family: "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia; }
+    font-family: "Roboto Light", "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia; }
   #menu a:hover {
     text-decoration: none;
     color: #0077aa; }
