@@ -10,4 +10,77 @@ block content
   .header
     h2 #{chap.number}. #{chap.title}
 
-  p.comment TODO.
+  +section('Использование компилятора PL/SQL')
+
+  ul
+    li PL/SQL использует новый оптимизирующий компилятор, который может переделать код для лучшей производительности.
+    li Производительность PL/SQL улучшена по всем направлениям.
+    li Большинство улучшений выполняются автоматически.
+    li Уровень оптимизации по умолчанию повышает производительность для широкого диапазона PL/SQL операций.
+
+  p Изменения в компиляторе PL/SQL:
+  ul
+    li Уничтожение временных операндов компилятором.
+    li Вычисление некоторых операций во время компиляции.
+    li Повторное использование значений некоторых выражений.
+    li Упрощение или исключение некоторых ветвей и исключение мертвого кода.
+    li Избежание библиотечных вызовов путем прямого выполнения некоторых операций на виртуальной машине PL/SQL.
+    li Все курсоры корректно завершаются при выходе из цикла курсора или блока Объявления.
+    li Удаление вычислений, которые, как побочный эффект, лишь вызывают исключение.
+
+  +section('Параметры инициализации для компилятора PL/SQL')
+
+  ul
+    li #[+pl('PLSQL_CODE_TYPE')]. Задаёт режим компиляции (<u>#[+pl('INTERPRETED')]</u> или #[+pl('NATIVE')]).
+    li #[+pl('PLSQL_OPTIMIZE_LEVEL')]. Задаёт уровень оптимизации (#[+pl('0')], #[+pl('1')], <u>#[+pl('2')]</u> или #[+pl('3')]).
+    li #[+pl('PLSQL_CCFLAGS')]. Управляет условной компиляцией каждого модуля PL/SQL библиотеки независимо.
+    li #[+pl('PLSQL_WARNINGS')]. Включает или отключает создание PL/SQL компилятором отчётов о предупреждениях.
+
+  p Как правило, для обеспечения максимальной производительности, используют следующий параметр:
+  +plsql.
+    ALTER SESSION SET PLSQL_CODE_TYPE      = 'NATIVE';
+    ALTER SESSION SET PLSQL_OPTIMIZE_LEVEL = 2;
+  
+  p Настройки PL/SQL объектов можно посмотреть в словаре #[+pl('USER|ALL|DBA_PLSQL_OBJECT_SETTINGS')].
+
+  +plsql.
+    SELECT Name, Type, PLSQL_Debug, PLSQL_Code_Type, PLSQL_Optimize_Level
+    FROM USER_PLSQL_OBJECT_SETTINGS;
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>NAME</th><th>TYPE</th><th>PLSQL_DEBUG</th><th>PLSQL_CODE_TYPE</th><th>PLSQL_OPTIMIZE_LEVEL</th></tr></thead><tbody><tr><td>ADD_EMPLOYEE</td><td>PROCEDURE</td><td>FALSE</td><td>INTERPRETED</td><td>2</td></tr><tr><td>ADD_JOB_HISTORY</td><td>PROCEDURE</td><td>FALSE</td><td>INTERPRETED</td><td>2</td></tr><tr><td>CHECK_SALARY</td><td>PROCEDURE</td><td>FALSE</td><td>INTERPRETED</td><td>2</td></tr><tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr><tr><td>VALID_DEPTID</td><td>FUNCTION</td><td>FALSE</td><td>INTERPRETED</td><td>2</td></tr><tr><td>WEB_EMPLOYEE_REPORT</td><td>PROCEDURE</td><td>FALSE</td><td>INTERPRETED</td><td>2</td></tr></tbody></table></row>
+
+  +section('Использование предупреждений при компиляции')
+
+  p Преимущества предупреждений компилятора:
+  ul
+    li Делают программы более надежными и помогают избежать проблем во время выполнения.
+    li Выявление потенциальных проблем с производительностью.
+    li Определение факторов, приводящих к неопределенным результатам.
+
+  p Типы предупреждений:
+  ul
+    li Серьёзные (severe).
+    li Производительности (performance).
+    li Информационные (informational).
+    li Все (all).
+
+  p Можно управлять отображением предупреждений:
+  +plsql.
+    ALTER SESSION SET plsql_warnings = 'error:severe'
+                                     , 'enable:performance'
+                                     , 'disable:informational'
+                                     , 'error:05003'; -- 05003 — код предупреждения
+
+  p В SQL*Plus просмотреть ошибки можно с помощью команды #[+pl('SHOW ERRORS;')].
+
+  p Рекомендации по использованию #[+pl('PLSQL_WARNINGS')]:
+  ul
+    li Настройки параметра #[+pl('PLSQL_WARNINGS')] хранятся с каждой компилируемой подпрограммой.
+    li Если перекомпилировать подпрограмму с помощью одной из следующих инструкций, будут использованы текущие настройки для этого сеанса:
+      ul  
+        li #[+pl('CREATE OR REPLACE')].
+        li #[+pl('ALTER ... COMPILE')].
+    li Если перекомпилировать подпрограмму с помощью инструкции #[+pl('ALTER ... COMPILE')] с разделом #[+pl('REUSE SETTINGS')], то будут использованы исходные установки, сохранённые с программой.
+
+  +section('Использование пакета DBMS_WARNING')
+
+  
