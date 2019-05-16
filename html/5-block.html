@@ -128,6 +128,31 @@ BEGIN
   jobs_pkg.initialize;
 END;
 /</code></pre><pre><code class="language-output">Trigger created.
+</code></pre><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER upd_minsalary_trg
+FOR UPDATE OF Min_Salary ON Jobs
+COMPOUND TRIGGER
+
+    TYPE minSalaryMap IS TABLE OF Jobs.min_salary%TYPE INDEX BY Jobs.job_id%TYPE;
+    jobsTab minSalaryMap;
+    jobID   Jobs.job_id%TYPE;
+
+  AFTER EACH ROW IS
+  BEGIN
+    IF :OLD.Min_Salary != :NEW.Min_Salary THEN
+      jobsTab(:NEW.job_id) := :NEW.min_salary;
+    END IF;
+  END AFTER EACH ROW;
+
+  AFTER STATEMENT IS
+  BEGIN
+      jobID := jobsTab.FIRST;
+      WHILE jobID IS NOT NULL LOOP
+        emp_pkg.set_salary(jobID, jobsTab(jobID));
+        jobID := jobsTab.NEXT(jobID);
+      END LOOP;
+  END AFTER STATEMENT;
+END upd_minsalary_trg;
+/</code></pre><pre><code class="language-output">Trigger created.
 </code></pre><pre class="line-numbers undefined"><code class="language-plsql">EXECUTE emp_pkg.add_employee('Steven', 'Morse', 'SMORSE', sal => 6500);
 
 SELECT Employee_ID, Last_Name, First_Name, Email, Job_ID, Salary, Department_ID
@@ -272,15 +297,15 @@ END;
 
 </code></pre></div><div class="task" id="task-20-3"><p class="task-text" name="task-20-3"><b>Задание 3.</b> Создайте PL/SQL скрипт, который использует <code class='language-plsql'>DBMS_DB_VERSION</code> константу. Скрипт определяет версию Oracle.</p><ul><li>Если версия меньше или равна 10.1, необходимо выдать сообщение:<pre><code class="language-output">Unsupported database release</code></pre></li><li>В ином случае — показать сообщение:<pre><code class="language-output">Release {используемые версия СУБД и номер релиза} is supported
 </code></pre></li></ul><pre class="line-numbers undefined"><code class="language-plsql">BEGIN
-  IF DBMS_DB_VERSION.VER_LE_10_1 THEN
+  $IF DBMS_DB_VERSION.VER_LE_10_1 $THEN
     DBMS_OUTPUT.PUT_LINE('Unsupported database release');
-  ELSE
+  $ELSE
     DBMS_OUTPUT.PUT_LINE(
          'Release '
       || DBMS_DB_VERSION.VERSION ||'.'|| DBMS_DB_VERSION.RELEASE
       || ' is supported'
     );
-  END IF;
+  $END
 END;
 /</code></pre><pre><code class="language-output">Release 18.0 is supported
 
