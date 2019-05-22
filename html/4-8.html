@@ -39,7 +39,7 @@ BEGIN
   rowsAdded := DBMS_SQL.EXECUTE(cursorID);
   DBMS_SQL.CLOSE_CURSOR(cursorID);
 END;
-/</code></pre><a name="result"><h4>Результат</h4></a><p>Сравним время выполнения первого варианта и второго для таблиц с различным количеством столбцов и строк. Сравнивать будет по следующему шаблону:</p><pre class="line-numbers undefined"><code class="language-plsql">DECLARE
+/</code></pre><a name="result"><h4>Результат</h4></a><p>Сравним время выполнения первого варианта и второго для таблиц с различным количеством столбцов и строк. Сравнивать будем по следующему шаблону:</p><pre class="line-numbers undefined"><code class="language-plsql">DECLARE
   startTimestamp TIMESTAMP;
 BEGIN
   startTimestamp := SYSTIMESTAMP;
