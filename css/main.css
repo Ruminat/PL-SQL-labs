@@ -290,12 +290,18 @@ div.code-toolbar > .toolbar span:focus {
   #menu .icon-part, #menu .text-part {
     display: flex;
     align-items: center;
-    justify-content: center;
     height: 100%; }
   #menu .icon-part {
+    justify-content: center;
     width: 1.75rem; }
   #menu .text-part {
-    font-family: "Roboto Light", "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia; }
+    width: 10.25rem;
+    font-family: "Roboto Light", "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    line-height: 1.75rem; }
   #menu a:hover {
     text-decoration: none;
     color: #0077aa; }
@@ -304,6 +310,8 @@ div.code-toolbar > .toolbar span:focus {
     font-size: 0.8rem; }
     #menu .element.sub .icon-part {
       margin-left: 1.25rem; }
+    #menu .element.sub .text-part {
+      line-height: 1.25rem; }
 
 #menu-switch .text-part::after {
   content: "Меню"; }

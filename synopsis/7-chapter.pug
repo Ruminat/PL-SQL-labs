@@ -55,9 +55,9 @@ block content
 
   p Допустимые типы триггеров:
   ul
-    li Простые DML триггеры (#[+pl('BEFORE')], #[+pl('AFTER')], #[+pl('INSTEAD OF')]).
+    li Простые DML-триггеры (#[+pl('BEFORE')], #[+pl('AFTER')], #[+pl('INSTEAD OF')] (только для view)).
     li Составные (compound) триггеры.
-    li Не-DML триггеры (DDL-события, события базы данных).
+    li Не DML-триггеры (DDL-события, события базы данных).
 
   p Триггеры бывают:
   ul
@@ -67,6 +67,29 @@ block content
   +section('Использование условных предикатов')
 
   p Можно так же задавать условия для выполнения триггеров.
+
+  p В теле триггера можно использовать конструкции (если триггер состоит из нескольких DML-операций):
+  ul
+    li #[+pl('IF DELETING')],
+    li #[+pl('IF UPDATING')],
+    li #[+pl('IF INSERTING')],
+  p чтобы определить, какое событие вызвало триггер, который слушает несколько событий.
+
+  +plsql.
+    CREATE OR REPLACE TRIGGER triggerName
+    [BEFORE | AFTER] INSERT OR UPDATE OR DELETE ON Table_Name
+    BEGIN
+      IF DELETING THEN
+        -- ...
+      ELSIF UPDATING THEN
+        -- ...
+      ELSIF INSERTING THEN
+        -- ...
+      END IF;
+    END;
+    /
+
+  p Можно так же использовать #[+pl('WHEN')] для строковых триггеров.
 
   +plsql.
     CREATE OR REPLACE TRIGGER check_salary_trg
@@ -87,7 +110,7 @@ block content
     END;
     /
 
-  p О #[+pl('NEW')] и #[+pl('OLD')]:
+  p О #[+pl('NEW')] и #[+pl('OLD')] (доступны только в строковых триггерах):
   +sqlTable
     thead.thead-dark
       tr

@@ -1,10 +1,11 @@
+$menu-width: 12rem
 $element-height: 1.75rem
 
 #menu::-webkit-scrollbar
   width: 0
 
 #menu
-  width: 12rem
+  width: $menu-width
   height: 100vh
   position: fixed
   top: 0
@@ -33,13 +34,19 @@ $element-height: 1.75rem
   .icon-part, .text-part
     display: flex
     align-items: center
-    justify-content: center
     height: 100%
   .icon-part
     // justify-content: right
+    justify-content: center
     width: $element-height
   .text-part
+    width: $menu-width - $element-height
     font-family: "Roboto Light", "Droid Serif Regular", "Droid Serif", "Lora", Bookman, Georgia
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    display: block
+    line-height: $element-height
   a:hover
     text-decoration: none
     color: rgba(0, 119, 170, 1.0)
@@ -48,6 +55,8 @@ $element-height: 1.75rem
     font-size: 0.8rem
     .icon-part
       margin-left: $element-height - 0.5rem
+    .text-part
+      line-height: $element-height - 0.5rem
 
 #menu-switch .text-part::after
   content: "Меню"

@@ -4,7 +4,8 @@ include ../views/templates/_mixins.pug
 mixin section(title)
   div(class="section" id="secion-"+ section)
     // - sections.push({number: section, title: title});
-    a(name="#section-" + section): h4 #{section}. #{title}
+    a.section-link(id="section-" + section)
+      h4.section-header #{section}. #{title}
     - section++;
     block
 
@@ -30,3 +31,4 @@ html(lang='ru')
       //- p #{section}
 
     include ../views/templates/_scripts.pug
+    script(src=js + 'synopsis.js')
