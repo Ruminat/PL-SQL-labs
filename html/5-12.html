@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 5.12</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 5.12</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">В таблицу Специальность добавить столбец <code class="language-plsql">Шифр_Специальности</code>. Создать Compound-триггер, который при внесении или изменении названия специальности, будет вводить в соответствующую ячейку столбца <code class="language-plsql">Шифр_Специальности</code> первые буквы каждого слова в названии специальности. Проверьте работу триггера при одновременном изменении нескольких записей одной командой <code class="language-plsql">UPDATE</code> и одновременном внесении нескольких строк командой <code class="language-plsql">INSERT..SELECT</code>.</p><a name="solution"><h4>Решение</h4></a><p>Добавим столбец <code class="language-plsql">Шифр_Специальности</code>:</p><pre class="line-numbers undefined"><code class="language-plsql">ALTER TABLE Специальности ADD (Шифр_Специальности VARCHAR2(40));
+SELECT * FROM Специальности;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>КОД_СПЕЦИАЛЬНОСТИ</th><th>НАЗВАНИЕ_СПЕЦИАЛЬНОСТИ</th><th>ШИФР_СПЕЦИАЛЬНОСТИ</th></tr></thead><tbody><tr><td>1</td><td>СИСТЕМЫ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ</td><td>(null)</td></tr><tr><td>2</td><td>МАТЕМАТИЧЕСКОЕ ОБЕСПЕЧЕНИЕ ЭВМ</td><td>(null)</td></tr><tr><td>3</td><td>ВЫЧИСЛИТЕЛЬНЫЕ СЕТИ И СИСТЕМЫ</td><td>(null)</td></tr><tr><td>4</td><td>ЭКОНОМИКА ПРЕДПРИЯТИЙ</td><td>(null)</td></tr></tbody></table></row><p>Создадим триггер:</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE OR REPLACE TRIGGER Шифр_Специальности_Trg
+FOR INSERT OR UPDATE OF Название_Специальности ON Специальности
+COMPOUND TRIGGER
+
+  FUNCTION getCipher (specName Специальности.Название_Специальности%TYPE)
+  RETURN Специальности.Шифр_Специальности%TYPE IS
+    word_re VARCHAR2(256)  := &#39;[[:alpha:]]([-&#39;&#39;_[:alpha:][:digit:]]*[&#39;&#39;[:alpha:][:digit:]])?&#39;;
+    letters VARCHAR2(1024) := &#39;&#39;;
+    word VARCHAR2(1024);
+  BEGIN 
+    IF specName IS NULL THEN RETURN NULL; END IF;
+    FOR i IN 1..REGEXP_COUNT(specName, word_re) LOOP
+      word    := REGEXP_SUBSTR(specName, word_re, 1, i);
+      letters := letters || REGEXP_SUBSTR(word, &#39;[[:alpha:]]&#39;, 1, 1);
+    END LOOP;
+    RETURN letters;
+  END;
+
+  BEFORE EACH ROW IS
+  BEGIN
+    -- Меняем Шифр_Специальности только если фактические значения
+    -- столбцов Название_Специальности различаются
+    IF UPDATING AND NOT (
+      :OLD.Название_Специальности IS NULL AND :NEW.Название_Специальности IS NULL
+    ) AND (
+         :OLD.Название_Специальности IS NULL OR :NEW.Название_Специальности IS NULL
+      OR :OLD.Название_Специальности != :NEW.Название_Специальности
+    )
+    THEN
+      :NEW.Шифр_Специальности := getCipher(:NEW.Название_Специальности);
+    END IF;
+    IF INSERTING THEN
+      :NEW.Шифр_Специальности := getCipher(:NEW.Название_Специальности);
+    END IF;
+  END BEFORE EACH ROW;
+
+END Шифр_Специальности_Trg;
+/</code></pre><a name="result"><h4>Результат</h4></a><p>Добавим 3 строки:</p><pre class="line-numbers undefined"><code class="language-plsql">INSERT INTO Специальности (Код_Специальности, Название_Специальности)
+            SELECT 5, 'Программная инженерия'                FROM dual
+  UNION ALL SELECT 6, 'Психолого-педагогическое образование' FROM dual
+  UNION ALL SELECT 7, 'Ядерные физика и технологии'          FROM dual;
+
+SELECT * FROM Специальности
+ORDER BY Код_Специальности;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>КОД_СПЕЦИАЛЬНОСТИ</th><th>НАЗВАНИЕ_СПЕЦИАЛЬНОСТИ</th><th>ШИФР_СПЕЦИАЛЬНОСТИ</th></tr></thead><tbody><tr><td>1</td><td>СИСТЕМЫ АВТОМАТИЧЕСКОГО УПРАВЛЕНИЯ</td><td>(null)</td></tr><tr><td>2</td><td>МАТЕМАТИЧЕСКОЕ ОБЕСПЕЧЕНИЕ ЭВМ</td><td>(null)</td></tr><tr><td>3</td><td>ВЫЧИСЛИТЕЛЬНЫЕ СЕТИ И СИСТЕМЫ</td><td>(null)</td></tr><tr><td>4</td><td>ЭКОНОМИКА ПРЕДПРИЯТИЙ</td><td>(null)</td></tr><tr><td>5</td><td>Программная инженерия</td><td>Пи</td></tr><tr><td>6</td><td>Психолого-педагогическое образование</td><td>По</td></tr><tr><td>7</td><td>Ядерные физика и технологии</td><td>Яфит</td></tr></tbody></table></row><p>Заметим, что специальность «Психолого-педагогическое образование» получило шифр «По», т.к. психолого-педагогическое — слово в русском языке. Строки, которые были в таблице до <code class="language-plsql">INSERT</code>'а не получили новый шифр, т.к. соответствующие фактические значения названий специальностей не изменились.</p><p>Обновим все строки таблицы:</p><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Специальности
+SET Название_Специальности = LOWER(Название_Специальности);
+
+SELECT * FROM Специальности
+ORDER BY Код_Специальности;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>КОД_СПЕЦИАЛЬНОСТИ</th><th>НАЗВАНИЕ_СПЕЦИАЛЬНОСТИ</th><th>ШИФР_СПЕЦИАЛЬНОСТИ</th></tr></thead><tbody><tr><td>1</td><td>системы автоматического управления</td><td>сау</td></tr><tr><td>2</td><td>математическое обеспечение эвм</td><td>моэ</td></tr><tr><td>3</td><td>вычислительные сети и системы</td><td>всис</td></tr><tr><td>4</td><td>экономика предприятий</td><td>эп</td></tr><tr><td>5</td><td>программная инженерия</td><td>пи</td></tr><tr><td>6</td><td>психолого-педагогическое образование</td><td>по</td></tr><tr><td>7</td><td>ядерные физика и технологии</td><td>яфит</td></tr></tbody></table></row></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
