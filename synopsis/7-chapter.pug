@@ -28,6 +28,7 @@ block content
     CREATE OR REPLACE TRIGGER check_salary_trg
     -- перед INSERT в Employees или UPDATE столбцов Salary или Job_ID
     BEFORE INSERT OR UPDATE OF Salary, Job_ID ON Employees
+    [REFERENCING OLD AS old_name | NEW AS new_name] -- можно переименовывать OLD и NEW
     FOR EACH ROW -- строковый триггер, для каждой строки (не для всей DML-команды)
     BEGIN
       -- NEW — объект типа строки Employees, хранит строку после DML-команды

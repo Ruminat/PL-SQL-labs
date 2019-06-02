@@ -12,15 +12,105 @@ block content
 
   p.task-text Создать триггер, который при создании связи между существующим таблицами (команда #[+pl('ALTER TABLE')])  и создании таблицы со связью (команда #[+pl('CREATE TABLE')]) обеспечит режим каскадного обновления между таблицами. Триггер должен работать как при композитной, так и при рекурсивной связях. Проверить при одновременном изменении нескольких значений одной командой #[+pl('UPDATE')]. 
 
-//-   a(name="solution"): h4 Решение
+  a(name="solution"): h4 Решение
 
-//-   //- +plsql
-//-   //-   include:escape-html sql/4-8.sql
-//-   p Вода. Земля. Огонь. Воздух. Моя бабушка любила рассказывать мне истории о прошлом, когда Аватар сохранял равновесие между Племенами Воды, Царством Земли, Народом Огня и Воздушными кочевниками. Всё изменилось, когда Народ Огня развязал войну. Только Аватар, властелин всех четырёх стихий, мог остановить безжалостные атаки магов огня. Но, когда мир нуждался в нём больше всего, он исчез. Прошло сто лет, и Народ Огня уже был близок к победе в войне. Два года назад мой отец и мои соплеменники отправились в Царство Земли, чтобы помочь им сражаться против Народа Огня, оставив меня и моего брата управлять племенем. Некоторые люди полагали, что Аватар никогда больше не возродится, и связь времён утеряна навсегда, но я не утратила надежду. Я верила, что Аватар всё же вернётся и спасёт мир.
+  +plsql
+    include:escape-html sql/5-17.sql
 
-//-   a(name="result"): h4 Результат
+  a(name="result"): h4 Результат
 
-//-   p Земля. Огонь. Воздух. Вода. Когда я был мальчиком, мой отец, Аватар Аанг, рассказывал мне историю о том, как он и его друзья героически завершили Столетнюю войну. Аватар Аанг и Хозяин Огня Зуко преобразовали колонии Народа Огня в Объединенную Республику наций, общество, в котором маги и не-маги со всего мира могли бы жить и процветать вместе, в мире и гармонии. Они назвали столицу этой великой страны "--- город Республика. Аватар Аанг сделал много замечательных вещей в своей жизни но, к сожалению, его время в этом мире подошло к концу. И, как и цикл времён года, цикл Аватара начался заново.
+  p Создадим три таблицы:
+  ul
+    li #[+pl('People (ID, Name, Parent_ID)')] для проверки рекурсивной связи
+    li и #[+pl('Points (X, Y)')] с #[+pl('OnAxis (X, Y, Axis)')] для проверки композитной связи.
 
-//- block contents
-//-   +extraContents
+  p Рассмотрим сначала пример каскадного обновления рекурсивной связи.
+
+  +plsql.
+    CREATE TABLE People (
+       ID        NUMBER(6)    PRIMARY KEY
+     , Name      VARCHAR2(63) UNIQUE
+     , Parent_ID NUMBER(6)    REFERENCES People (ID)
+    );
+
+    INSERT INTO People (ID , Name           , Parent_ID)
+                SELECT  1  , 'Leonardo'     , NULL FROM dual
+      UNION ALL SELECT  2  , 'Donatello'    , 1    FROM dual
+      UNION ALL SELECT  3  , 'Michelangelo' , 2    FROM dual
+      UNION ALL SELECT  4  , 'Raphael'      , 3    FROM dual;
+
+    SELECT * FROM People;
+
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th><th>PARENT_ID</th></tr></thead><tbody><tr><td>1</td><td>Leonardo</td><td>(null)</td></tr><tr><td>2</td><td>Donatello</td><td>1</td></tr><tr><td>3</td><td>Michelangelo</td><td>2</td></tr><tr><td>4</td><td>Raphael</td><td>3</td></tr></tbody></table></row>
+
+  p Попробуем обновить первичный ключ таблицы #[+pl('People')] (#[+pl('ID')]):
+
+  +plsql.
+    UPDATE People SET ID = ID + 1;
+
+    SELECT * FROM People;
+
+  p Как можно заметить, вместе с ним обновились и соответстующие поля #[+pl('Parent_ID')]:
+
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th><th>PARENT_ID</th></tr></thead><tbody><tr><td><em class="correct">2</em></td><td>Leonardo</td><td>(null)</td></tr><tr><td><em class="correct">3</em></td><td>Donatello</td><td><em class="correct">2</em></td></tr><tr><td><em class="correct">4</em></td><td>Michelangelo</td><td><em class="correct">3</em></td></tr><tr><td><em class="correct">5</em></td><td>Raphael</td><td><em class="correct">4</em></td></tr></tbody></table></row>
+
+  p Теперь рассмотрим примеры работы с композитной связью.
+
+  +plsql.
+    CREATE TABLE Points (
+       X NUMBER(6)
+     , Y NUMBER(6)
+     , PRIMARY KEY (X, Y)
+    );
+
+    INSERT INTO Points (X , Y)
+                SELECT  0 , 0 FROM dual
+      UNION ALL SELECT  0 , 1 FROM dual
+      UNION ALL SELECT  1 , 0 FROM dual
+      UNION ALL SELECT  1 , 1 FROM dual;
+
+    SELECT * FROM Points;
+
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th></tr></thead><tbody><tr><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td></tr></tbody></table></row>
+
+  +plsql.
+    CREATE TABLE OnAxis (
+       X NUMBER(6)
+     , Y NUMBER(6)
+     , Axis VARCHAR2(16)
+    );
+
+    ALTER TABLE OnAxis ADD CONSTRAINT FK_OnAxis_Points_X_Y
+                       FOREIGN KEY (X, Y) REFERENCES Points (X, Y);
+
+    INSERT INTO OnAxis (X , Y , Axis)
+                SELECT  0 , 0 , 'xy' FROM dual
+      UNION ALL SELECT  0 , 1 , 'y'  FROM dual
+      UNION ALL SELECT  1 , 0 , 'x'  FROM dual
+      UNION ALL SELECT  1 , 1 , NULL FROM dual;
+
+    SELECT * FROM OnAxis;
+
+  <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th><th>AXIS</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>xy</td></tr><tr><td>0</td><td>1</td><td>y</td></tr><tr><td>1</td><td>0</td><td>x</td></tr><tr><td>1</td><td>1</td><td>(null)</td></tr></tbody></table></row>
+
+  p Обновим таблицу #[+pl('Points')]:
+
+  +plsql.
+    UPDATE Points SET X = X + 1, Y = Y + 1;
+
+    SELECT * FROM OnAxis;
+    SELECT * FROM Points;
+
+  p Заметим, опять же, что вместе с таблицей #[+pl('Points')] обновилась и дочерняя таблица #[+pl('OnAxis')]:
+
+  .row
+    .col-md-6.aligment-center
+      p Таблица #[+pl('OnAxis')]
+      <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th><th>AXIS</th></tr></thead><tbody><tr><td><em class="correct">1</em></td><td><em class="correct">1</em></td><td>xy</td></tr><tr><td><em class="correct">1</em></td><td><em class="correct">2</em></td><td>y</td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">1</em></td><td>x</td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">2</em></td><td>(null)</td></tr></tbody></table></row>
+    .col-md-6.aligment-center
+      p Таблица #[+pl('Points')]
+      <row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th></tr></thead><tbody><tr><td><em class="correct">1</em></td><td><em class="correct">1</em></td></tr><tr><td><em class="correct">1</em></td><td><em class="correct">2</em></td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">1</em></td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">2</em></td></tr></tbody></table></row>
+
+
+block contents
+  +extraContents

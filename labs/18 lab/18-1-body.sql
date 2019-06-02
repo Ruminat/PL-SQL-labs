@@ -15,10 +15,11 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
     ,      mail Employees.Email%TYPE
     ,       job Employees.Job_ID%TYPE         := 'SA_REP'
     ,       mgr Employees.Manager_ID%TYPE     := 145
-    ,       sal Employees.Salary%TYPE         := 1000
+    ,       sal Employees.Salary%TYPE         := -1
     ,      comm Employees.Commission_PCT%TYPE := 0
     ,     depID Employees.Department_ID%TYPE  := 30
     ) IS
+      newSalary Employees.Salary%TYPE := sal;
     PROCEDURE audit_newEmp IS
     PRAGMA AUTONOMOUS_TRANSACTION;
     BEGIN
@@ -32,6 +33,13 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
       COMMIT;
     END;
   BEGIN
+    IF newSalary = -1 THEN
+      SELECT Min_Salary
+      INTO newSalary
+      FROM Jobs
+      WHERE Job_ID = job;
+    END IF;
+
     IF valid_deptid(depID) THEN
       audit_newEmp;
 
@@ -42,7 +50,7 @@ CREATE OR REPLACE PACKAGE BODY emp_pkg IS
       )
       VALUES (
         Employees_Seq.NEXTVAL, firstName    , lastName  , mail  ,
-        TRUNC(SYSDATE)       , job          , mgr       , sal   ,
+        TRUNC(SYSDATE)       , job          , mgr       , newSalary   ,
         comm                 , depID
       );
     ELSE
@@ -164,3 +172,4 @@ BEGIN
   init_departments;
 END emp_pkg;
 /
+SHOW ERRORS;

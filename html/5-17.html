@@ -1,1 +1,527 @@
-<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 5.17</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 5.17</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать триггер, который при создании связи между существующим таблицами (команда <code class="language-plsql">ALTER TABLE</code>)  и создании таблицы со связью (команда <code class="language-plsql">CREATE TABLE</code>) обеспечит режим каскадного обновления между таблицами. Триггер должен работать как при композитной, так и при рекурсивной связях. Проверить при одновременном изменении нескольких значений одной командой <code class="language-plsql">UPDATE</code>. </p></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
+<!DOCTYPE html><html lang="ru"><head><title>Доп. задание 5.17</title><meta charset="UTF-8"><link rel="icon" href="./../img/icons/database.png"><link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"><link rel="stylesheet" href="./../css/main.css"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body><nav id="menu"><a class="element" id="menu-switch"><div class="icon-part"><i class="fas fa-bars"></i></div><div class="text-part"></div></a><a class="element" href="../index.html"><div class="icon-part"><i class="fas fa-home"></i></div><div class="text-part">На главную</div></a><a class="element link" href="https://github.com/Ruminat/PL-SQL-labs"><div class="icon-part"><i class="fab fa-github"></i></div><div class="text-part">GitHub</div></a><a class="element" href="#task"><div class="icon-part"><i class="fas fa-thumbtack"></i></div><div class="text-part">Задача</div></a><a class="element" href="#solution"><div class="icon-part"><i class="fas fa-code"></i></div><div class="text-part">Решение</div></a><a class="element" href="#result"><div class="icon-part"><i class="fas fa-poll-h"></i></div><div class="text-part">Результат</div></a></nav><div id="main"><div class="labs"><div class="labs"><div class="header"><h2>Дополнительное задание 5.17</h2></div></div><a name="task"><h4>Постановка задачи</h4></a><p class="task-text">Создать триггер, который при создании связи между существующим таблицами (команда <code class="language-plsql">ALTER TABLE</code>)  и создании таблицы со связью (команда <code class="language-plsql">CREATE TABLE</code>) обеспечит режим каскадного обновления между таблицами. Триггер должен работать как при композитной, так и при рекурсивной связях. Проверить при одновременном изменении нескольких значений одной командой <code class="language-plsql">UPDATE</code>. </p><a name="solution"><h4>Решение</h4></a><pre class="line-numbers undefined"><code class="language-plsql">-- DROP TRIGGER UC_After_Create;
+-- DROP TRIGGER UC_After_Drop;
+-- DROP TRIGGER UC_After_Alter;
+-- DROP TABLE &quot;_UC-constraints&quot; PURGE;
+
+-- Представление, содержащее ограничения в удобной форме.
+CREATE OR REPLACE VIEW Constraints_View AS
+  SELECT Con.Table_Name
+       , Con.Constraint_Name
+       , Con.Constraint_Type
+       , Con.Status
+       , Col.Column_Name
+       , Col.Position
+       , Con.R_Constraint_Name
+  FROM   USER_CONSTRAINTS  Con
+    JOIN USER_CONS_COLUMNS Col
+      ON Con.Constraint_Name = Col.Constraint_Name;
+
+-- Таблица, хранящая ограничения, которые мы уже обработали триггером,
+-- чтобы они могли быть включены в новый триггер Update Cascade (при ALTER TABLE).
+CREATE TABLE &quot;_UC-constraints&quot; (
+   Main_Table VARCHAR2(128)
+ , Ref_Table  VARCHAR2(128)
+ , Main_Col   VARCHAR2(128)
+ , Ref_Col    VARCHAR2(128)
+ , Ref_Num    NUMBER(2)
+ , PRIMARY KEY (Main_Table, Ref_Table, Main_Col, Ref_Col, Ref_Num)
+);
+
+
+-- Пакет для организации каскадного обновления (Update Cascade package).
+CREATE OR REPLACE PACKAGE UCpkg AUTHID CURRENT_USER IS
+  -- Типы пакета.
+  SUBTYPE TabNameType   IS USER_TABLES.Table_Name%TYPE;           -- :: String
+  SUBTYPE ColNameType   IS USER_TAB_COLUMNS.Column_Name%TYPE;     -- :: String
+  SUBTYPE ConNameType   IS USER_CONSTRAINTS.Constraint_Name%TYPE; -- :: String
+  SUBTYPE TriggNameType IS USER_OBJECTS.Object_Name%TYPE;         -- :: String
+  TYPE StringsList IS TABLE OF VARCHAR2(1024); -- :: [String]
+  TYPE RefRecord IS RECORD ( -- :: RefRecord
+     mainCols StringsList := StringsList() -- :: [String]
+   , refCols  StringsList := StringsList() -- :: [String]
+  );
+  TYPE RefsList IS TABLE OF RefRecord; -- :: [RefRecord]
+  TYPE RelationRecord IS RECORD ( -- :: RelationRecord
+     mainTab TabNameType            -- :: String
+   , refTab  TabNameType            -- :: String
+   , refs    RefsList := RefsList() -- :: [RefRecord]
+  );
+  TYPE RelationsList IS TABLE OF RelationRecord; -- :: [RelationRecord]
+  TYPE queryRecord IS RECORD ( -- Запись, которую получаем при запросе к ограничениям.
+      Main_Table VARCHAR(1024) -- :: String
+    , Ref_Table  VARCHAR(1024) -- :: String
+    , Main_Cols  VARCHAR(1024) -- :: String
+    , Ref_Cols   VARCHAR(1024) -- :: String
+  );
+  TYPE rowsList IS TABLE OF queryRecord; -- :: [queryRecord]
+
+  -- Процедура, обрабатывающая создание (CREATE) таблицы.
+  PROCEDURE onCreateTable (tabName TabNameType);
+  -- Процедура, разбирающая ALTER выражение.
+  PROCEDURE parse (statement VARCHAR2);
+
+  -- Возвращает список таблиц со столбцами, от которых tabName зависит по FK.
+  -- getRelations :: String -&gt; [RefRecord]
+  FUNCTION getRelations (tabName TabNameType) RETURN RelationsList;
+
+  -- Возвращает структурированную версию запроса (превращает его в RelationsList)
+  -- structureConstraints :: [queryRecord] -&gt; [RelationRecord]
+  FUNCTION structureConstraints (queryResult rowsList) RETURN RelationsList;
+
+  -- String2ListOfObjects(&#39;A, B, C&#39;) -&gt; [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]
+  -- String2ListOfObjects :: String -&gt; [String]
+  FUNCTION String2ListOfObjects (string VARCHAR2)  RETURN StringsList;
+
+  -- Конкатенирует список строк через разделитель.
+  -- joinStrings([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;], &#39;, &#39;) -&gt; &#39;a, b, c, d&#39;
+  -- joinStrings :: ([String], String) -&gt; String
+  FUNCTION joinStrings (strings StringsList, joiner VARCHAR2) RETURN VARCHAR2;
+
+  -- Возвращает название таблицы для его использования в SQL-запросе.
+  -- toSQLname(&#39;Employees&#39;) -&gt; &#39;EMPLOYEES&#39;
+  -- toSQLname(&#39;&quot;emps!&quot;&#39;) -&gt; &#39;emps!&#39;
+  -- toSQLname :: String -&gt; String
+  FUNCTION toSQLname (tabName TabNameType) RETURN TabNameType;
+END UCpkg;
+/
+
+
+-- Тело пакета для каскадного обновления (Update Cascade package).
+CREATE OR REPLACE PACKAGE BODY UCpkg IS
+
+  FAILURE_IN_FORALL EXCEPTION;  
+  PRAGMA EXCEPTION_INIT (FAILURE_IN_FORALL, -24381);
+
+  -- Регулярные выражения для обработки AFTER ALTER.
+  OBJECT_RE VARCHAR2(1024) := &#39;([[:alpha:]_[:digit:]#$]+|&quot;[^&quot;]+&quot;)&#39;; -- Регулярка имени объекта
+  ALTER_ADD_FK_RE  VARCHAR2(1024) -- Регулярка для вылавливания главной таблицы и столбцов
+    := &#39;ALTER\s+TABLE\s+&#39;|| OBJECT_RE ||&#39;\s+ADD\s+&#39;
+    || &#39;(CONSTRAINT\s+&#39;|| OBJECT_RE ||&#39;\s+)?&#39;
+    || &#39;FOREIGN\s+KEY\s*\((&#39;|| OBJECT_RE ||&#39;(,\s*&#39;|| OBJECT_RE ||&#39;)*)\)\s*&#39;
+    || &#39;REFERENCES\s+&#39;|| OBJECT_RE ||&#39;\s*\((&#39;|| OBJECT_RE ||&#39;(,\s*&#39;|| OBJECT_RE ||&#39;)*)\).*&#39;;
+
+  -- Создаёт триггер для главной таблицы mainTab (относительно подчинённой refTab)
+  PROCEDURE createTrigger (mainTab TabNameType, refTab TabNameType, refs RefsList) IS
+    mainCols StringsList := StringsList();
+    refCols StringsList  := StringsList();
+    triggerName TriggNameType := &#39;UC_&#39;|| SUBSTR(mainTab, 1, 10) ||&#39;_&#39;|| SUBSTR(refTab, 1, 10);
+    triggerText VARCHAR2(16384); -- текст триггера для EXECUTE IMMEDIATE
+    mainColsListed VARCHAR2(256); -- имена столбцов главной таблицы через запятую
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;Creating trigger &#39;|| triggerName);
+
+    FOR r IN 1..refs.COUNT LOOP
+      mainCols := mainCols MULTISET UNION DISTINCT refs(r).mainCols;
+      refCols  := refCols  MULTISET UNION DISTINCT refs(r).refCols;
+    END LOOP;
+
+    mainColsListed := joinStrings(mainCols, &#39;, &#39;);
+
+    DECLARE
+      whenClause  VARCHAR2(1024);
+      setClause   VARCHAR2(1024);
+      whereClause VARCHAR2(1024);
+      regularWhenClause  VARCHAR2(1024);
+      regularSetClause   VARCHAR2(1024);
+      regularWhereClause VARCHAR2(1024);
+
+      setNull          VARCHAR2(1024);
+      ifClause         VARCHAR2(1024);
+      changeCollection VARCHAR2(1024);
+      nullExpression   VARCHAR2(1024);
+      updateExpression VARCHAR2(1024);
+
+      equalStatements StringsList    := StringsList();
+      ifConditions    StringsList    := StringsList();
+      ifBlocks        StringsList := StringsList();
+
+      whenCols   StringsList := mainCols;
+      setCols    StringsList := mainCols;
+      whereCols  StringsList := mainCols;
+      nullCols   StringsList := mainCols;
+
+      regularWhenCols  StringsList := mainCols;
+      regularSetCols   StringsList := mainCols;
+      regularWhereCols StringsList := mainCols;
+    BEGIN
+      FOR i IN 1..mainCols.COUNT LOOP
+        regularWhenCols(i)  := &#39;OLD.&#39;|| mainCols(i) ||&#39; != NEW.&#39;|| mainCols(i);
+        regularSetCols(i)   := refCols(i) ||&#39; = :NEW.&#39;|| mainCols(i);
+        regularWhereCols(i) := refCols(i) ||&#39; = :OLD.&#39;|| mainCols(i);
+
+        nullCols(i)  := refCols(i) ||&#39; = NULL&#39;;
+        whenCols(i)  := &#39;:OLD.&#39;|| mainCols(i) ||&#39; != :NEW.&#39;|| mainCols(i);
+        setCols(i)   := refCols(i) ||&#39; = tabRows(i).&#39;|| refCols(i);
+        whereCols(i) := &#39;tabIDs(i) = ROWID&#39;;
+      END LOOP;
+      regularWhenClause  := joinStrings(regularWhenCols  , &#39; OR &#39; );
+      regularSetClause   := joinStrings(regularSetCols   , &#39;, &#39;   );
+      regularWhereClause := joinStrings(regularWhereCols , &#39; AND &#39;);
+
+      setNull     := joinStrings(nullCols  , &#39;, &#39; );
+      whenClause  := joinStrings(whenCols  , &#39; OR &#39; );
+      setClause   := joinStrings(setCols   , &#39;, &#39;   );
+      whereClause := joinStrings(whereCols , &#39; AND &#39;);
+
+      IF mainTab = refTab THEN
+        nullExpression := &#39;UPDATE &#39;|| mainTab ||&#39; SET &#39;|| setNull ||&#39;;&#39;;
+        updateExpression := NULL;
+      ELSE
+        nullExpression := NULL;
+        updateExpression := &#39;
+          UPDATE &#39;|| refTab ||&#39;
+          SET &#39;|| regularSetClause ||&#39;
+          WHERE &#39;|| regularWhereClause ||&#39;;
+        &#39;;
+      END IF;
+
+      FOR i IN 1..refs.COUNT LOOP
+        equalStatements.DELETE;
+        ifConditions.DELETE;
+        FOR j IN 1..refs(i).mainCols.COUNT LOOP
+          equalStatements.EXTEND;
+          equalStatements(j)
+            := &#39;tabRows(i).&#39;|| refs(i).refCols(j) ||&#39; := :NEW.&#39;|| refs(i).mainCols(j) ||&#39;;&#39;;
+
+          ifConditions.EXTEND;
+          ifConditions(j)
+            := &#39;tabRows(i).&#39;|| refs(i).refCols(j) ||&#39; = :OLD.&#39;|| refs(i).mainCols(j);
+        END LOOP;
+
+        ifBlocks.EXTEND;
+        ifBlocks(i) := &#39;IF &#39;|| joinStrings(ifConditions, &#39; AND &#39;) ||&#39; AND NOT changed(i)&#39;
+          ||&#39; THEN &#39;|| joinStrings(equalStatements, &#39; &#39;) ||&#39; changed(i) := TRUE; END IF;&#39;;
+      END LOOP;
+
+      ifClause := joinStrings(ifBlocks, &#39; &#39;);
+
+      triggerText := &#39;
+        CREATE OR REPLACE TRIGGER &#39;|| triggerName ||&#39;
+        FOR UPDATE OF &#39;|| mainColsListed ||&#39; ON &#39;|| mainTab ||&#39;
+        COMPOUND TRIGGER
+
+          TYPE TabRowsList IS TABLE OF &#39;|| refTab ||&#39;%ROWTYPE;
+          TYPE ROWIDList   IS TABLE OF ROWID;
+          TYPE BoolList    IS TABLE OF BOOLEAN;
+          tabRows TabRowsList := TabRowsList();
+          tabIDs  ROWIDList   := ROWIDList();
+          changed BoolList    := BoolList();
+
+          BEFORE STATEMENT IS
+          BEGIN
+            SELECT *     BULK COLLECT INTO tabRows FROM &#39;|| refTab ||&#39;;
+            SELECT ROWID BULK COLLECT INTO tabIDs  FROM &#39;|| refTab ||&#39;;
+            changed.EXTEND(tabRows.COUNT);
+            FOR i IN 1..changed.COUNT LOOP
+              changed(i) := FALSE;
+            END LOOP;
+
+            &#39;|| nullExpression ||&#39;
+          END BEFORE STATEMENT;
+
+          BEFORE EACH ROW IS
+          BEGIN
+            IF &#39;|| whenClause ||&#39; THEN
+              &#39;|| updateExpression ||&#39;
+              FOR i IN 1..tabRows.COUNT LOOP
+                &#39;|| ifClause ||&#39;
+              END LOOP;
+            END IF;
+          END BEFORE EACH ROW;
+
+          AFTER STATEMENT IS
+          BEGIN
+            FORALL i IN 1..tabRows.COUNT
+              UPDATE &#39;|| refTab ||&#39;
+              SET &#39;|| setClause ||&#39;
+              WHERE tabIDs(i) = ROWID;
+          END AFTER STATEMENT;
+
+        END &#39;|| triggerName ||&#39;;
+      &#39;;
+
+      DBMS_OUTPUT.PUT_LINE(&#39;-- Trigger&#39;&#39;s code: &#39; || triggerText);
+      -- EXECUTE IMMEDIATE triggerText;
+      -- DBMS_OUTPUT.PUT_LINE(&#39;Created trigger &#39;|| triggerName);
+    END;
+
+    DECLARE
+      ref RefRecord;
+    BEGIN
+      FOR r IN 1..refs.COUNT LOOP
+        BEGIN
+          ref := refs(r);
+          FORALL c IN 1..ref.mainCols.COUNT
+          SAVE EXCEPTIONS
+            INSERT INTO &quot;_UC-constraints&quot;
+              (Main_Table, Ref_Table, Main_Col       , Ref_Col       , Ref_Num)
+            VALUES
+              (mainTab   , refTab   , ref.mainCols(c), ref.refCols(c), r      );
+        EXCEPTION WHEN FAILURE_IN_FORALL THEN NULL;
+        END;
+      END LOOP;
+    END;
+  END;
+
+  PROCEDURE onCreateTable (tabName TabNameType) IS
+    relations RelationsList := getRelations(tabName);
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE(&#39;Creating table &#39;|| tabName);
+    FOR i IN 1..relations.COUNT LOOP
+      createTrigger(relations(i).mainTab, relations(i).refTab, relations(i).refs);
+    END LOOP;
+  END;
+
+  PROCEDURE parse (statement VARCHAR2) IS
+  BEGIN
+    IF NOT REGEXP_LIKE(statement, ALTER_ADD_FK_RE) THEN RETURN; END IF;
+    DECLARE
+      refTab  VARCHAR2(1024) := toSQLname(REGEXP_REPLACE(statement, ALTER_ADD_FK_RE, &#39;\1&#39;));
+      mainTab VARCHAR2(1024) := toSQLname(REGEXP_REPLACE(statement, ALTER_ADD_FK_RE, &#39;\8&#39;));
+      refColsString  VARCHAR2(1024) := REGEXP_REPLACE(statement, ALTER_ADD_FK_RE, &#39;\4&#39;);
+      mainColsString VARCHAR2(1024) := REGEXP_REPLACE(statement, ALTER_ADD_FK_RE, &#39;\9&#39;);
+      mainCols StringsList := String2ListOfObjects(refColsString);
+      refCols  StringsList := String2ListOfObjects(mainColsString);
+
+      queryResult rowsList := rowsList();
+      relations RelationsList;
+    BEGIN
+      FOR i IN 1..mainCols.COUNT LOOP
+        mainCols(i) := toSQLname(mainCols(i));
+      END LOOP;
+      FOR i IN 1..refCols.COUNT LOOP
+        refCols(i) := toSQLname(refCols(i));
+      END LOOP;
+
+      SELECT Main_Table
+           , Ref_Table
+           , LISTAGG(Main_Col, &#39;, &#39;) WITHIN GROUP (ORDER BY Main_Col, Ref_Col) AS Main_Cols
+           , LISTAGG(Ref_Col , &#39;, &#39;) WITHIN GROUP (ORDER BY Main_Col, Ref_Col) AS Ref_Cols
+      BULK COLLECT INTO queryResult
+      FROM &quot;_UC-constraints&quot;
+      WHERE Ref_Table = refTab
+      GROUP BY Main_Table, Ref_Table, Ref_Num
+      ORDER BY Main_Table, Ref_Table;
+
+      relations := structureConstraints(queryResult);
+
+      DECLARE
+        added BOOLEAN := FALSE;
+        indx PLS_INTEGER;
+      BEGIN
+        FOR r IN 1..relations.COUNT LOOP
+          CONTINUE WHEN mainTab != relations(r).mainTab
+                     OR refTab  != relations(r).refTab;
+          relations(r).refs.EXTEND;
+          relations(r).refs(relations(r).refs.LAST).mainCols := mainCols;
+          relations(r).refs(relations(r).refs.LAST).refCols  := refCols;
+          added := TRUE;
+          EXIT;
+        END LOOP;
+
+        IF NOT added THEN
+          relations.EXTEND;
+          indx := relations.LAST;
+          relations(indx).mainTab := mainTab;
+          relations(indx).refTab  := refTab;
+          relations(indx).refs := RefsList();
+          relations(indx).refs.EXTEND;
+          relations(indx).refs(relations(indx).refs.LAST).mainCols := mainCols;
+          relations(indx).refs(relations(indx).refs.LAST).refCols  := refCols;
+        END IF;
+      END;
+
+      FOR i IN 1..relations.COUNT LOOP
+        createTrigger(relations(i).mainTab, relations(i).refTab, relations(i).refs);
+      END LOOP;
+    END;
+  END;
+
+  FUNCTION getRelations (tabName TabNameType) RETURN RelationsList IS
+    queryResult rowsList := rowsList();
+    sqlTabName TabNameType := toSQLname(tabName);
+  BEGIN
+    -- Берём данные о ссылках таблицы на другие таблицы из словарей.
+    SELECT R.Table_Name AS Main_Table
+         , L.Table_Name AS Ref_Table
+         , LISTAGG(R.Column_Name, &#39;, &#39;) WITHIN GROUP (ORDER BY L.Position) AS Main_Cols
+         , LISTAGG(L.Column_Name, &#39;, &#39;) WITHIN GROUP (ORDER BY L.Position) AS Ref_Cols
+    BULK COLLECT INTO queryResult
+    FROM   Constraints_View L
+      JOIN Constraints_View R
+        ON  L.Table_Name = sqlTabName
+        AND L.R_Constraint_Name = R.Constraint_Name
+        AND L.Constraint_Type = &#39;R&#39;
+        AND L.Position = R.Position
+        AND L.Status = &#39;ENABLED&#39;
+    GROUP BY R.Table_Name, L.Table_Name, L.Constraint_Name
+    ORDER BY R.Table_Name, L.Table_Name;
+
+    DBMS_OUTPUT.PUT_LINE(&#39;sqlTabName = &#39;|| sqlTabName);
+    DBMS_OUTPUT.PUT_LINE(&#39;queryResult.COUNT = &#39;|| queryResult.COUNT);
+
+    RETURN structureConstraints(queryResult);
+  END;
+
+  FUNCTION structureConstraints (queryResult rowsList) RETURN RelationsList IS
+    result RelationsList := RelationsList();
+    currRelation RelationRecord;
+    currRef      RefRecord;
+    currRefs RefsList := RefsList();
+    r queryRecord; -- row
+  BEGIN
+    FOR i IN 1..queryResult.COUNT LOOP
+      r := queryResult(i);
+
+      IF currRelation.mainTab IS NOT NULL AND (
+           currRelation.mainTab != r.Main_Table 
+        OR currRelation.refTab  != r.Ref_Table
+      )
+      THEN
+        result.EXTEND;
+        result(result.LAST) := currRelation;
+
+        currRelation.mainTab := r.Main_Table;
+        currRelation.refTab  := r.Ref_Table;
+        currRelation.refs.DELETE;
+      END IF;
+
+      currRef.mainCols := String2ListOfObjects(r.Main_Cols);
+      currRef.refCols  := String2ListOfObjects(r.Ref_Cols);
+      currRelation.refs.EXTEND;
+      currRelation.refs(currRelation.refs.LAST) := currRef;
+
+      IF currRelation.mainTab IS NULL THEN
+        currRelation.mainTab := r.Main_Table;
+        currRelation.refTab  := r.Ref_Table;
+      END IF;
+    END LOOP;
+
+    IF currRelation.refs.COUNT &gt; 0 THEN
+      result.EXTEND;
+      result(result.LAST) := currRelation;
+    END IF;
+
+    RETURN result;
+  END;
+
+  FUNCTION String2ListOfObjects (string VARCHAR2)  RETURN StringsList IS
+    result StringsList := StringsList();
+    n PLS_INTEGER := REGEXP_COUNT(string, OBJECT_RE);
+  BEGIN
+    result.EXTEND(n);
+    FOR i IN 1..n LOOP
+      result(i) := REGEXP_SUBSTR(string, OBJECT_RE, 1, i);
+    END LOOP;
+    RETURN result;
+  END;
+
+  FUNCTION toSQLname (tabName TabNameType) RETURN TabNameType IS
+  BEGIN
+    IF SUBSTR(tabName, 1, 1) = &#39;&quot;&#39;
+    THEN RETURN REGEXP_SUBSTR(tabName, &#39;[^&quot;]+&#39;);
+    ELSE RETURN UPPER(tabName);
+    END IF;
+  END;
+
+  FUNCTION joinStrings (strings StringsList, joiner VARCHAR2) RETURN VARCHAR2 IS
+    result VARCHAR2(16384);
+  BEGIN
+    IF strings.COUNT = 0 THEN RETURN NULL; END IF;
+    FOR i IN 1..(strings.COUNT - 1) LOOP
+      result := result || strings(i) || joiner;
+    END LOOP;
+    RETURN result || strings(strings.LAST);
+  END;
+
+END UCpkg;
+/
+
+
+-- Триггер на создание (CREATE) таблицы в схеме.
+CREATE OR REPLACE TRIGGER UC_After_Create
+AFTER CREATE ON SCHEMA
+WHEN (ORA_DICT_OBJ_TYPE = &#39;TABLE&#39;)
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(&#39;Fired the trigger [AFTER CREATE] on &#39;|| ORA_DICT_OBJ_NAME);
+  UCpkg.onCreateTable(ORA_DICT_OBJ_NAME);
+END;
+/
+-- Триггер на удаление таблицы
+-- CREATE OR REPLACE TRIGGER UC_After_Drop
+-- AFTER DROP ON SCHEMA
+-- WHEN (ORA_DICT_OBJ_TYPE = &#39;TABLE&#39;)
+-- BEGIN
+--   DELETE FROM &quot;_UC-constraints&quot;
+--   WHERE ORA_DICT_OBJ_NAME IN (Main_Table, Ref_Table);
+-- END;
+-- /
+
+-- Триггер на изменение (ALTER) таблицы в схеме.
+CREATE OR REPLACE TRIGGER UC_After_Alter
+AFTER ALTER ON SCHEMA
+WHEN (ORA_DICT_OBJ_TYPE = &#39;TABLE&#39;)
+DECLARE
+  sqlText ORA_NAME_LIST_T;
+  statement varchar2(1024);
+  n PLS_INTEGER;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE(&#39;Fired the trigger [AFTER ALTER] on &#39;|| ORA_DICT_OBJ_NAME);
+  n := ORA_SQL_TXT(sqlText);
+  FOR i in 1..n LOOP
+    statement := statement || sqlText(i);
+  END LOOP;
+
+  UCpkg.parse(statement);
+END;
+/
+</code></pre><a name="result"><h4>Результат</h4></a><p>Создадим три таблицы:</p><ul><li><code class="language-plsql">People (ID, Name, Parent_ID)</code> для проверки рекурсивной связи</li><li>и <code class="language-plsql">Points (X, Y)</code> с <code class="language-plsql">OnAxis (X, Y, Axis)</code> для проверки композитной связи.</li></ul><p>Рассмотрим сначала пример каскадного обновления рекурсивной связи.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE People (
+   ID        NUMBER(6)    PRIMARY KEY
+ , Name      VARCHAR2(63) UNIQUE
+ , Parent_ID NUMBER(6)    REFERENCES People (ID)
+);
+
+INSERT INTO People (ID , Name           , Parent_ID)
+            SELECT  1  , 'Leonardo'     , NULL FROM dual
+  UNION ALL SELECT  2  , 'Donatello'    , 1    FROM dual
+  UNION ALL SELECT  3  , 'Michelangelo' , 2    FROM dual
+  UNION ALL SELECT  4  , 'Raphael'      , 3    FROM dual;
+
+SELECT * FROM People;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th><th>PARENT_ID</th></tr></thead><tbody><tr><td>1</td><td>Leonardo</td><td>(null)</td></tr><tr><td>2</td><td>Donatello</td><td>1</td></tr><tr><td>3</td><td>Michelangelo</td><td>2</td></tr><tr><td>4</td><td>Raphael</td><td>3</td></tr></tbody></table></row><p>Попробуем обновить первичный ключ таблицы <code class="language-plsql">People</code> (<code class="language-plsql">ID</code>):</p><pre class="line-numbers undefined"><code class="language-plsql">UPDATE People SET ID = ID + 1;
+
+SELECT * FROM People;
+</code></pre><p>Как можно заметить, вместе с ним обновились и соответстующие поля <code class="language-plsql">Parent_ID</code>:</p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>ID</th><th>NAME</th><th>PARENT_ID</th></tr></thead><tbody><tr><td><em class="correct">2</em></td><td>Leonardo</td><td>(null)</td></tr><tr><td><em class="correct">3</em></td><td>Donatello</td><td><em class="correct">2</em></td></tr><tr><td><em class="correct">4</em></td><td>Michelangelo</td><td><em class="correct">3</em></td></tr><tr><td><em class="correct">5</em></td><td>Raphael</td><td><em class="correct">4</em></td></tr></tbody></table></row><p>Теперь рассмотрим примеры работы с композитной связью.</p><pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE Points (
+   X NUMBER(6)
+ , Y NUMBER(6)
+ , PRIMARY KEY (X, Y)
+);
+
+INSERT INTO Points (X , Y)
+            SELECT  0 , 0 FROM dual
+  UNION ALL SELECT  0 , 1 FROM dual
+  UNION ALL SELECT  1 , 0 FROM dual
+  UNION ALL SELECT  1 , 1 FROM dual;
+
+SELECT * FROM Points;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th></tr></thead><tbody><tr><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td></tr></tbody></table></row><pre class="line-numbers undefined"><code class="language-plsql">CREATE TABLE OnAxis (
+   X NUMBER(6)
+ , Y NUMBER(6)
+ , Axis VARCHAR2(16)
+);
+
+ALTER TABLE OnAxis ADD CONSTRAINT FK_OnAxis_Points_X_Y
+                   FOREIGN KEY (X, Y) REFERENCES Points (X, Y);
+
+INSERT INTO OnAxis (X , Y , Axis)
+            SELECT  0 , 0 , 'xy' FROM dual
+  UNION ALL SELECT  0 , 1 , 'y'  FROM dual
+  UNION ALL SELECT  1 , 0 , 'x'  FROM dual
+  UNION ALL SELECT  1 , 1 , NULL FROM dual;
+
+SELECT * FROM OnAxis;
+</code></pre><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th><th>AXIS</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>xy</td></tr><tr><td>0</td><td>1</td><td>y</td></tr><tr><td>1</td><td>0</td><td>x</td></tr><tr><td>1</td><td>1</td><td>(null)</td></tr></tbody></table></row><p>Обновим таблицу <code class="language-plsql">Points</code>:</p><pre class="line-numbers undefined"><code class="language-plsql">UPDATE Points SET X = X + 1, Y = Y + 1;
+
+SELECT * FROM OnAxis;
+SELECT * FROM Points;
+</code></pre><p>Заметим, опять же, что вместе с таблицей <code class="language-plsql">Points</code> обновилась и дочерняя таблица <code class="language-plsql">OnAxis</code>:</p><div class="row"><div class="col-md-6 aligment-center"><p>Таблица <code class="language-plsql">OnAxis</code></p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th><th>AXIS</th></tr></thead><tbody><tr><td><em class="correct">1</em></td><td><em class="correct">1</em></td><td>xy</td></tr><tr><td><em class="correct">1</em></td><td><em class="correct">2</em></td><td>y</td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">1</em></td><td>x</td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">2</em></td><td>(null)</td></tr></tbody></table></row></div><div class="col-md-6 aligment-center"><p>Таблица <code class="language-plsql">Points</code></p><row class="aligment-center"><table class="table table-SQL table-bordered table-hover table-sm"><thead class="thead-dark"><tr><th>X</th><th>Y</th></tr></thead><tbody><tr><td><em class="correct">1</em></td><td><em class="correct">1</em></td></tr><tr><td><em class="correct">1</em></td><td><em class="correct">2</em></td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">1</em></td></tr><tr><td><em class="correct">2</em></td><td><em class="correct">2</em></td></tr></tbody></table></row></div></div></div></div><script src="./../js/prism.js"></script><script src="./../js/setup.js"></script><script src="./../js/main.js"></script></body></html>
