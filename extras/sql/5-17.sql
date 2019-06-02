@@ -1,7 +1,7 @@
--- DROP TRIGGER UC_After_Create;
--- DROP TRIGGER UC_After_Drop;
--- DROP TRIGGER UC_After_Alter;
--- DROP TABLE "_UC-constraints" PURGE;
+DROP TRIGGER UC_After_Create;
+DROP TRIGGER UC_After_Drop;
+DROP TRIGGER UC_After_Alter;
+DROP TABLE "_UC-constraints" PURGE;
 
 -- Представление, содержащее ограничения в удобной форме.
 CREATE OR REPLACE VIEW Constraints_View AS
@@ -447,15 +447,6 @@ BEGIN
   UCpkg.onCreateTable(ORA_DICT_OBJ_NAME);
 END;
 /
--- Триггер на удаление таблицы
--- CREATE OR REPLACE TRIGGER UC_After_Drop
--- AFTER DROP ON SCHEMA
--- WHEN (ORA_DICT_OBJ_TYPE = 'TABLE')
--- BEGIN
---   DELETE FROM "_UC-constraints"
---   WHERE ORA_DICT_OBJ_NAME IN (Main_Table, Ref_Table);
--- END;
--- /
 
 -- Триггер на изменение (ALTER) таблицы в схеме.
 CREATE OR REPLACE TRIGGER UC_After_Alter
