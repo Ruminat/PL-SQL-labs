@@ -19,7 +19,7 @@
   "dependencies": {
     "gulp": "^4.0.1",
     "gulp-pug": "^4.0.1",
-    "pug": "^2.0.3"
+    "pug": "^3.0.1"
   },
   "devDependencies": {
     "gulp-sass": "^4.0.2",
